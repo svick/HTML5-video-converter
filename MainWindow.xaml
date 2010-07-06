@@ -21,8 +21,8 @@
 		</StackPanel>
 		<StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0">
 			<TextBlock TextAlignment="Center">Formát</TextBlock>
-			<CheckBox Margin="3" Name="webm">WebM</CheckBox>
-			<CheckBox Margin="3" Name="h264">H.264</CheckBox>
+			<CheckBox Margin="3" Name="webm" IsChecked="True">WebM</CheckBox>
+			<CheckBox Margin="3" Name="h264" IsChecked="True">H.264</CheckBox>
 			<CheckBox Margin="3" Name="theora">Theora</CheckBox>
 		</StackPanel>
 		<StackPanel Grid.Row="1" Grid.Column="1">
