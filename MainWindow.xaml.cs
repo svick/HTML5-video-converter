@@ -19,6 +19,21 @@ namespace Video_converter
 		string fileName;
 		Converter converter;
 
+		public static readonly DependencyProperty ShowProgressBarProperty =
+				DependencyProperty.Register("ShowProgressBar", typeof(bool), typeof(MainWindow), new UIPropertyMetadata(false));
+
+		public bool ShowProgressBar
+		{
+			get
+			{
+				return (bool)GetValue(ShowProgressBarProperty);
+			}
+			set
+			{
+				SetValue(ShowProgressBarProperty, value);
+			}
+		}
+
 		public MainWindow()
 		{
 			converter = new Converter();
@@ -57,7 +72,9 @@ namespace Video_converter
 
 		private void Convert_Click(object sender, RoutedEventArgs e)
 		{
-			foreach (CheckBox formatCheckBox in formats)
+			ShowProgressBar = true;
+
+			/*foreach (CheckBox formatCheckBox in formats)
 				if (formatCheckBox.IsChecked == true)
 				{
 					string format = formatCheckBox.Name;
@@ -67,7 +84,7 @@ namespace Video_converter
 							int height = int.Parse((string)resolutionCheckBox.Tag);
 							converter.ConvertFormat(fileNameTextBox.Text, format, height);
 						}
-				}
+				}*/
 		}
 	}
 }
