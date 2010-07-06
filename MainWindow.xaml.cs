@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using Microsoft.Win32;
-using System.IO;
 
 namespace Video_converter
 {
@@ -19,25 +11,13 @@ namespace Video_converter
 		string fileName;
 		Converter converter;
 
-		public static readonly DependencyProperty ShowProgressBarProperty =
-				DependencyProperty.Register("ShowProgressBar", typeof(bool), typeof(MainWindow), new UIPropertyMetadata(false));
-
-		public bool ShowProgressBar
-		{
-			get
-			{
-				return (bool)GetValue(ShowProgressBarProperty);
-			}
-			set
-			{
-				SetValue(ShowProgressBarProperty, value);
-			}
-		}
+		ProgressBar progressBar;
 
 		public MainWindow()
 		{
 			converter = new Converter();
 			InitializeComponent();
+
 			resolutions = new CheckBox[] { height480, height720, height1080 };
 			formats = new CheckBox[] { webm, h264, theora };
 		}
@@ -72,7 +52,12 @@ namespace Video_converter
 
 		private void Convert_Click(object sender, RoutedEventArgs e)
 		{
-			ShowProgressBar = true;
+			progressBar = new ProgressBar();
+
+			progressBar.Cancelled += new System.EventHandler(progressBar_Cancelled);
+
+			Content = progressBar;
+			
 
 			/*foreach (CheckBox formatCheckBox in formats)
 				if (formatCheckBox.IsChecked == true)
@@ -85,6 +70,11 @@ namespace Video_converter
 							converter.ConvertFormat(fileNameTextBox.Text, format, height);
 						}
 				}*/
+
+		}
+
+		void progressBar_Cancelled(object sender, EventArgs e)
+		{
 		}
 	}
 }

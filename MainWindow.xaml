@@ -3,21 +3,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:local="clr-namespace:Video_converter"
 	Title="HTML 5" Width="240" Height="250" ResizeMode="CanMinimize">
-	<Window.Style>
-		<Style TargetType="local:MainWindow">
-			<Style.Triggers>
-				<Trigger Property="ShowProgressBar" Value="True">
-					<Setter Property="ContentTemplate">
-						<Setter.Value>
-							<DataTemplate>
-								<local:ProgressBar />
-							</DataTemplate>
-						</Setter.Value>
-					</Setter>
-				</Trigger>
-			</Style.Triggers>
-		</Style>
-	</Window.Style>
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />
