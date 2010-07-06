@@ -4,7 +4,18 @@
 	xmlns:local="clr-namespace:Video_converter"
 	Title="HTML 5" Width="240" Height="250" ResizeMode="CanMinimize">
 	<Grid>
-		<Grid.ColumnDefinitions>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.3">
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Offset="0.0" 
+              Color="#EDF3FA" />
+                    <GradientStop Offset="1.0" 
+              Color="#FFFFFF" />
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid.ColumnDefinitions>
 			<ColumnDefinition />
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
