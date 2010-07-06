@@ -1,13 +1,15 @@
 ﻿<UserControl x:Class="Video_converter.ProgressBar"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Grid Margin="5">
+	<Grid Margin="10">
 		<Grid.RowDefinitions>
+            <RowDefinition />
 			<RowDefinition />
 			<RowDefinition />
 		</Grid.RowDefinitions>
-		<ProgressBar Grid.Row="0" Height="30" />
-		<Button Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="Cancel" Click="Cancel_Click">
+        <TextBlock Grid.Row="0" FontSize="18" HorizontalAlignment="Center" Foreground="#003399">Převádění videa</TextBlock>
+		<ProgressBar Grid.Row="1" Height="30" />
+		<Button Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="Cancel" Click="Cancel_Click">
 			<TextBlock Margin="20,1" FontSize="13">
 				    Zrušit
 			</TextBlock>
