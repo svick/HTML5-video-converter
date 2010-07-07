@@ -56,6 +56,10 @@ namespace Video_converter
 			{
 				converter.VideoInfo(video);
 				ConvertButton.IsEnabled = true;
+
+				height1080.IsEnabled = (video.Height >= 1080);
+				height720.IsEnabled = (video.Height >= 720);
+				height480.IsEnabled = (video.Height >= 480);
 			}
 			catch (Exception e)
 			{
