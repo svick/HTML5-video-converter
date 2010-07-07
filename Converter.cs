@@ -55,6 +55,27 @@ namespace Video_converter
 				throw new Exception("Tento formát videa nelze převést");
 			}
 
+			// Video info
+			Match m = new Regex(@"Video: ([^,]*), [^,]*, (\d*)x(\d*), ").Match(output);
+
+			if (m.Success)
+			{
+				video.Format = m.Groups[1].Value;
+				video.Width = int.Parse(m.Groups[2].Value);
+				video.Height = int.Parse(m.Groups[3].Value);
+			}
+
+			// Duration
+			m = new Regex(@"Duration: (\d*:\d*:\d*.\d*)").Match(output);
+
+			if (m.Success)
+			{
+				video.Duration = TimeSpan.Parse(m.Groups[1].Value);
+				#if DEBUG
+				System.Windows.Forms.MessageBox.Show(video.Duration.ToString());
+				#endif
+			}
+
 			//System.Windows.Forms.MessageBox.Show(output);
 
 			return video;
