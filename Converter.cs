@@ -55,6 +55,7 @@ namespace Video_converter
 				throw new Exception("Tento formát videa nelze převést");
 			}
 
+			// TODO: Kontrola správnosti regexpů a ošetření chyb
 			// Video info
 			Match m = new Regex(@"Video: ([^,]*), [^,]*, (\d*)x(\d*), ").Match(output);
 
@@ -65,15 +66,21 @@ namespace Video_converter
 				video.Height = int.Parse(m.Groups[3].Value);
 			}
 
+			// Audio info
+			m = new Regex(@"Audio: ([^,]*), [^,]*, [^,]*, [^,]*, (\d*)").Match(output);
+
+			if (m.Success)
+			{
+				video.AudioFormat = m.Groups[1].Value;
+				video.AudioBitRate = int.Parse(m.Groups[2].Value);
+			}
+
 			// Duration
 			m = new Regex(@"Duration: (\d*:\d*:\d*.\d*)").Match(output);
 
 			if (m.Success)
 			{
 				video.Duration = TimeSpan.Parse(m.Groups[1].Value);
-				#if DEBUG
-				System.Windows.Forms.MessageBox.Show(video.Duration.ToString());
-				#endif
 			}
 
 			//System.Windows.Forms.MessageBox.Show(output);
