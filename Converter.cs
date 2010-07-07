@@ -42,6 +42,7 @@ namespace Video_converter
 		public Video VideoInfo(Video video) 
 		{
 			string parameters = string.Format("-i \"{0}\"", video.Path);
+
 			string output = run(ffmpeg, parameters);
 
 			// is regular video file
@@ -86,6 +87,25 @@ namespace Video_converter
 			//System.Windows.Forms.MessageBox.Show(output);
 
 			return video;
+		}
+
+		public string previewImage(Video video) 
+		{
+			string imageFileName = System.Guid.NewGuid().ToString() + ".png";
+
+			int height = 100;
+			int width = video.Width / (video.Height / height);
+
+			string parameters = string.Format("-i \"{0}\" -an -vframes 1 -s {1}x{2} -ss 00:00:10 -f image2 {3}", video.Path, width, height, imageFileName);
+			
+			string output = run(ffmpeg, parameters);
+
+			if (File.Exists(imageFileName))
+			{
+				return imageFileName;
+			}
+
+			return string.Empty;
 		}
 
 		private string run(string exeFile, string parameters)
