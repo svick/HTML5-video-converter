@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
+using System.Windows.Forms;
 
 namespace Video_converter
 {
@@ -18,8 +18,8 @@ namespace Video_converter
 			converter = new Converter();
 			InitializeComponent();
 
-			resolutions = new CheckBox[] { height480, height720, height1080 };
-			formats = new CheckBox[] { webm, h264, theora };
+			resolutions = new System.Windows.Controls.CheckBox[] { height480, height720, height1080 };
+			formats = new System.Windows.Controls.CheckBox[] { webm, h264, theora };
 		}
 
 		private void File_Click(object sender, RoutedEventArgs e)
@@ -40,15 +40,15 @@ namespace Video_converter
 			else
 				ofd.InitialDirectory = Path.GetDirectoryName(fileName);
 
-			if (ofd.ShowDialog() == true)
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				fileName = ofd.FileName;
 				fileNameTextBox.Text = fileName;
 			}
 		}
 
-		CheckBox[] resolutions;
-		CheckBox[] formats;
+		System.Windows.Controls.CheckBox[] resolutions;
+		System.Windows.Controls.CheckBox[] formats;
 
 		private void Convert_Click(object sender, RoutedEventArgs e)
 		{
