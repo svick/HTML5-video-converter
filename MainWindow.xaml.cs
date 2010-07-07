@@ -15,8 +15,6 @@ namespace Video_converter
 
 		public MainWindow()
 		{
-			converter = new Converter();
-
 			resolutions = new CheckBox[] { height480, height720, height1080 };
 			formats = new CheckBox[] { webm, h264, theora };
 		}
@@ -44,6 +42,7 @@ namespace Video_converter
 				fileName = ofd.FileName;
 				fileNameTextBox.Text = fileName;
 
+				
 				GetVideoInfo(fileName);
 			}
 		}
@@ -51,10 +50,11 @@ namespace Video_converter
 		private void GetVideoInfo(string FileName)
 		{
 			Video video = new Video(FileName);
+			converter = new Converter(video);
 
 			try
 			{
-				converter.VideoInfo(video);
+				converter.VideoInfo();
 				ConvertButton.IsEnabled = true;
 
 				height1080.IsEnabled = (video.Height >= 1080);

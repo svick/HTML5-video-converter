@@ -30,20 +30,22 @@ namespace Video_converter
 	public class Converter
 	{
 		private string ffmpeg { get; set; }
+		private Video video;
 
-		public Converter()
+		public Converter(Video video)
 		{
+			this.video = video;
 			ffmpeg = Settings.Default.ExeLocation;
 
 			if (!File.Exists(ffmpeg))
 				throw new Exception("Soubor ffmpeg.exe nebyl nalezen");
 		}
 
-		public Video VideoInfo(Video video) 
+		public Video VideoInfo() 
 		{
 			string parameters = string.Format("-i \"{0}\"", video.Path);
 
-			string output = run(ffmpeg, parameters);
+			string output = run(ffmpeg, parameters, true);
 
 			// is regular video file
 			if (output.Contains("Invalid data found when processing input"))
@@ -84,12 +86,10 @@ namespace Video_converter
 				video.Duration = TimeSpan.Parse(m.Groups[1].Value);
 			}
 
-			//System.Windows.Forms.MessageBox.Show(output);
-
 			return video;
 		}
 
-		public string previewImage(Video video) 
+		public string previewImage()
 		{
 			string imageFileName = System.Guid.NewGuid().ToString() + ".png";
 
@@ -108,19 +108,62 @@ namespace Video_converter
 			return string.Empty;
 		}
 
-		private string run(string exeFile, string parameters)
+		public bool convert(string format, string size)
 		{
+			string outputFilePath = Path.GetDirectoryName(video.Path);
+			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(video.Path);
+			outputFilePath += ".webm";
+
+			string parameters = string.Format("-i \"{0}\" -threads 0 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2} \"{3}\"", video.Path, "320k", "1000k", outputFilePath);
+
+			string output = run(ffmpeg, parameters, false);
+
+			return true;
+		}
+
+		private string run(string exeFile, string parameters, bool outputAtEnd = true)
+		{
+			string output = string.Empty;
+
 			ProcessStartInfo startInfo = new ProcessStartInfo(exeFile, parameters);
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
 			startInfo.CreateNoWindow = true;
 
 			Process proc = Process.Start(startInfo);
-			proc.WaitForExit();
-			string output = proc.StandardError.ReadToEnd();
-			proc.Close();
+
+			if (outputAtEnd)
+			{
+				proc.WaitForExit();
+				output = proc.StandardError.ReadToEnd();
+				proc.Close();
+			}
+			else
+			{
+				proc.BeginErrorReadLine();
+				proc.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+			}
 
 			return output;
+		}
+
+		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+		{
+			if (e.Data == null)
+				return;
+
+			Match m = new Regex(@"time=(\d*).(\d*)").Match(e.Data);
+			if (m.Success)
+			{
+				TimeSpan progress = new TimeSpan(0, 0, 0, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
+				computeProgress(progress);
+			}
+		}
+
+		private void computeProgress(TimeSpan progress)
+		{
+			double percent = progress.TotalMilliseconds / video.Duration.TotalMilliseconds * 100;
+			System.Windows.Forms.MessageBox.Show(percent.ToString());
 		}
 	}
 }
