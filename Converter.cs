@@ -45,16 +45,12 @@ namespace Video_converter
 			string output = run(ffmpeg, parameters);
 
 			// is regular video file
-			Match m = new Regex("Invalid data found when processing input").Match(output);
-
-			if(m.Success)
+			if (output.Contains("Invalid data found when processing input"))
 			{
 				throw new Exception("Neplatný formát vstupního souboru");
 			}
 
-			m = new Regex("could not find codec parameters").Match(output);
-
-			if (m.Success)
+			if (output.Contains("could not find codec parameters"))
 			{
 				throw new Exception("Tento formát videa nelze převést");
 			}
