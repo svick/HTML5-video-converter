@@ -8,6 +8,7 @@ namespace Video_converter
 	public partial class MainWindow : Window
 	{
 		string fileName;
+
 		Converter converter;
 
 		ProgressBar progressBar;
@@ -15,7 +16,6 @@ namespace Video_converter
 		public MainWindow()
 		{
 			converter = new Converter();
-			InitializeComponent();
 
 			resolutions = new CheckBox[] { height480, height720, height1080 };
 			formats = new CheckBox[] { webm, h264, theora };
@@ -24,7 +24,7 @@ namespace Video_converter
 		private void File_Click(object sender, RoutedEventArgs e)
 		{
 			fileName = fileNameTextBox.Text;
-            System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
+			System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
 
 			ofd.Filter = "Video|*.avi;*.mp4;*.wmv;*.ogv;*.webm;*.mkv;*.flv;*.mov;*.3gp|Všechny soubory|*.*";
 
@@ -39,10 +39,28 @@ namespace Video_converter
 			else
 				ofd.InitialDirectory = Path.GetDirectoryName(fileName);
 
-            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				fileName = ofd.FileName;
 				fileNameTextBox.Text = fileName;
+
+				GetVideoInfo(fileName);
+			}
+		}
+
+		private void GetVideoInfo(string FileName)
+		{
+			Video video = new Video(FileName);
+
+			try
+			{
+				converter.VideoInfo(video);
+				ConvertButton.IsEnabled = true;
+			}
+			catch (Exception e)
+			{
+				ConvertButton.IsEnabled = false;
+				System.Windows.Forms.MessageBox.Show(e.Message);
 			}
 		}
 

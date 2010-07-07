@@ -35,7 +35,7 @@
 			<CheckBox Margin="3" Name="height1080" Tag="1080">1080p</CheckBox>
 		</StackPanel>
 		<Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="#F0F0F0" BorderBrush="#DFDFDF" BorderThickness="0,1,0,0" SnapsToDevicePixels="True" Margin="0,8,0,0">
-			<Button Margin="10" HorizontalAlignment="Center" Click="Convert_Click">
+			<Button Margin="10" HorizontalAlignment="Center" Click="Convert_Click" Name="ConvertButton">
 				<TextBlock Margin="20,1" FontSize="13">
 				    Převést
 				</TextBlock>
