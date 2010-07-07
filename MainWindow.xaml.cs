@@ -2,7 +2,6 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 
 namespace Video_converter
 {
@@ -18,14 +17,14 @@ namespace Video_converter
 			converter = new Converter();
 			InitializeComponent();
 
-			resolutions = new System.Windows.Controls.CheckBox[] { height480, height720, height1080 };
-			formats = new System.Windows.Controls.CheckBox[] { webm, h264, theora };
+			resolutions = new CheckBox[] { height480, height720, height1080 };
+			formats = new CheckBox[] { webm, h264, theora };
 		}
 
 		private void File_Click(object sender, RoutedEventArgs e)
 		{
 			fileName = fileNameTextBox.Text;
-			OpenFileDialog ofd = new OpenFileDialog();
+            System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
 
 			ofd.Filter = "Video|*.avi;*.mp4;*.wmv;*.ogv;*.webm;*.mkv;*.flv;*.mov;*.3gp|Všechny soubory|*.*";
 
@@ -47,8 +46,8 @@ namespace Video_converter
 			}
 		}
 
-		System.Windows.Controls.CheckBox[] resolutions;
-		System.Windows.Controls.CheckBox[] formats;
+		CheckBox[] resolutions;
+		CheckBox[] formats;
 
 		private void Convert_Click(object sender, RoutedEventArgs e)
 		{
