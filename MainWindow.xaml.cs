@@ -27,7 +27,7 @@ namespace Video_converter
 			fileName = fileNameTextBox.Text;
 			OpenFileDialog ofd = new OpenFileDialog();
 
-			ofd.Filter = "Všechny soubory|*.*";
+			ofd.Filter = "Video|*.avi;*.mp4;*.wmv;*.ogv;*.webm;*.mkv;*.flv;*.mov;*.3gp|Všechny soubory|*.*";
 
 			ofd.CheckPathExists = true;
 			ofd.CheckFileExists = true;
