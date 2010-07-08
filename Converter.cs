@@ -44,6 +44,15 @@ namespace Video_converter
 	}
 
 	public delegate void ProgressChangedEventHandler(object sender, EventArg<double> e);
+	public class ConvertExitedEventArgs : EventArgs
+	{
+		public readonly bool Success;
+
+		public ConvertExitedEventArgs(bool success)
+		{
+			this.Success = success;
+		}
+	}
 	public delegate void DoneUpdatedEventHandler(ConvertProcess sender, DataReceivedEventArgs e);
 	public delegate void ConvertExitedEventHandler(object sender, EventArgs e);
 
@@ -259,7 +268,11 @@ namespace Video_converter
 
 		void proc_Exited(object sender, EventArgs e)
 		{
-			ConvertExited(this, e);
+			// is video sucessfully converted?
+			string lastLine = output.Trim().Split('\n').Last();
+			bool success = lastLine.StartsWith("video:");
+
+			ConvertExited(this, new ConvertExitedEventArgs(success));
 		}
 
 		public void Stop() 
@@ -279,7 +292,6 @@ namespace Video_converter
 				return;
 
 			output += e.Data + Environment.NewLine;
-			System.Windows.Forms.MessageBox.Show(output);
 
 			Match m = timeRegex.Match(e.Data);
 			if (m.Success)
