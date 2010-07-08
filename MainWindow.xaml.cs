@@ -2,16 +2,17 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Shell;
 
 namespace Video_converter
 {
 	public partial class MainWindow : Window
 	{
 		string fileName;
-
 		Converter converter;
 
 		ProgressBar progressBar;
+		
 
 		public MainWindow()
 		{
@@ -51,6 +52,8 @@ namespace Video_converter
 		{
 			Video video = new Video(FileName);
 			converter = new Converter(video);
+			//converter.ProgressChanged += new ProgressChangedEventHandler(taskBarProgress);
+			converter.ProgressChanged += new ProgressChangedEventHandler(progress);
 
 			try
 			{
@@ -78,6 +81,9 @@ namespace Video_converter
 			progressBar.Cancelled += new System.EventHandler(progressBar_Cancelled);
 
 			Content = progressBar;
+
+			converter.convert("h264", "720p");
+
 			
 
 			/*foreach (CheckBox formatCheckBox in formats)
@@ -92,6 +98,16 @@ namespace Video_converter
 						}
 				}*/
 
+		}
+
+		void progress(object sender, ProgressChangedEventArgs e)
+		{
+			Dispatcher.Invoke((Action)(() =>
+				{
+					TaskbarItemInfo taskbarItemInfo = new TaskbarItemInfo();
+					taskbarItemInfo.ProgressValue = e.Progress;
+					progressBar.bar.Value = e.Progress;
+				}));
 		}
 
 		void progressBar_Cancelled(object sender, EventArgs e)

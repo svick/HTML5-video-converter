@@ -27,8 +27,22 @@ namespace Video_converter
 		}
 	}
 
+	public class ProgressChangedEventArgs : EventArgs
+	{
+		public readonly double Progress;
+
+		public ProgressChangedEventArgs(double Progress)
+    {
+        this.Progress = Progress;
+    }    
+	}
+
+	public delegate void ProgressChangedEventHandler(object sender, ProgressChangedEventArgs e);
+
 	public class Converter
 	{
+		public event ProgressChangedEventHandler ProgressChanged;
+
 		private string ffmpeg { get; set; }
 		private Video video;
 
@@ -114,7 +128,7 @@ namespace Video_converter
 			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(video.Path);
 			outputFilePath += ".webm";
 
-			string parameters = string.Format("-i \"{0}\" -threads 0 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2} \"{3}\"", video.Path, "320k", "1000k", outputFilePath);
+			string parameters = string.Format("-y -i \"{0}\" -threads 0 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2} \"{3}\"", video.Path, "320k", "1000k", outputFilePath);
 
 			string output = run(ffmpeg, parameters, false);
 
@@ -140,30 +154,36 @@ namespace Video_converter
 			}
 			else
 			{
-				proc.BeginErrorReadLine();
-				proc.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+				proc.WaitForExit();
+				//proc.BeginErrorReadLine();
+				//proc.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
 			}
 
 			return output;
 		}
+
+		static Regex time = new Regex(@"time=(\d*).(\d*)", RegexOptions.Compiled);
 
 		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
 		{
 			if (e.Data == null)
 				return;
 
-			Match m = new Regex(@"time=(\d*).(\d*)").Match(e.Data);
+			Match m = time.Match(e.Data);
 			if (m.Success)
 			{
 				TimeSpan progress = new TimeSpan(0, 0, 0, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
 				computeProgress(progress);
 			}
+			return;
 		}
 
 		private void computeProgress(TimeSpan progress)
 		{
 			double percent = progress.TotalMilliseconds / video.Duration.TotalMilliseconds * 100;
-			System.Windows.Forms.MessageBox.Show(percent.ToString());
+			ProgressChangedEventArgs args = new ProgressChangedEventArgs(percent);
+			ProgressChanged(this, args);
+			//System.Windows.Forms.MessageBox.Show(percent.ToString());
 		}
 	}
 }

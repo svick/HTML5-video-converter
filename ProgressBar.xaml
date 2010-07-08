@@ -8,7 +8,7 @@
 			<RowDefinition />
 		</Grid.RowDefinitions>
 		<TextBlock Grid.Row="0" FontSize="18" HorizontalAlignment="Center" Foreground="#003399" Margin="10">Převádění videa</TextBlock>
-		<ProgressBar Grid.Row="1" Height="30" Margin="10" />
+		<ProgressBar Grid.Row="1" Height="30" Margin="10" Name="bar" />
 		<Button Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10" Name="Cancel" Click="Cancel_Click">
 			<TextBlock Margin="20,1" FontSize="13">
 				    Zrušit
