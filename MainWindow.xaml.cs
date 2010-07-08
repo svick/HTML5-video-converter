@@ -103,8 +103,9 @@ namespace Video_converter
 		{
 			Dispatcher.Invoke((Action)(() =>
 				{
-					taskBarItemInfo.ProgressValue = e.Progress / 100;
-					progressBar.bar.Value = e.Progress;
+					taskBarItemInfo.ProgressValue = e.Progress;
+					progressBar.bar.Value = e.Progress * 100;
+					progressBar.textInfo.Text = "Hotovo: " + e.Progress.ToString("P0");
 				}));
 		}
 

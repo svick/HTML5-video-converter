@@ -39,6 +39,7 @@ namespace Video_converter
 
 	public delegate void ProgressChangedEventHandler(object sender, ProgressChangedEventArgs e);
 	public delegate void NewLineEventHandler(object sender, DataReceivedEventArgs e);
+	public delegate void ConvertExitedEventHandler(object sender, EventArgs e);
 
 	public class Converter
 	{
@@ -131,8 +132,14 @@ namespace Video_converter
 			ConvertProcess process = new ConvertProcess(parameters, false);
 			convertProcesses.Add(process, outputFilePath);
 			process.NewLine += new NewLineEventHandler(parseConvertTime);
+			process.ConvertExited += new ConvertExitedEventHandler(process_ConvertExited);
 
 			return true;
+		}
+
+		void process_ConvertExited(object sender, EventArgs e)
+		{
+			System.Windows.Forms.MessageBox.Show("Konec");
 		}
 
 		public void StopAll() 
@@ -154,7 +161,7 @@ namespace Video_converter
 
 		private void computeProgress(TimeSpan progress)
 		{
-			double percent = progress.TotalMilliseconds / video.Duration.TotalMilliseconds * 100;
+			double percent = progress.TotalMilliseconds / video.Duration.TotalMilliseconds;
 			ProgressChangedEventArgs args = new ProgressChangedEventArgs(percent);
 			ProgressChanged(this, args);
 		}
@@ -205,6 +212,7 @@ namespace Video_converter
 	public class ConvertProcess
 	{
 		public event NewLineEventHandler NewLine;
+		public event ConvertExitedEventHandler ConvertExited;
 
 		private string Ffmpeg { get; set; }
 		private Process proc;
@@ -232,6 +240,7 @@ namespace Video_converter
 			startInfo.CreateNoWindow = true;
 
 			proc = Process.Start(startInfo);
+			proc.EnableRaisingEvents = true;
 			
 			if (outputAtEnd)
 			{
@@ -243,15 +252,24 @@ namespace Video_converter
 			{
 				proc.BeginErrorReadLine();
 				proc.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+				proc.Exited += new EventHandler(proc_Exited);
 			}
 
 			return output;
 		}
 
+		void proc_Exited(object sender, EventArgs e)
+		{
+			ConvertExited(sender, e);
+		}
+
 		public void Stop() 
 		{
-			proc.Kill();
-			proc.WaitForExit();
+			if (!proc.HasExited)
+			{
+				proc.Kill();
+				proc.WaitForExit();
+			}
 		}
 
 		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
