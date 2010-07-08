@@ -196,6 +196,7 @@ namespace Video_converter
 				{
 					process.Run();
 					++currentThreads;
+					break;
 				}
 			}
 
