@@ -221,6 +221,7 @@ namespace Video_converter
 		private string Ffmpeg { get; set; }
 		private Process proc;
 		private string parameters;
+		private string output = string.Empty;
 		private bool outputAtEnd;
 
 		public ConvertProcess(string parameters, bool outputAtEnd = true) 
@@ -236,8 +237,6 @@ namespace Video_converter
 
 		public string Run()
 		{
-			string output = string.Empty;
-
 			ProcessStartInfo startInfo = new ProcessStartInfo(Ffmpeg, parameters);
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
@@ -282,6 +281,9 @@ namespace Video_converter
 		{
 			if (e.Data == null)
 				return;
+
+			output += e.Data + Environment.NewLine;
+			System.Windows.Forms.MessageBox.Show(output);
 
 			Match m = timeRegex.Match(e.Data);
 			if (m.Success)
