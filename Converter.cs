@@ -38,7 +38,7 @@ namespace Video_converter
 	}
 
 	public delegate void ProgressChangedEventHandler(object sender, ProgressChangedEventArgs e);
-	public delegate void NewLineEventHandler(object sender, DataReceivedEventArgs e);
+	public delegate void DoneUpdatedEventHandler(ConvertProcess sender, DataReceivedEventArgs e);
 	public delegate void ConvertExitedEventHandler(object sender, EventArgs e);
 
 	public class Converter
@@ -52,6 +52,7 @@ namespace Video_converter
 		{
 			this.video = video;
 			convertProcesses = new ConvertProcesses(2);
+			convertProcesses.ProgressChanged += new ProgressChangedEventHandler(convertProcesses_ProgressChanged);
 		}
 
 		public Video VideoInfo() 
@@ -125,21 +126,15 @@ namespace Video_converter
 		{
 			string outputFilePath = Path.GetDirectoryName(video.Path);
 			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(video.Path);
-			outputFilePath += ".webm";
+			outputFilePath += "_" + size + ".webm";
 
 			string parameters = string.Format("-y -i \"{0}\" -threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2} \"{3}\"", video.Path, "320k", "1000k", outputFilePath);
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
-			convertProcesses.Add(process, outputFilePath);
-			process.NewLine += new NewLineEventHandler(parseConvertTime);
-			process.ConvertExited += new ConvertExitedEventHandler(process_ConvertExited);
+			process.ProccesingFile = outputFilePath;
+			convertProcesses.Add(process);
 
 			return true;
-		}
-
-		void process_ConvertExited(object sender, EventArgs e)
-		{
-			System.Windows.Forms.MessageBox.Show("Konec");
 		}
 
 		public void StopAll() 
@@ -147,71 +142,80 @@ namespace Video_converter
 			convertProcesses.StopAll();
 		}
 
-		static Regex timeRegex = new Regex(@"time=(\d*).(\d*)", RegexOptions.Compiled);
-
-		private void parseConvertTime(object sender, DataReceivedEventArgs e)
+		void convertProcesses_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
-			Match m = timeRegex.Match(e.Data);
-			if (m.Success)
-			{
-				TimeSpan progress = new TimeSpan(0, 0, 0, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
-				computeProgress(progress);
-			}
+			double percent = e.Progress / video.Duration.TotalMilliseconds;
+			ProgressChanged(this, new ProgressChangedEventArgs(percent));
 		}
-
-		private void computeProgress(TimeSpan progress)
-		{
-			double percent = progress.TotalMilliseconds / video.Duration.TotalMilliseconds;
-			ProgressChangedEventArgs args = new ProgressChangedEventArgs(percent);
-			ProgressChanged(this, args);
-		}
-	}
-
-	public class ProcessDescription
-	{
-		public ConvertProcess Process;
-		public string File;
 	}
 
 	public class ConvertProcesses
 	{
+		public event ProgressChangedEventHandler ProgressChanged;
+
 		private int maxThreads;
 		private int currentThreads;
-		private List<ProcessDescription> processes = new List<ProcessDescription>(4);
+		private List<ConvertProcess> processes = new List<ConvertProcess>(4);
 
 		public ConvertProcesses(int maxThreads)
 		{
 			this.maxThreads = maxThreads;
 		}
 
-		public void Add(ConvertProcess process, string file)
+		public void Add(ConvertProcess process)
 		{
-			processes.Add(new ProcessDescription(){ Process = process, File = file });
+			processes.Add(process);
+			process.DoneUpdated += new DoneUpdatedEventHandler(process_DoneUpdated);
+			process.ConvertExited += new ConvertExitedEventHandler(process_ConvertExited);
 			process.Run();
 		}
 
-		public void Stop(ProcessDescription processDescription) 
+		void process_DoneUpdated(ConvertProcess sender, DataReceivedEventArgs e)
 		{
-			processDescription.Process.Stop();
+			double avg = 0;
+			int count = 0;
 
-			if (File.Exists(processDescription.File))
+			foreach (ConvertProcess process in processes)
 			{
-				File.Delete(processDescription.File);
+				avg += process.Done.TotalMilliseconds;
+				count++;
+			}
+
+			avg /= count;
+
+			ProgressChanged(this,	new ProgressChangedEventArgs(avg));
+		}
+
+		public void Stop(ConvertProcess process) 
+		{
+			process.Stop();
+
+			if (File.Exists(process.ProccesingFile))
+			{
+				File.Delete(process.ProccesingFile);
 			}
 		}
 
 		public void StopAll() 
 		{
-			foreach (ProcessDescription process in processes)
+			foreach (ConvertProcess process in processes)
 			{
 				Stop(process);
 			}
+		}
+
+		void process_ConvertExited(object sender, EventArgs e)
+		{
+			System.Windows.Forms.MessageBox.Show("Konec");
 		}
 	}
 
 	public class ConvertProcess
 	{
-		public event NewLineEventHandler NewLine;
+		public string ProccesingFile;
+		public TimeSpan Done;
+
+		public event DoneUpdatedEventHandler DoneUpdated;
 		public event ConvertExitedEventHandler ConvertExited;
 
 		private string Ffmpeg { get; set; }
@@ -260,7 +264,7 @@ namespace Video_converter
 
 		void proc_Exited(object sender, EventArgs e)
 		{
-			ConvertExited(sender, e);
+			ConvertExited(this, e);
 		}
 
 		public void Stop() 
@@ -272,12 +276,20 @@ namespace Video_converter
 			}
 		}
 
+		static Regex timeRegex = new Regex(@"time=(\d*).(\d*)", RegexOptions.Compiled);
+
 		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
 		{
 			if (e.Data == null)
 				return;
 
-			NewLine(this, e);
+			Match m = timeRegex.Match(e.Data);
+			if (m.Success)
+			{
+				Done = new TimeSpan(0, 0, 0, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
+			}
+
+			DoneUpdated(this, e);
 		}
 	}
 }
