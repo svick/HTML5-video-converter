@@ -50,17 +50,21 @@ namespace Video_converter
 	{
 		public event ProgressChangedEventHandler ProgressChanged;
 
-		private Video video;
+		public Video Video
+		{
+			get;
+			protected set;
+		}
 		private List<ActualProcess> actualProcesses = new List<ActualProcess>(4);
 
 		public Converter(Video video)
 		{
-			this.video = video;
+			this.Video = video;
 		}
 
 		public Video VideoInfo() 
 		{
-			string parameters = string.Format("-i \"{0}\"", video.Path);
+			string parameters = string.Format("-i \"{0}\"", Video.Path);
 
 			string output = new ConvertProcess(parameters).Run();
 
@@ -81,9 +85,9 @@ namespace Video_converter
 
 			if (m.Success)
 			{
-				video.Format = m.Groups[1].Value;
-				video.Width = int.Parse(m.Groups[2].Value);
-				video.Height = int.Parse(m.Groups[3].Value);
+				Video.Format = m.Groups[1].Value;
+				Video.Width = int.Parse(m.Groups[2].Value);
+				Video.Height = int.Parse(m.Groups[3].Value);
 			}
 
 			// Audio info
@@ -91,8 +95,8 @@ namespace Video_converter
 
 			if (m.Success)
 			{
-				video.AudioFormat = m.Groups[1].Value;
-				video.AudioBitRate = int.Parse(m.Groups[2].Value);
+				Video.AudioFormat = m.Groups[1].Value;
+				Video.AudioBitRate = int.Parse(m.Groups[2].Value);
 			}
 
 			// Duration
@@ -100,10 +104,10 @@ namespace Video_converter
 
 			if (m.Success)
 			{
-				video.Duration = TimeSpan.Parse(m.Groups[1].Value);
+				Video.Duration = TimeSpan.Parse(m.Groups[1].Value);
 			}
 
-			return video;
+			return Video;
 		}
 
 		public string PreviewImage()
@@ -111,9 +115,9 @@ namespace Video_converter
 			string imageFileName = System.Guid.NewGuid().ToString() + ".png";
 
 			int height = 100;
-			int width = video.Width / (video.Height / height);
+			int width = Video.Width / (Video.Height / height);
 
-			string parameters = string.Format("-i \"{0}\" -an -vframes 1 -s {1}x{2} -ss 00:00:10 -f image2 {3}", video.Path, width, height, imageFileName);
+			string parameters = string.Format("-i \"{0}\" -an -vframes 1 -s {1}x{2} -ss 00:00:10 -f image2 {3}", Video.Path, width, height, imageFileName);
 
 			string output = new ConvertProcess(parameters).Run();
 
@@ -127,11 +131,11 @@ namespace Video_converter
 
 		public bool Convert(string format, string size)
 		{
-			string outputFilePath = Path.GetDirectoryName(video.Path);
-			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(video.Path);
+			string outputFilePath = Path.GetDirectoryName(Video.Path);
+			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(Video.Path);
 			outputFilePath += ".webm";
 
-			string parameters = string.Format("-y -i \"{0}\" -threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2} \"{3}\"", video.Path, "320k", "1000k", outputFilePath);
+			string parameters = string.Format("-y -i \"{0}\" -threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2} \"{3}\"", Video.Path, "320k", "1000k", outputFilePath);
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
 
@@ -167,7 +171,7 @@ namespace Video_converter
 
 		private void computeProgress(TimeSpan progress)
 		{
-			double percent = progress.TotalMilliseconds / video.Duration.TotalMilliseconds * 100;
+			double percent = progress.TotalMilliseconds / Video.Duration.TotalMilliseconds * 100;
 			ProgressChangedEventArgs args = new ProgressChangedEventArgs(percent);
 			ProgressChanged(this, args);
 		}
