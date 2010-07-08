@@ -5,6 +5,7 @@ using Video_converter.Properties;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Text;
 
 namespace Video_converter
 {
@@ -46,10 +47,12 @@ namespace Video_converter
 	public delegate void ProgressChangedEventHandler(object sender, EventArg<double> e);
 	public delegate void DoneUpdatedEventHandler(ConvertProcess sender, DataReceivedEventArgs e);
 	public delegate void ConvertExitedEventHandler(object sender, EventArg<bool> e);
+	public delegate void AllFinishedEventHander(object sender, EventArgs e);
 
 	public class Converter
 	{
 		public event ProgressChangedEventHandler ProgressChanged;
+		public event AllFinishedEventHander AllFinished;
 
 		private Video video;
 		private ConvertProcesses convertProcesses;
@@ -59,6 +62,12 @@ namespace Video_converter
 			this.video = video;
 			convertProcesses = new ConvertProcesses(2);
 			convertProcesses.ProgressChanged += new ProgressChangedEventHandler(convertProcesses_ProgressChanged);
+			convertProcesses.AllFinished += new AllFinishedEventHander(convertProcesses_AllFinished);
+		}
+
+		void convertProcesses_AllFinished(object sender, EventArgs e)
+		{
+			AllFinished(this, e);
 		}
 
 		public Video VideoInfo() 
@@ -158,6 +167,7 @@ namespace Video_converter
 	public class ConvertProcesses
 	{
 		public event ProgressChangedEventHandler ProgressChanged;
+		public event AllFinishedEventHander AllFinished;
 
 		private int maxThreads;
 		private int currentThreads;
@@ -202,7 +212,8 @@ namespace Video_converter
 
 			if (currentThreads == 0)
 			{
-				System.Windows.Forms.MessageBox.Show("Total Konec");
+				AllFinished(this, new EventArgs());
+				//System.Windows.Forms.MessageBox.Show("Total Konec");
 			}
 		}
 
@@ -231,6 +242,7 @@ namespace Video_converter
 		public TimeSpan Done;
 		public enum ProcessStatus { Waiting, Running, Finished, Failed, Stopped }
 		public ProcessStatus Status;
+		public StringBuilder ResultBuilder = new StringBuilder();
 
 		public event DoneUpdatedEventHandler DoneUpdated;
 		public event ConvertExitedEventHandler ConvertExited;
@@ -238,8 +250,8 @@ namespace Video_converter
 		private string Ffmpeg { get; set; }
 		private Process proc;
 		private string parameters;
-		private string output = string.Empty;
 		private bool outputAtEnd;
+		
 
 		public ConvertProcess(string parameters, bool outputAtEnd = true) 
 		{
@@ -255,6 +267,8 @@ namespace Video_converter
 
 		public string Run()
 		{
+			string output = string.Empty;
+
 			ProcessStartInfo startInfo = new ProcessStartInfo(Ffmpeg, parameters);
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
@@ -285,7 +299,7 @@ namespace Video_converter
 		void proc_Exited(object sender, EventArgs e)
 		{
 			// is video sucessfully converted?
-			string lastLine = output.Trim().Split('\n').Last();
+			string lastLine = ResultBuilder.ToString().Trim().Split('\n').Last();
 			bool success = lastLine.StartsWith("video:");
 
 			if (success)
@@ -317,7 +331,7 @@ namespace Video_converter
 			if (e.Data == null)
 				return;
 
-			output += e.Data + Environment.NewLine;
+			ResultBuilder.AppendLine(e.Data);
 
 			Match m = timeRegex.Match(e.Data);
 			if (m.Success)

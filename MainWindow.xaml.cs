@@ -52,6 +52,7 @@ namespace Video_converter
 			Video video = new Video(FileName);
 			converter = new Converter(video);
 			converter.ProgressChanged += new ProgressChangedEventHandler(progress);
+			converter.AllFinished += new AllFinishedEventHander(converter_AllFinished);
 
 			try
 			{
@@ -83,8 +84,8 @@ namespace Video_converter
 			taskBarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
 
 			converter.Convert("h264", "720p");
-			converter.Convert("h264", "480p");
-			converter.Convert("h264", "320p");
+			/*converter.Convert("h264", "480p");
+			converter.Convert("h264", "320p");*/
 
 			
 
@@ -110,6 +111,16 @@ namespace Video_converter
 					progressBar.bar.Value = e.Data * 100;
 					progressBar.textInfo.Text = "Hotovo: " + e.Data.ToString();
 				}));
+		}
+
+		void converter_AllFinished(object sender, EventArgs e)
+		{
+			Dispatcher.Invoke((Action)(() =>
+			{
+				progressBar.bar.Value = 100;
+				progressBar.textInfo.Text = "Hotovo: 100 %";
+				taskBarItemInfo.ProgressState = TaskbarItemProgressState.None;
+			}));
 		}
 
 		void progressBar_Cancelled(object sender, EventArgs e)
