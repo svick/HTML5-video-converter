@@ -101,13 +101,13 @@ namespace Video_converter
 
 		}
 
-		void progress(object sender, ProgressChangedEventArgs e)
+		void progress(object sender, EventArg<double> e)
 		{
 			Dispatcher.Invoke((Action)(() =>
 				{
-					taskBarItemInfo.ProgressValue = e.Progress;
-					progressBar.bar.Value = e.Progress * 100;
-					progressBar.textInfo.Text = "Hotovo: " + e.Progress.ToString("P0");
+					taskBarItemInfo.ProgressValue = e.Data;
+					progressBar.bar.Value = e.Data * 100;
+					progressBar.textInfo.Text = "Hotovo: " + e.Data.ToString("P0");
 				}));
 		}
 

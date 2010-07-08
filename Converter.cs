@@ -28,17 +28,22 @@ namespace Video_converter
 		}
 	}
 
-	public class ProgressChangedEventArgs : EventArgs
+	public class EventArg<T> : EventArgs
 	{
-		public readonly double Progress;
+		private readonly T eventData;
 
-		public ProgressChangedEventArgs(double Progress)
-    {
-        this.Progress = Progress;
-    }    
+		public EventArg(T data)
+		{
+			eventData = data;
+		}
+
+		public T Data
+		{
+			get { return eventData; }
+		}
 	}
 
-	public delegate void ProgressChangedEventHandler(object sender, ProgressChangedEventArgs e);
+	public delegate void ProgressChangedEventHandler(object sender, EventArg<double> e);
 	public delegate void DoneUpdatedEventHandler(ConvertProcess sender, DataReceivedEventArgs e);
 	public delegate void ConvertExitedEventHandler(object sender, EventArgs e);
 
@@ -143,10 +148,10 @@ namespace Video_converter
 			convertProcesses.StopAll();
 		}
 
-		void convertProcesses_ProgressChanged(object sender, ProgressChangedEventArgs e)
+		void convertProcesses_ProgressChanged(object sender, EventArg<double> e)
 		{
-			double percent = e.Progress / video.Duration.TotalMilliseconds;
-			ProgressChanged(this, new ProgressChangedEventArgs(percent));
+			double percent = e.Data / video.Duration.TotalMilliseconds;
+			ProgressChanged(this, new EventArg<double>(percent));
 		}
 	}
 
@@ -174,7 +179,7 @@ namespace Video_converter
 		void process_DoneUpdated(ConvertProcess sender, DataReceivedEventArgs e)
 		{
 			double avg = processes.Select(p => p.Done.TotalMilliseconds).Average();
-			ProgressChanged(this,	new ProgressChangedEventArgs(avg));
+			ProgressChanged(this,	new EventArg<double>(avg));
 		}
 
 		public void Stop(ConvertProcess process) 
