@@ -9,14 +9,10 @@ namespace Video_converter
 	public partial class MainWindow : Window
 	{
 		string fileName;
+		Converter converter;
 		ProgressBar progressBar;
 		object mainContent;
-
-		public Converter Converter
-		{
-			get;
-			protected set;
-		}
+		
 
 		public MainWindow()
 		{
@@ -54,12 +50,12 @@ namespace Video_converter
 		private void GetVideoInfo(string FileName)
 		{
 			Video video = new Video(FileName);
-			Converter = new Converter(video);
-			Converter.ProgressChanged += new ProgressChangedEventHandler(progress);
+			converter = new Converter(video);
+			converter.ProgressChanged += new ProgressChangedEventHandler(progress);
 
 			try
 			{
-				Converter.VideoInfo();
+				converter.VideoInfo();
 				ConvertButton.IsEnabled = true;
 
 				height1080.IsEnabled = (video.Height >= 1080);
@@ -85,7 +81,7 @@ namespace Video_converter
 			Content = progressBar;
 
 			taskBarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
-			Converter.Convert("h264", "720p");
+			converter.Convert("h264", "720p");
 
 			
 
@@ -115,7 +111,12 @@ namespace Video_converter
 		void progressBar_Cancelled(object sender, EventArgs e)
 		{
 			Content = mainContent;
-			Converter.StopAll();
+			converter.StopAll();
+		}
+
+		private void Window_Closed(object sender, EventArgs e)
+		{
+			converter.StopAll();
 		}
 	}
 }
