@@ -4,6 +4,7 @@ using System.IO;
 using Video_converter.Properties;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Video_converter
 {
@@ -172,17 +173,7 @@ namespace Video_converter
 
 		void process_DoneUpdated(ConvertProcess sender, DataReceivedEventArgs e)
 		{
-			double avg = 0;
-			int count = 0;
-
-			foreach (ConvertProcess process in processes)
-			{
-				avg += process.Done.TotalMilliseconds;
-				count++;
-			}
-
-			avg /= count;
-
+			double avg = processes.Select(p => p.Done.TotalMilliseconds).Average();
 			ProgressChanged(this,	new ProgressChangedEventArgs(avg));
 		}
 
