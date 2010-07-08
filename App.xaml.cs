@@ -6,7 +6,9 @@ namespace Video_converter
 	{
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{
-			((MainWindow)MainWindow).Converter.StopAll();
+			Converter converter = ((MainWindow)MainWindow).Converter;
+			if (converter != null)
+				converter.StopAll();
 		}
 	}
 }
