@@ -40,22 +40,17 @@ namespace Video_converter
 	public delegate void ProgressChangedEventHandler(object sender, ProgressChangedEventArgs e);
 	public delegate void NewLineEventHandler(object sender, DataReceivedEventArgs e);
 
-	public class ActualProcess 
-	{
-		public string File;
-		public ConvertProcess Process;
-	}
-
 	public class Converter
 	{
 		public event ProgressChangedEventHandler ProgressChanged;
 
 		private Video video;
-		private List<ActualProcess> actualProcesses = new List<ActualProcess>(4);
+		private ConvertProcesses convertProcesses;
 
 		public Converter(Video video)
 		{
 			this.video = video;
+			convertProcesses = new ConvertProcesses(2);
 		}
 
 		public Video VideoInfo() 
@@ -134,10 +129,7 @@ namespace Video_converter
 			string parameters = string.Format("-y -i \"{0}\" -threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2} \"{3}\"", video.Path, "320k", "1000k", outputFilePath);
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
-
-			actualProcesses.Add(new ActualProcess { File = outputFilePath, Process = process });
-
-			process.Run();
+			convertProcesses.Add(process, outputFilePath);
 			process.NewLine += new NewLineEventHandler(parseConvertTime);
 
 			return true;
@@ -145,12 +137,7 @@ namespace Video_converter
 
 		public void StopAll() 
 		{
-			foreach (ActualProcess proc in actualProcesses)
-			{
-				proc.Process.Stop();
-				if (File.Exists(proc.File))
-					File.Delete(proc.File);
-			}
+			convertProcesses.StopAll();
 		}
 
 		static Regex timeRegex = new Regex(@"time=(\d*).(\d*)", RegexOptions.Compiled);
@@ -173,14 +160,45 @@ namespace Video_converter
 		}
 	}
 
+	public class ProcessDescription
+	{
+		public ConvertProcess Process;
+		public string File;
+	}
+
 	public class ConvertProcesses
 	{
 		private int maxThreads;
 		private int currentThreads;
+		private List<ProcessDescription> processes = new List<ProcessDescription>(4);
 
 		public ConvertProcesses(int maxThreads)
 		{
 			this.maxThreads = maxThreads;
+		}
+
+		public void Add(ConvertProcess process, string file)
+		{
+			processes.Add(new ProcessDescription(){ Process = process, File = file });
+			process.Run();
+		}
+
+		public void Stop(ProcessDescription processDescription) 
+		{
+			processDescription.Process.Stop();
+
+			if (File.Exists(processDescription.File))
+			{
+				File.Delete(processDescription.File);
+			}
+		}
+
+		public void StopAll() 
+		{
+			foreach (ProcessDescription process in processes)
+			{
+				Stop(process);
+			}
 		}
 	}
 
@@ -201,7 +219,7 @@ namespace Video_converter
 				throw new Exception("Soubor ffmpeg.exe nebyl nalezen");
 
 			this.parameters = parameters;
-			this.outputAtEnd = true;
+			this.outputAtEnd = outputAtEnd;
 		}
 
 		public string Run()
