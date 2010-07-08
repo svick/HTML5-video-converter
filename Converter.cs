@@ -44,17 +44,8 @@ namespace Video_converter
 	}
 
 	public delegate void ProgressChangedEventHandler(object sender, EventArg<double> e);
-	public class ConvertExitedEventArgs : EventArgs
-	{
-		public readonly bool Success;
-
-		public ConvertExitedEventArgs(bool success)
-		{
-			this.Success = success;
-		}
-	}
 	public delegate void DoneUpdatedEventHandler(ConvertProcess sender, DataReceivedEventArgs e);
-	public delegate void ConvertExitedEventHandler(object sender, EventArgs e);
+	public delegate void ConvertExitedEventHandler(object sender, EventArg<bool> e);
 
 	public class Converter
 	{
@@ -272,7 +263,7 @@ namespace Video_converter
 			string lastLine = output.Trim().Split('\n').Last();
 			bool success = lastLine.StartsWith("video:");
 
-			ConvertExited(this, new ConvertExitedEventArgs(success));
+			ConvertExited(this, new EventArg<bool>(success));
 		}
 
 		public void Stop() 
