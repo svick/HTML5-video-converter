@@ -173,13 +173,36 @@ namespace Video_converter
 			processes.Add(process);
 			process.DoneUpdated += new DoneUpdatedEventHandler(process_DoneUpdated);
 			process.ConvertExited += new ConvertExitedEventHandler(process_ConvertExited);
-			process.Run();
+
+			if (currentThreads < maxThreads)
+			{
+				++currentThreads;
+				process.Run();
+			}
 		}
 
 		void process_DoneUpdated(ConvertProcess sender, DataReceivedEventArgs e)
 		{
 			double avg = processes.Select(p => p.Done.TotalMilliseconds).Average();
 			ProgressChanged(this,	new EventArg<double>(avg));
+		}
+
+		void process_ConvertExited(object sender, EventArg<bool> e)
+		{
+			--currentThreads;
+			foreach (ConvertProcess process in processes)
+			{
+				if (process.Status == ConvertProcess.ProcessStatus.Waiting)
+				{
+					process.Run();
+					++currentThreads;
+				}
+			}
+
+			if (currentThreads == 0)
+			{
+				System.Windows.Forms.MessageBox.Show("Total Konec");
+			}
 		}
 
 		public void Stop(ConvertProcess process) 
@@ -199,17 +222,14 @@ namespace Video_converter
 				Stop(process);
 			}
 		}
-
-		void process_ConvertExited(object sender, EventArgs e)
-		{
-			System.Windows.Forms.MessageBox.Show("Konec");
-		}
 	}
 
 	public class ConvertProcess
 	{
 		public string ProccesingFile;
 		public TimeSpan Done;
+		public enum ProcessStatus { Waiting, Running, Finished, Failed, Stopped }
+		public ProcessStatus Status;
 
 		public event DoneUpdatedEventHandler DoneUpdated;
 		public event ConvertExitedEventHandler ConvertExited;
@@ -223,12 +243,13 @@ namespace Video_converter
 		public ConvertProcess(string parameters, bool outputAtEnd = true) 
 		{
 			Ffmpeg = Settings.Default.ExeLocation;
-
+			
 			if (!File.Exists(Ffmpeg))
 				throw new Exception("Soubor ffmpeg.exe nebyl nalezen");
 
 			this.parameters = parameters;
 			this.outputAtEnd = outputAtEnd;
+			Status = ProcessStatus.Waiting;
 		}
 
 		public string Run()
@@ -240,12 +261,15 @@ namespace Video_converter
 
 			proc = Process.Start(startInfo);
 			proc.EnableRaisingEvents = true;
+
+			Status = ProcessStatus.Running;
 			
 			if (outputAtEnd)
 			{
 				proc.WaitForExit();
 				output = proc.StandardError.ReadToEnd();
 				proc.Close();
+				Status = ProcessStatus.Finished;
 			}
 			else
 			{
@@ -263,6 +287,15 @@ namespace Video_converter
 			string lastLine = output.Trim().Split('\n').Last();
 			bool success = lastLine.StartsWith("video:");
 
+			if (success)
+			{
+				Status = ProcessStatus.Finished;
+			}
+			else if (Status != ProcessStatus.Stopped)
+			{
+				Status = ProcessStatus.Failed;
+			}
+
 			ConvertExited(this, new EventArg<bool>(success));
 		}
 
@@ -272,6 +305,7 @@ namespace Video_converter
 			{
 				proc.Kill();
 				proc.WaitForExit();
+				Status = ProcessStatus.Stopped;
 			}
 		}
 

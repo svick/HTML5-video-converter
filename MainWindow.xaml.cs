@@ -84,6 +84,7 @@ namespace Video_converter
 
 			converter.Convert("h264", "720p");
 			converter.Convert("h264", "480p");
+			converter.Convert("h264", "320p");
 
 			
 
@@ -107,7 +108,7 @@ namespace Video_converter
 				{
 					taskBarItemInfo.ProgressValue = e.Data;
 					progressBar.bar.Value = e.Data * 100;
-					progressBar.textInfo.Text = "Hotovo: " + e.Data.ToString("P0");
+					progressBar.textInfo.Text = "Hotovo: " + e.Data.ToString();
 				}));
 		}
 
