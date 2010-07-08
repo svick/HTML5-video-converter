@@ -38,28 +38,32 @@ namespace Video_converter
 	}
 
 	public delegate void ProgressChangedEventHandler(object sender, ProgressChangedEventArgs e);
+	public delegate void NewLineEventHandler(object sender, DataReceivedEventArgs e);
+
+	public class ActualProcess 
+	{
+		public string File;
+		public ConvertProcess Process;
+	}
 
 	public class Converter
 	{
 		public event ProgressChangedEventHandler ProgressChanged;
 
-		private string ffmpeg { get; set; }
 		private Video video;
+		private List<ActualProcess> actualProcesses = new List<ActualProcess>(4);
 
 		public Converter(Video video)
 		{
 			this.video = video;
-			ffmpeg = Settings.Default.ExeLocation;
-
-			if (!File.Exists(ffmpeg))
-				throw new Exception("Soubor ffmpeg.exe nebyl nalezen");
 		}
 
 		public Video VideoInfo() 
 		{
 			string parameters = string.Format("-i \"{0}\"", video.Path);
 
-			string output = run(ffmpeg, parameters, true);
+			ConvertProcess process = new ConvertProcess();
+			string output = process.Run(parameters, true);
 
 			// is regular video file
 			if (output.Contains("Invalid data found when processing input"))
@@ -103,7 +107,7 @@ namespace Video_converter
 			return video;
 		}
 
-		public string previewImage()
+		public string PreviewImage()
 		{
 			string imageFileName = System.Guid.NewGuid().ToString() + ".png";
 
@@ -112,7 +116,8 @@ namespace Video_converter
 
 			string parameters = string.Format("-i \"{0}\" -an -vframes 1 -s {1}x{2} -ss 00:00:10 -f image2 {3}", video.Path, width, height, imageFileName);
 			
-			string output = run(ffmpeg, parameters);
+			ConvertProcess process = new ConvertProcess();
+			string output = process.Run(parameters);
 
 			if (File.Exists(imageFileName))
 			{
@@ -122,7 +127,7 @@ namespace Video_converter
 			return string.Empty;
 		}
 
-		public bool convert(string format, string size)
+		public bool Convert(string format, string size)
 		{
 			string outputFilePath = Path.GetDirectoryName(video.Path);
 			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(video.Path);
@@ -130,51 +135,37 @@ namespace Video_converter
 
 			string parameters = string.Format("-y -i \"{0}\" -threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2} \"{3}\"", video.Path, "320k", "1000k", outputFilePath);
 
-			string output = run(ffmpeg, parameters, false);
+			ConvertProcess process = new ConvertProcess();
+
+			actualProcesses.Add(new ActualProcess { File = outputFilePath, Process = process });
+
+			process.Run(parameters, false);
+			process.NewLine += new NewLineEventHandler(parseConvertTime);
 
 			return true;
 		}
 
-		private string run(string exeFile, string parameters, bool outputAtEnd = true)
+		public void StopAll() 
 		{
-			string output = string.Empty;
-
-			ProcessStartInfo startInfo = new ProcessStartInfo(exeFile, parameters);
-			startInfo.RedirectStandardError = true;
-			startInfo.UseShellExecute = false;
-			startInfo.CreateNoWindow = true;
-
-			Process proc = Process.Start(startInfo);
-
-			if (outputAtEnd)
+			foreach (ActualProcess proc in actualProcesses)
 			{
-				proc.WaitForExit();
-				output = proc.StandardError.ReadToEnd();
-				proc.Close();
-			}
-			else
-			{
-				proc.BeginErrorReadLine();
-				proc.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+				proc.Process.Stop();
+				if (File.Exists(proc.File))
+					File.Delete(proc.File);
 			}
 
-			return output;
 		}
 
 		static Regex timeRegex = new Regex(@"time=(\d*).(\d*)", RegexOptions.Compiled);
 
-		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+		private void parseConvertTime(object sender, DataReceivedEventArgs e)
 		{
-			if (e.Data == null)
-				return;
-
 			Match m = timeRegex.Match(e.Data);
 			if (m.Success)
 			{
 				TimeSpan progress = new TimeSpan(0, 0, 0, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
 				computeProgress(progress);
 			}
-			return;
 		}
 
 		private void computeProgress(TimeSpan progress)
@@ -182,6 +173,63 @@ namespace Video_converter
 			double percent = progress.TotalMilliseconds / video.Duration.TotalMilliseconds * 100;
 			ProgressChangedEventArgs args = new ProgressChangedEventArgs(percent);
 			ProgressChanged(this, args);
+		}
+	}
+
+	public class ConvertProcess
+	{
+		public event NewLineEventHandler NewLine;
+
+		private string Ffmpeg { get; set; }
+		//private string OutputString;
+		Process Proc;
+
+		public ConvertProcess() 
+		{
+			Ffmpeg = Settings.Default.ExeLocation;
+
+			if (!File.Exists(Ffmpeg))
+				throw new Exception("Soubor ffmpeg.exe nebyl nalezen");
+		}
+
+		public string Run(string parameters, bool outputAtEnd = true)
+		{
+			string output = string.Empty;
+
+			ProcessStartInfo startInfo = new ProcessStartInfo(Ffmpeg, parameters);
+			startInfo.RedirectStandardError = true;
+			startInfo.UseShellExecute = false;
+			startInfo.CreateNoWindow = true;
+
+			Proc = Process.Start(startInfo);
+			
+			if (outputAtEnd)
+			{
+				Proc.WaitForExit();
+				output = Proc.StandardError.ReadToEnd();
+				Proc.Close();
+			}
+			else
+			{
+				Proc.BeginErrorReadLine();
+				Proc.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+			}
+
+			return output;
+		}
+
+		public void Stop() 
+		{
+			Proc.Kill();
+			Proc.WaitForExit();
+		}
+
+		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+		{
+			if (e.Data == null)
+				return;
+
+			NewLine(this, e);
 		}
 	}
 }

@@ -18,10 +18,6 @@ namespace Video_converter
 		{
 			resolutions = new CheckBox[] { height480, height720, height1080 };
 			formats = new CheckBox[] { webm, h264, theora };
-
-			//TaskbarItemInfo taskbarItemInfo = new TaskbarItemInfo();
-			//taskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
-			//taskbarItemInfo.ProgressValue = 0.30;
 		}
 
 		private void File_Click(object sender, RoutedEventArgs e)
@@ -46,7 +42,6 @@ namespace Video_converter
 			{
 				fileName = ofd.FileName;
 				fileNameTextBox.Text = fileName;
-
 				
 				GetVideoInfo(fileName);
 			}
@@ -86,7 +81,7 @@ namespace Video_converter
 			Content = progressBar;
 
 			taskBarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
-			converter.convert("h264", "720p");
+			converter.Convert("h264", "720p");
 
 			
 
@@ -116,11 +111,12 @@ namespace Video_converter
 		void progressBar_Cancelled(object sender, EventArgs e)
 		{
 			Content = mainContent;
+			converter.StopAll();
 		}
 
 		private void Window_Closed(object sender, EventArgs e)
 		{
-
+			converter.StopAll();
 		}
 	}
 }
