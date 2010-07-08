@@ -10,14 +10,18 @@ namespace Video_converter
 	{
 		string fileName;
 		Converter converter;
-
 		ProgressBar progressBar;
+		object mainContent;
 		
 
 		public MainWindow()
 		{
 			resolutions = new CheckBox[] { height480, height720, height1080 };
 			formats = new CheckBox[] { webm, h264, theora };
+
+			//TaskbarItemInfo taskbarItemInfo = new TaskbarItemInfo();
+			//taskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+			//taskbarItemInfo.ProgressValue = 0.30;
 		}
 
 		private void File_Click(object sender, RoutedEventArgs e)
@@ -52,7 +56,6 @@ namespace Video_converter
 		{
 			Video video = new Video(FileName);
 			converter = new Converter(video);
-			//converter.ProgressChanged += new ProgressChangedEventHandler(taskBarProgress);
 			converter.ProgressChanged += new ProgressChangedEventHandler(progress);
 
 			try
@@ -79,9 +82,10 @@ namespace Video_converter
 			progressBar = new ProgressBar();
 
 			progressBar.Cancelled += new System.EventHandler(progressBar_Cancelled);
-
+			mainContent = Content;
 			Content = progressBar;
 
+			taskBarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
 			converter.convert("h264", "720p");
 
 			
@@ -104,14 +108,19 @@ namespace Video_converter
 		{
 			Dispatcher.Invoke((Action)(() =>
 				{
-					TaskbarItemInfo taskbarItemInfo = new TaskbarItemInfo();
-					taskbarItemInfo.ProgressValue = e.Progress;
+					taskBarItemInfo.ProgressValue = e.Progress / 100;
 					progressBar.bar.Value = e.Progress;
 				}));
 		}
 
 		void progressBar_Cancelled(object sender, EventArgs e)
 		{
+			Content = mainContent;
+		}
+
+		private void Window_Closed(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

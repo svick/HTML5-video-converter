@@ -2,7 +2,13 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:local="clr-namespace:Video_converter"
-	Title="HTML 5" Width="240" Height="250" ResizeMode="CanMinimize" Background="{StaticResource gradient}">
+	Title="HTML 5" Width="240" Height="250" ResizeMode="CanMinimize" Background="{StaticResource gradient}" Closed="Window_Closed">
+
+	<Window.TaskbarItemInfo>
+		<TaskbarItemInfo x:Name="taskBarItemInfo"> 
+		</TaskbarItemInfo>
+	</Window.TaskbarItemInfo>
+	
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />

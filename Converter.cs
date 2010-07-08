@@ -128,7 +128,7 @@ namespace Video_converter
 			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(video.Path);
 			outputFilePath += ".webm";
 
-			string parameters = string.Format("-y -i \"{0}\" -threads 0 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2} \"{3}\"", video.Path, "320k", "1000k", outputFilePath);
+			string parameters = string.Format("-y -i \"{0}\" -threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2} \"{3}\"", video.Path, "320k", "1000k", outputFilePath);
 
 			string output = run(ffmpeg, parameters, false);
 
@@ -154,22 +154,21 @@ namespace Video_converter
 			}
 			else
 			{
-				proc.WaitForExit();
-				//proc.BeginErrorReadLine();
-				//proc.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+				proc.BeginErrorReadLine();
+				proc.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
 			}
 
 			return output;
 		}
 
-		static Regex time = new Regex(@"time=(\d*).(\d*)", RegexOptions.Compiled);
+		static Regex timeRegex = new Regex(@"time=(\d*).(\d*)", RegexOptions.Compiled);
 
 		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
 		{
 			if (e.Data == null)
 				return;
 
-			Match m = time.Match(e.Data);
+			Match m = timeRegex.Match(e.Data);
 			if (m.Success)
 			{
 				TimeSpan progress = new TimeSpan(0, 0, 0, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
@@ -183,7 +182,6 @@ namespace Video_converter
 			double percent = progress.TotalMilliseconds / video.Duration.TotalMilliseconds * 100;
 			ProgressChangedEventArgs args = new ProgressChangedEventArgs(percent);
 			ProgressChanged(this, args);
-			//System.Windows.Forms.MessageBox.Show(percent.ToString());
 		}
 	}
 }
