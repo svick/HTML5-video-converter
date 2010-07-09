@@ -100,12 +100,14 @@ namespace Video_converter
 			}
 
 			// Audio info
-			m = Regex.Match(output, @"Audio: ([^,]*), [^,]*, [^,]*, [^,]*, (\d*)");
+			m = Regex.Match(output, @"Audio: ([^,]*), [^,]*, [^,]*, [^,]*(?:, (\d*))?");
 
 			if (m.Success)
 			{
 				video.AudioFormat = m.Groups[1].Value;
-				video.AudioBitRate = int.Parse(m.Groups[2].Value);
+
+				if(m.Groups[2].Value != String.Empty)
+					video.AudioBitRate = int.Parse(m.Groups[2].Value);
 			}
 
 			// Duration
@@ -138,15 +140,15 @@ namespace Video_converter
 			return string.Empty;
 		}
 
-		public bool Convert(string formatName, string size)
+		public bool Convert(string formatName, int height)
 		{
 			Format format = Format.GetFormatByName(formatName);
 
 			string outputFilePath = Path.GetDirectoryName(video.Path);
 			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(video.Path);
-			outputFilePath += "_" + size + "." + format.Extension;
+			outputFilePath += "_" + height.ToString() + "." + format.Extension;
 
-			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, size), outputFilePath);
+			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, height), outputFilePath);
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
 			process.ProccesingFile = outputFilePath;
@@ -233,7 +235,14 @@ namespace Video_converter
 		{
 			foreach (ConvertProcess process in processes)
 			{
-				Stop(process);
+				if (process.Status == ConvertProcess.ProcessStatus.Running)
+				{
+					Stop(process);
+				}
+				else if (process.Status == ConvertProcess.ProcessStatus.Waiting)
+				{
+					processes.Remove(process);
+				}
 			}
 		}
 	}
@@ -287,6 +296,7 @@ namespace Video_converter
 
 			string dataDir = Path.GetDirectoryName(ffmpegLocation);
 
+			// datadir for libx264
 			if (!Path.IsPathRooted(dataDir))
 				dataDir = Path.Combine(Directory.GetCurrentDirectory(), dataDir); 
 
