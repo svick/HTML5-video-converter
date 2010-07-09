@@ -21,8 +21,7 @@ namespace Video_converter
 
 		public override string BuildParams(Video video, string targetResolution)
 		{
-			string parameters = string.Format("-threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {0} -b {1}", "320k", "1000k");
-			return parameters;
+			return string.Format("-threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {0} -b {1}", "320k", "1000k");
 		}
 	}
 
@@ -38,8 +37,7 @@ namespace Video_converter
 
 		public override string BuildParams(Video video, string targetResolution)
 		{
-			string parameters = string.Format("-threads 4 -f mp4 -vcodec libx264 -acodec aac -strict experimental -vpre normal -ab {0} -b {1}", "320k", "1000k");
-			return parameters;
+			return string.Format("-threads 4 -f mp4 -vcodec libx264 -acodec aac -strict experimental -vpre normal -ab {0} -b {1}", "320k", "1000k");
 		}
 	}
 
@@ -55,8 +53,7 @@ namespace Video_converter
 
 		public override string BuildParams(Video video, string targetResolution)
 		{
-			string parameters = string.Format("-threads 4 -f ogg -vcodec libtheora -acodec libvorbis -ab {0} -b {1}", "320k", "1000k");
-			return parameters;
+			return string.Format("-threads 4 -f ogg -vcodec libtheora -acodec libvorbis -ab {0} -b {1}", "320k", "1000k");
 		}
 	}
 }
