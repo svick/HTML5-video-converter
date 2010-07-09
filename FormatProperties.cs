@@ -2,14 +2,11 @@
 
 namespace Video_converter
 {
-	public class FormatProperties
+	public abstract class FormatProperties
 	{
 		public string Extension { get; protected set; }
 
-		public string BuildParams(Video video, string targetResolution)
-		{
-			return String.Empty;
-		}
+		public abstract string BuildParams(Video video, string targetResolution);
 	}
 
 	public class WebMFormat : FormatProperties
@@ -19,9 +16,9 @@ namespace Video_converter
 			Extension = "webm";
 		}
 
-		public string BuildParams(Video video, string targetResolution)
+		public override string BuildParams(Video video, string targetResolution)
 		{
-			string parameters = string.Format("-threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2}", "320k", "1000k");
+			string parameters = string.Format("-threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {0} -b {1}", "320k", "1000k");
 			return parameters;
 		}
 	}
@@ -33,9 +30,9 @@ namespace Video_converter
 			Extension = "mp4";
 		}
 
-		public string BuildParams(Video video, string targetResolution)
+		public override string BuildParams(Video video, string targetResolution)
 		{
-			string parameters = string.Format("-threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2}", "320k", "1000k");
+			string parameters = string.Format("-threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {0} -b {1}", "320k", "1000k");
 			return parameters;
 		}
 	}
@@ -47,9 +44,9 @@ namespace Video_converter
 			Extension = "ogv";
 		}
 
-		public string BuildParams(Video video, string targetResolution)
+		public override string BuildParams(Video video, string targetResolution)
 		{
-			string parameters = string.Format("-threads 4 -f ogg -vcodec libtheora -acodec libvorbis -ab {1} -b {2}", "320k", "1000k");
+			string parameters = string.Format("-threads 4 -f ogg -vcodec libtheora -acodec libvorbis -ab {0} -b {1}", "320k", "1000k");
 			return parameters;
 		}
 	}
