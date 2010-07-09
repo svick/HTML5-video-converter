@@ -11,7 +11,7 @@ namespace Video_converter
 {
 	public class Video
 	{
-		public string Path { get; set; }
+		public string Path { get; private set; }
 		public TimeSpan Duration { get; set; }
 		public int BitRate { get; set; }
 		public string Format { get; set; }
