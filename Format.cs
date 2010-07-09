@@ -7,10 +7,37 @@ namespace Video_converter
 		public abstract string Extension { get; }
 
 		public abstract string BuildParams(Video video, string targetResolution);
+
+		public static Format GetFormatByName(string name)
+		{
+			switch (name)
+			{
+			case "webm":
+				return WebMFormat.Instance;
+			case "h264":
+				return H264Format.Instance;
+			case "theora":
+				return TheoraFormat.Instance;
+			default:
+				throw new Exception(string.Format("Neznámý formát {0}.", name));
+			}
+		}
 	}
 
 	public class WebMFormat : Format
 	{
+		protected WebMFormat()
+		{ }
+
+		static WebMFormat instance = new WebMFormat();
+		public static WebMFormat Instance
+		{
+			get
+			{
+				return instance;
+			}
+		}
+
 		public override string Extension
 		{
 			get
@@ -27,6 +54,18 @@ namespace Video_converter
 
 	public class H264Format : Format
 	{
+		protected H264Format()
+		{ }
+
+		static H264Format instance = new H264Format();
+		public static H264Format Instance
+		{
+			get
+			{
+				return instance;
+			}
+		}
+
 		public override string Extension
 		{
 			get
@@ -43,6 +82,18 @@ namespace Video_converter
 
 	public class TheoraFormat : Format
 	{
+		protected TheoraFormat()
+		{ }
+
+		static TheoraFormat instance = new TheoraFormat();
+		public static TheoraFormat Instance
+		{
+			get
+			{
+				return instance;
+			}
+		}
+
 		public override string Extension
 		{
 			get

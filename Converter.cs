@@ -57,13 +57,6 @@ namespace Video_converter
 		private Video video;
 		private ConvertProcesses convertProcesses;
 
-		private Dictionary<string, Format> formatProperties = new Dictionary<string, Format>
-    {
-			{ "webm", new WebMFormat() },
-			{ "h264", new H264Format() },
-      { "theora", new TheoraFormat() },
-    };
-
 		public Converter(Video video)
 		{
 			this.video = video;
@@ -145,13 +138,15 @@ namespace Video_converter
 			return string.Empty;
 		}
 
-		public bool Convert(string format, string size)
+		public bool Convert(string formatName, string size)
 		{
+			Format format = Format.GetFormatByName(formatName);
+
 			string outputFilePath = Path.GetDirectoryName(video.Path);
 			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(video.Path);
-			outputFilePath += "_" + size + "." + formatProperties[format].Extension;
+			outputFilePath += "_" + size + "." + format.Extension;
 
-			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, formatProperties[format].BuildParams(video, size), outputFilePath);
+			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, size), outputFilePath);
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
 			process.ProccesingFile = outputFilePath;
