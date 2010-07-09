@@ -83,7 +83,7 @@ namespace Video_converter
 
 			taskBarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
 
-			converter.Convert("h264", "720p");
+			converter.Convert("webm", "720p");
 			/*converter.Convert("h264", "480p");
 			converter.Convert("h264", "320p");*/
 

@@ -57,6 +57,13 @@ namespace Video_converter
 		private Video video;
 		private ConvertProcesses convertProcesses;
 
+		static Dictionary<string, FormatProperties> formatProperties = new Dictionary<string, FormatProperties>
+    {
+			{ "webm", new WebMFormat() },
+			{ "h264", new H264Format() },
+      { "theora", new TheoraFormat() },
+    };
+
 		public Converter(Video video)
 		{
 			this.video = video;
@@ -141,9 +148,9 @@ namespace Video_converter
 		{
 			string outputFilePath = Path.GetDirectoryName(video.Path);
 			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(video.Path);
-			outputFilePath += "_" + size + ".webm";
+			outputFilePath += "_" + size + "." + formatProperties[format].Extension;
 
-			string parameters = string.Format("-y -i \"{0}\" -threads 4 -f webm -vcodec libvpx -acodec libvorbis -ab {1} -b {2} \"{3}\"", video.Path, "320k", "1000k", outputFilePath);
+			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, formatProperties[format].BuildParams(video, size), outputFilePath);
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
 			process.ProccesingFile = outputFilePath;
