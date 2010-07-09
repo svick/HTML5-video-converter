@@ -253,7 +253,7 @@ namespace Video_converter
 		public event DoneUpdatedEventHandler DoneUpdated;
 		public event ConvertExitedEventHandler ConvertExited;
 
-		private string Ffmpeg { get; set; }
+		private string ffmpegLocation;
 		private Process proc;
 		private string parameters;
 		private bool outputAtEnd;
@@ -261,10 +261,18 @@ namespace Video_converter
 
 		public ConvertProcess(string parameters, bool outputAtEnd = true) 
 		{
-			Ffmpeg = Settings.Default.ExeLocation;
-			
-			if (!File.Exists(Ffmpeg))
-				throw new Exception("Soubor ffmpeg.exe nebyl nalezen");
+			if (Environment.Is64BitOperatingSystem && File.Exists(Settings.Default.ffmpegLocation64))
+			{
+				ffmpegLocation = Settings.Default.ffmpegLocation64;
+			}
+			else if (File.Exists(Settings.Default.ffmpegLocation))
+			{
+				ffmpegLocation = Settings.Default.ffmpegLocation;
+			}
+			else
+			{
+				throw new Exception("Soubor " + ffmpegLocation + " nebyl nalezen");
+			}
 
 			this.parameters = parameters;
 			this.outputAtEnd = outputAtEnd;
@@ -275,7 +283,7 @@ namespace Video_converter
 		{
 			string output = string.Empty;
 
-			ProcessStartInfo startInfo = new ProcessStartInfo(Ffmpeg, parameters);
+			ProcessStartInfo startInfo = new ProcessStartInfo(ffmpegLocation, parameters);
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
 			startInfo.CreateNoWindow = true;

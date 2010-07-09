@@ -25,10 +25,10 @@ namespace Video_converter.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ffmpeg.exe")]
-        public string ExeLocation {
+        [global::System.Configuration.DefaultSettingValueAttribute("ffmpegBin\\ffmpeg.exe")]
+        public string ffmpegLocation {
             get {
-                return ((string)(this["ExeLocation"]));
+                return ((string)(this["ffmpegLocation"]));
             }
         }
         
@@ -38,6 +38,15 @@ namespace Video_converter.Properties {
         public string WorkingPath {
             get {
                 return ((string)(this["WorkingPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ffmpegBin\\ffmpeg64.exe")]
+        public string ffmpegLocation64 {
+            get {
+                return ((string)(this["ffmpegLocation64"]));
             }
         }
     }
