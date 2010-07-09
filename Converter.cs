@@ -90,7 +90,7 @@ namespace Video_converter
 
 			// TODO: Kontrola správnosti regexpů a ošetření chyb
 			// Video info
-			Match m = new Regex(@"Video: ([^,]*), [^,]*, (\d*)x(\d*), ").Match(output);
+			Match m = Regex.Match(output, @"Video: ([^,]*), [^,]*, (\d*)x(\d*), ");
 
 			if (m.Success)
 			{
@@ -100,7 +100,7 @@ namespace Video_converter
 			}
 
 			// Audio info
-			m = new Regex(@"Audio: ([^,]*), [^,]*, [^,]*, [^,]*, (\d*)").Match(output);
+			m = Regex.Match(output, @"Audio: ([^,]*), [^,]*, [^,]*, [^,]*, (\d*)");
 
 			if (m.Success)
 			{
@@ -109,7 +109,7 @@ namespace Video_converter
 			}
 
 			// Duration
-			m = new Regex(@"Duration: (\d*:\d*:\d*.\d*)").Match(output);
+			m = Regex.Match(output, @"Duration: (\d*:\d*:\d*.\d*)");
 
 			if (m.Success)
 			{
