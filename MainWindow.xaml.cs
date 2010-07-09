@@ -18,6 +18,7 @@ namespace Video_converter
 
 		public MainWindow()
 		{
+			InitializeComponent();
 			resolutions = new CheckBox[] { height480, height720, height1080 };
 			formats = new CheckBox[] { webm, h264, theora };
 		}
