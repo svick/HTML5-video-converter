@@ -67,6 +67,7 @@ namespace Video_converter
 		public Converter(Video video)
 		{
 			this.video = video;
+
 			convertProcesses = new ConvertProcesses(2);
 			convertProcesses.ProgressChanged += new ProgressChangedEventHandler(convertProcesses_ProgressChanged);
 			convertProcesses.AllFinished += new AllFinishedEventHander(convertProcesses_AllFinished);
@@ -263,6 +264,7 @@ namespace Video_converter
 		{
 			if (Environment.Is64BitOperatingSystem && File.Exists(Settings.Default.ffmpegLocation64))
 			{
+				// use 64 bit version of ffmpeg
 				ffmpegLocation = Settings.Default.ffmpegLocation64;
 			}
 			else if (File.Exists(Settings.Default.ffmpegLocation))
@@ -287,6 +289,13 @@ namespace Video_converter
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
 			startInfo.CreateNoWindow = true;
+
+			string dataDir = Path.GetDirectoryName(ffmpegLocation);
+
+			if (!Path.IsPathRooted(dataDir))
+				dataDir = Path.Combine(Directory.GetCurrentDirectory(), dataDir); 
+
+			startInfo.EnvironmentVariables["FFMPEG_DATADIR"] = dataDir;
 
 			proc = Process.Start(startInfo);
 			proc.EnableRaisingEvents = true;
