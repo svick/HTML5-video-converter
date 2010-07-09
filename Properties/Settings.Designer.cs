@@ -34,15 +34,6 @@ namespace Video_converter.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string WorkingPath {
-            get {
-                return ((string)(this["WorkingPath"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("ffmpegBin\\ffmpeg64.exe")]
         public string ffmpegLocation64 {
             get {
