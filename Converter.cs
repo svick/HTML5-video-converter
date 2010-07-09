@@ -213,7 +213,6 @@ namespace Video_converter
 			if (currentThreads == 0)
 			{
 				AllFinished(this, new EventArgs());
-				//System.Windows.Forms.MessageBox.Show("Total Konec");
 			}
 		}
 
@@ -337,9 +336,8 @@ namespace Video_converter
 			if (m.Success)
 			{
 				Done = new TimeSpan(0, 0, 0, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
+				DoneUpdated(this, e);
 			}
-
-			DoneUpdated(this, e);
 		}
 	}
 }
