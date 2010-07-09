@@ -233,7 +233,7 @@ namespace Video_converter
 
 		public void StopAll() 
 		{
-			foreach (ConvertProcess process in processes)
+			foreach (ConvertProcess process in processes.ToArray())
 			{
 				if (process.Status == ConvertProcess.ProcessStatus.Running)
 				{
