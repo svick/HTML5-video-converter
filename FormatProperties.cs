@@ -4,16 +4,19 @@ namespace Video_converter
 {
 	public abstract class FormatProperties
 	{
-		public string Extension { get; protected set; }
+		public abstract string Extension { get; }
 
 		public abstract string BuildParams(Video video, string targetResolution);
 	}
 
 	public class WebMFormat : FormatProperties
 	{
-		public WebMFormat() 
+		public override string Extension
 		{
-			Extension = "webm";
+			get
+			{
+				return "webm";
+			}
 		}
 
 		public override string BuildParams(Video video, string targetResolution)
@@ -25,9 +28,12 @@ namespace Video_converter
 
 	public class H264Format : FormatProperties
 	{
-		public H264Format()
+		public override string Extension
 		{
-			Extension = "mp4";
+			get
+			{
+				return "mp4";
+			}
 		}
 
 		public override string BuildParams(Video video, string targetResolution)
@@ -39,9 +45,12 @@ namespace Video_converter
 
 	public class TheoraFormat : FormatProperties
 	{
-		public TheoraFormat()
+		public override string Extension
 		{
-			Extension = "ogv";
+			get
+			{
+				return "ogv";
+			}
 		}
 
 		public override string BuildParams(Video video, string targetResolution)
@@ -50,7 +59,4 @@ namespace Video_converter
 			return parameters;
 		}
 	}
-
-
-
 }
