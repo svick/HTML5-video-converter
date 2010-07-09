@@ -57,7 +57,7 @@ namespace Video_converter
 		private Video video;
 		private ConvertProcesses convertProcesses;
 
-		private Dictionary<string, FormatProperties> formatProperties = new Dictionary<string, FormatProperties>
+		private Dictionary<string, Format> formatProperties = new Dictionary<string, Format>
     {
 			{ "webm", new WebMFormat() },
 			{ "h264", new H264Format() },

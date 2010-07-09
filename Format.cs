@@ -2,14 +2,14 @@
 
 namespace Video_converter
 {
-	public abstract class FormatProperties
+	public abstract class Format
 	{
 		public abstract string Extension { get; }
 
 		public abstract string BuildParams(Video video, string targetResolution);
 	}
 
-	public class WebMFormat : FormatProperties
+	public class WebMFormat : Format
 	{
 		public override string Extension
 		{
@@ -25,7 +25,7 @@ namespace Video_converter
 		}
 	}
 
-	public class H264Format : FormatProperties
+	public class H264Format : Format
 	{
 		public override string Extension
 		{
@@ -41,7 +41,7 @@ namespace Video_converter
 		}
 	}
 
-	public class TheoraFormat : FormatProperties
+	public class TheoraFormat : Format
 	{
 		public override string Extension
 		{
