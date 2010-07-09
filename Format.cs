@@ -5,6 +5,12 @@ using System.Collections.Generic;
 
 namespace Video_converter
 {
+	public class Size
+	{
+		public int Width { get; set; }
+		public int Height { get; set; }
+	}
+
 	public class ParamsBuilder 
 	{
 		private Dictionary<string, string> parameters = new Dictionary<string, string>();
@@ -49,6 +55,31 @@ namespace Video_converter
 				throw new Exception(string.Format("Neznámý formát {0}.", name));
 			}
 		}
+
+		public Size Resize(Video video, int height)
+		{
+			int width;
+
+			// 16:9 and higger
+			if (( (double) video.Width / video.Height) > ( (double) 16 / 9))
+			{
+				width = video.Height * 16 / 9;
+
+				if (width > video.Width)
+					width = video.Width;
+
+				height = video.Height / (video.Width / width);
+			}
+			else
+			{
+				if (height > video.Height)
+					height = video.Height;
+
+				width = video.Width / (video.Height / height);
+			}
+			
+			return new Size { Height = height, Width = width };
+		}
 	}
 
 	public class WebMFormat : Format
@@ -73,9 +104,20 @@ namespace Video_converter
 			}
 		}
 
-		public override string BuildParams(Video video, int height)
+		public override string BuildParams(Video video, int height = 0)
 		{
 			ParamsBuilder parameters = new ParamsBuilder();
+
+			if (height != 0)
+			{
+				Size size = Resize(video, height);
+
+				if (size.Height != video.Height)
+				{
+					parameters.Add("s", string.Format("{0}x{1}", size.Width.ToString(), size.Height.ToString()));
+				}
+			}
+			
 			parameters.Add("threads", "4");
 			parameters.Add("f", "webm");
 

@@ -12,7 +12,9 @@ namespace Video_converter
 		Converter converter;
 		ProgressBar progressBar;
 		object mainContent;
-		
+
+		CheckBox[] resolutions;
+		CheckBox[] formats;
 
 		public MainWindow()
 		{
@@ -59,9 +61,9 @@ namespace Video_converter
 				converter.VideoInfo();
 				ConvertButton.IsEnabled = true;
 
-				height1080.IsEnabled = (video.Height >= 1080);
-				height720.IsEnabled = (video.Height >= 720);
-				height480.IsEnabled = (video.Height >= 480);
+				height1080.IsEnabled = (video.Height >= 1080 || video.Width >= 1920);
+				height720.IsEnabled =  (video.Height >= 720  || video.Width >= 1280);
+				height480.IsEnabled =  (video.Height >= 480  || video.Width >= 854);
 			}
 			catch (Exception e)
 			{
@@ -69,9 +71,6 @@ namespace Video_converter
 				System.Windows.Forms.MessageBox.Show(e.Message);
 			}
 		}
-
-		CheckBox[] resolutions;
-		CheckBox[] formats;
 
 		private void Convert_Click(object sender, RoutedEventArgs e)
 		{
@@ -83,13 +82,7 @@ namespace Video_converter
 
 			taskBarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
 
-			converter.Convert("webm", 720);
-			/*converter.Convert("h264", "480p");
-			converter.Convert("h264", "320p");*/
-
-			
-
-			/*foreach (CheckBox formatCheckBox in formats)
+			foreach (CheckBox formatCheckBox in formats)
 				if (formatCheckBox.IsChecked == true)
 				{
 					string format = formatCheckBox.Name;
@@ -97,10 +90,9 @@ namespace Video_converter
 						if (resolutionCheckBox.IsChecked == true)
 						{
 							int height = int.Parse((string)resolutionCheckBox.Tag);
-							converter.ConvertFormat(fileNameTextBox.Text, format, height);
+							converter.Convert(format, height);
 						}
-				}*/
-
+				}
 		}
 
 		void progress(object sender, EventArg<double> e)
