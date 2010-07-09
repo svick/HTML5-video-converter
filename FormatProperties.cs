@@ -6,7 +6,10 @@ namespace Video_converter
 	{
 		public string Extension { get; protected set; }
 
-		public extern string BuildParams(Video video, string targetResolution);
+		public string BuildParams(Video video, string targetResolution)
+		{
+			return String.Empty;
+		}
 	}
 
 	public class WebMFormat : FormatProperties
