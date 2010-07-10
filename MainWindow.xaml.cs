@@ -12,6 +12,7 @@ namespace Video_converter
 		Converter converter;
 		ProgressBar progressBar;
 		object mainContent;
+		DateTime startTime;
 
 		CheckBox[] resolutions;
 		CheckBox[] formats;
@@ -79,9 +80,12 @@ namespace Video_converter
 
 			progressBar.Cancelled += new System.EventHandler(progressBar_Cancelled);
 			mainContent = Content;
+
 			Content = progressBar;
 
 			taskBarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+
+			startTime = DateTime.Now;
 
 			foreach (CheckBox formatCheckBox in formats)
 				if (formatCheckBox.IsChecked == true)
@@ -102,7 +106,8 @@ namespace Video_converter
 				{
 					taskBarItemInfo.ProgressValue = e.Data;
 					progressBar.bar.Value = e.Data * 100;
-					progressBar.textInfo.Text = "Hotovo: " + e.Data.ToString("P");
+					TimeSpan remain = new TimeSpan(0, 0, 0, 0, (int)( (DateTime.Now - startTime).TotalMilliseconds * (1 - e.Data) / e.Data));
+					progressBar.textInfo.Text = "Hotovo: " + e.Data.ToString("P") + ", zbývá " + remain.ToString();
 				}));
 		}
 
