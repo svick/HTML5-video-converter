@@ -67,6 +67,35 @@ namespace Video_converter
 			return parameters;
 		}
 
+		public BitRate ComputeBitRate(Video video, int height)
+		{
+			int audioBitRate, videoBitRate;
+
+			if (height >= 1080)
+			{
+				audioBitRate = 320;
+				videoBitRate = 4000;
+			}
+			else if (height >= 720)
+			{
+				audioBitRate = 256;
+				videoBitRate = 2000;
+			}
+			else
+			{
+				audioBitRate = 256;
+				videoBitRate = 1000;
+			}
+
+			if (video.BitRate.Video != 0 && videoBitRate > video.BitRate.Video)
+				videoBitRate = video.BitRate.Video;
+
+			if (video.BitRate.Audio != 0 && audioBitRate > video.BitRate.Audio)
+				audioBitRate = video.BitRate.Audio;
+
+			return new BitRate { Audio = audioBitRate, Video = videoBitRate };
+		}
+
 		public Size Resize(Video video, int height)
 		{
 			int width;
@@ -117,40 +146,16 @@ namespace Video_converter
 
 		public override string BuildParams(Video video, int height = 0)
 		{
-			ParamsBuilder parameters = new ParamsBuilder();
+			ParamsBuilder parameters = DefaultParams(video, height, new ParamsBuilder());
 
-			int audioBitRate, videoBitRate;
-
-			if (height >= 1080)
-			{
-				audioBitRate = 320;
-				videoBitRate = 4000;
-			}
-			else if (height >= 720)
-			{
-				audioBitRate = 256;
-				videoBitRate = 2000;
-			}
-			else
-			{
-				audioBitRate = 256;
-				videoBitRate = 1000;
-			}
-
-			if (video.BitRate.Video != 0 && videoBitRate > video.BitRate.Video)
-				videoBitRate = video.BitRate.Video;
-
-			if (video.BitRate.Audio != 0 && audioBitRate > video.BitRate.Audio)
-				audioBitRate = video.BitRate.Audio;
-
-			parameters = DefaultParams(video, height, parameters);
+			BitRate bitRate = ComputeBitRate(video, height);
 			
 			parameters.Add("f", "webm");
 
 			if (video.Format != "vp8")
 			{
 				parameters.Add("vcodec", "libvpx");
-				parameters.Add("b", videoBitRate.ToString() + "k");
+				parameters.Add("b", bitRate.Video.ToString() + "k");
 			}
 			else
 			{
@@ -160,7 +165,7 @@ namespace Video_converter
 			if (video.AudioFormat != "vorbis")
 			{
 				parameters.Add("acodec", "libvorbis");
-				parameters.Add("ab", audioBitRate + "k");
+				parameters.Add("ab", bitRate.Audio.ToString() + "k");
 			}
 			else
 			{
