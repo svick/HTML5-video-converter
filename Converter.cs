@@ -9,16 +9,26 @@ using System.Text;
 
 namespace Video_converter
 {
+	public class Size
+	{
+		public int Width { get; set; }
+		public int Height { get; set; }
+	}
+
+	public class BitRate
+	{
+		public int Audio { get; set; }
+		public int Video { get; set; }
+	}
+
 	public class Video
 	{
 		public string Path { get; private set; }
 		public TimeSpan Duration { get; set; }
-		public int BitRate { get; set; }
 		public string Format { get; set; }
-		public int AudioBitRate { get; set; }
 		public string AudioFormat { get; set; }
-		public int Width  { get; set; }
-		public int Height { get; set; }
+		public BitRate BitRate = new BitRate();
+		public Size Size = new Size();
 
 		public Video(string path)
 		{
@@ -95,8 +105,8 @@ namespace Video_converter
 			if (m.Success)
 			{
 				video.Format = m.Groups[1].Value;
-				video.Width = int.Parse(m.Groups[2].Value);
-				video.Height = int.Parse(m.Groups[3].Value);
+				video.Size.Width = int.Parse(m.Groups[2].Value);
+				video.Size.Height =  int.Parse(m.Groups[3].Value);
 			}
 
 			// Audio info
@@ -107,7 +117,7 @@ namespace Video_converter
 				video.AudioFormat = m.Groups[1].Value;
 
 				if(m.Groups[2].Value != String.Empty)
-					video.AudioBitRate = int.Parse(m.Groups[2].Value);
+					video.BitRate.Audio = int.Parse(m.Groups[2].Value);
 			}
 
 			// Duration
@@ -126,7 +136,7 @@ namespace Video_converter
 			string imageFileName = System.Guid.NewGuid().ToString() + ".png";
 
 			int height = 100;
-			int width = video.Width / (video.Height / height);
+			int width = video.Size.Width / (video.Size.Height / height);
 
 			string parameters = string.Format("-i \"{0}\" -an -vframes 1 -s {1}x{2} -ss 00:00:10 -f image2 {3}", video.Path, width, height, imageFileName);
 

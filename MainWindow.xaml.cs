@@ -62,9 +62,9 @@ namespace Video_converter
 				converter.VideoInfo();
 				ConvertButton.IsEnabled = true;
 
-				height1080.IsEnabled = (video.Height >= 1080 || video.Width >= 1920);
-				height720.IsEnabled =  (video.Height >= 720  || video.Width >= 1280);
-				height480.IsEnabled =  (video.Height >= 480  || video.Width >= 854);
+				height1080.IsEnabled = (video.Size.Height >= 1080 || video.Size.Width >= 1920);
+				height720.IsEnabled  = (video.Size.Height >= 720  || video.Size.Width >= 1280);
+				height480.IsEnabled  = (video.Size.Height >= 480  || video.Size.Width >= 854);
 			}
 			catch (Exception e)
 			{

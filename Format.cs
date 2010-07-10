@@ -5,12 +5,6 @@ using System.Collections.Generic;
 
 namespace Video_converter
 {
-	public class Size
-	{
-		public int Width { get; set; }
-		public int Height { get; set; }
-	}
-
 	public class ParamsBuilder 
 	{
 		private Dictionary<string, string> parameters = new Dictionary<string, string>();
@@ -56,26 +50,43 @@ namespace Video_converter
 			}
 		}
 
+		public ParamsBuilder DefaultParams(Video video, int height, ParamsBuilder parameters) 
+		{
+			parameters.Add("threads", Environment.ProcessorCount.ToString());
+
+			if (height != 0)
+			{
+				Size size = Resize(video, height);
+
+				if (size.Height != video.Size.Height)
+				{
+					parameters.Add("s", string.Format("{0}x{1}", size.Width.ToString(), size.Height.ToString()));
+				}
+			}
+
+			return parameters;
+		}
+
 		public Size Resize(Video video, int height)
 		{
 			int width;
 
 			// 16:9 and higger
-			if (( (double) video.Width / video.Height) > ( (double) 16 / 9))
+			if (( (double) video.Size.Width / video.Size.Height) > ( (double) 16 / 9))
 			{
 				width = height * 16 / 9;
 
-				if (width > video.Width)
-					width = video.Width;
+				if (width > video.Size.Width)
+					width = video.Size.Width;
 
-				height = video.Height * width / video.Width;
+				height = video.Size.Height * width / video.Size.Width;
 			}
 			else
 			{
-				if (height > video.Height)
-					height = video.Height;
+				if (height > video.Size.Height)
+					height = video.Size.Height;
 
-				width = video.Width * height / video.Height;
+				width = video.Size.Width * height / video.Size.Height;
 			}
 			
 			return new Size { Height = height, Width = width };
@@ -108,16 +119,6 @@ namespace Video_converter
 		{
 			ParamsBuilder parameters = new ParamsBuilder();
 
-			if (height != 0)
-			{
-				Size size = Resize(video, height);
-
-				if (size.Height != video.Height)
-				{
-					parameters.Add("s", string.Format("{0}x{1}", size.Width.ToString(), size.Height.ToString()));
-				}
-			}
-
 			int audioBitRate, videoBitRate;
 
 			if (height >= 1080)
@@ -136,13 +137,14 @@ namespace Video_converter
 				videoBitRate = 1000;
 			}
 
-			if (video.BitRate != 0 && videoBitRate > video.BitRate)
-				videoBitRate = video.BitRate;
+			if (video.BitRate.Video != 0 && videoBitRate > video.BitRate.Video)
+				videoBitRate = video.BitRate.Video;
 
-			if (video.AudioBitRate != 0 && audioBitRate > video.AudioBitRate)
-				audioBitRate = video.AudioBitRate;
+			if (video.BitRate.Audio != 0 && audioBitRate > video.BitRate.Audio)
+				audioBitRate = video.BitRate.Audio;
+
+			parameters = DefaultParams(video, height, parameters);
 			
-			parameters.Add("threads", Environment.ProcessorCount.ToString());
 			parameters.Add("f", "webm");
 
 			if (video.Format != "vp8")
