@@ -117,6 +117,31 @@ namespace Video_converter
 					parameters.Add("s", string.Format("{0}x{1}", size.Width.ToString(), size.Height.ToString()));
 				}
 			}
+
+			int audioBitRate = 0;
+			int videoBitRate = 0;
+
+			if (height >= 1080)
+			{
+				audioBitRate = 320;
+				videoBitRate = 4000;
+			}
+			else if (height >= 720)
+			{
+				audioBitRate = 256;
+				videoBitRate = 2000;
+			}
+			else
+			{
+				audioBitRate = 256;
+				videoBitRate = 1000;
+			}
+
+			if (video.BitRate != 0 && videoBitRate > video.BitRate)
+				videoBitRate = video.BitRate;
+
+			if (video.AudioBitRate != 0 && audioBitRate > video.AudioBitRate)
+				audioBitRate = video.AudioBitRate;
 			
 			parameters.Add("threads", "4");
 			parameters.Add("f", "webm");
@@ -124,7 +149,7 @@ namespace Video_converter
 			if (video.Format != "vp8")
 			{
 				parameters.Add("vcodec", "libvpx");
-				parameters.Add("b", "1000k");
+				parameters.Add("b", videoBitRate.ToString() + "k");
 			}
 			else
 			{
@@ -134,7 +159,7 @@ namespace Video_converter
 			if (video.AudioFormat != "vorbis")
 			{
 				parameters.Add("acodec", "libvorbis");
-				parameters.Add("ab", "320k");
+				parameters.Add("ab", audioBitRate + "k");
 			}
 			else
 			{
