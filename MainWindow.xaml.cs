@@ -54,7 +54,7 @@ namespace Video_converter
 		{
 			Video video = new Video(FileName);
 			converter = new Converter(video);
-			converter.ProgressChanged += new ProgressChangedEventHandler(progress);
+			converter.ProgressChanged += new ProgressChangedEventHandler(converter_ProgressChanged);
 			converter.AllFinished += new AllFinishedEventHander(converter_AllFinished);
 
 			try
@@ -96,13 +96,13 @@ namespace Video_converter
 				}
 		}
 
-		void progress(object sender, EventArg<double> e)
+		void converter_ProgressChanged(object sender, EventArg<double> e)
 		{
 			Dispatcher.Invoke((Action)(() =>
 				{
 					taskBarItemInfo.ProgressValue = e.Data;
 					progressBar.bar.Value = e.Data * 100;
-					progressBar.textInfo.Text = "Hotovo: " + e.Data.ToString();
+					progressBar.textInfo.Text = "Hotovo: " + e.Data.ToString("P");
 				}));
 		}
 
