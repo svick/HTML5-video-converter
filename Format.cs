@@ -228,7 +228,33 @@ namespace Video_converter
 
 		public override string BuildParams(Video video, int height)
 		{
-			return string.Format("-threads 4 -f ogg -vcodec libtheora -acodec libvorbis -ab {0} -b {1}", "320k", "1000k");
+			ParamsBuilder parameters = DefaultParams(video, height, new ParamsBuilder());
+
+			BitRate bitRate = ComputeBitRate(video, height);
+
+			parameters.Add("f", "ogg");
+
+			if (video.Format != "theora")
+			{
+				parameters.Add("vcodec", "libtheora");
+				parameters.Add("b", bitRate.Video.ToString() + "k");
+			}
+			else
+			{
+				parameters.Add("vcodec", "copy");
+			}
+
+			if (video.AudioFormat != "vorbis")
+			{
+				parameters.Add("acodec", "libvorbis");
+				parameters.Add("ab", bitRate.Audio.ToString() + "k");
+			}
+			else
+			{
+				parameters.Add("acodec", "copy");
+			}
+
+			return parameters.ToString();
 		}
 	}
 }
