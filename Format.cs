@@ -118,8 +118,7 @@ namespace Video_converter
 				}
 			}
 
-			int audioBitRate = 0;
-			int videoBitRate = 0;
+			int audioBitRate, videoBitRate;
 
 			if (height >= 1080)
 			{
@@ -143,7 +142,7 @@ namespace Video_converter
 			if (video.AudioBitRate != 0 && audioBitRate > video.AudioBitRate)
 				audioBitRate = video.AudioBitRate;
 			
-			parameters.Add("threads", "4");
+			parameters.Add("threads", Environment.ProcessorCount.ToString());
 			parameters.Add("f", "webm");
 
 			if (video.Format != "vp8")

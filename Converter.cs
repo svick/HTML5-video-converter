@@ -61,7 +61,7 @@ namespace Video_converter
 		{
 			this.video = video;
 
-			convertProcesses = new ConvertProcesses(2);
+			convertProcesses = new ConvertProcesses(Environment.ProcessorCount);
 			convertProcesses.ProgressChanged += new ProgressChangedEventHandler(convertProcesses_ProgressChanged);
 			convertProcesses.AllFinished += new AllFinishedEventHander(convertProcesses_AllFinished);
 		}
