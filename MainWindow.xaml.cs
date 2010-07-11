@@ -101,7 +101,7 @@ namespace Video_converter
 
 			timer = new System.Windows.Threading.DispatcherTimer();
 			timer.Tick += new EventHandler(timer_Tick);
-			timer.Interval = new TimeSpan(0,0,1);
+			timer.Interval = TimeSpan.FromSeconds(1);
 			timer.Start();
 
 			startTime = DateTime.Now;
@@ -123,7 +123,7 @@ namespace Video_converter
 		{
 			taskBarItemInfo.ProgressValue = totalProgress;
 			progressBar.bar.Value = totalProgress * 100;
-			TimeSpan remain = new TimeSpan(0, 0, 0, 0, (int)((DateTime.Now - startTime).TotalMilliseconds * (1 - totalProgress) / totalProgress));
+			TimeSpan remain = TimeSpan.FromMilliseconds((DateTime.Now - startTime).TotalMilliseconds * (1 - totalProgress) / totalProgress);
 			progressBar.textInfo.Text = "Hotovo: " + totalProgress.ToString("P") + ", zbývá " + remain.ToString();
 		}
 
