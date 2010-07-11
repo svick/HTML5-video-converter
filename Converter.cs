@@ -314,9 +314,7 @@ namespace Video_converter
 
 		void proc_Exited(object sender, EventArgs e)
 		{
-			// is video sucessfully converted?
-			string lastLine = ResultBuilder.ToString().Trim().Split('\n').Last();
-			bool success = lastLine.StartsWith("video:");
+			bool success = (ResultBuilder.ToString().IndexOf("video:") != -1);
 
 			if (success)
 			{
