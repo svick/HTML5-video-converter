@@ -27,7 +27,8 @@ namespace Video_converter
 		{
 			Dispatcher.Invoke((Action)(() =>
 			{
-				TextLog.Text += text + "\n";
+				TextLog.AppendText(text + "\n");
+				TextLog.ScrollToEnd();
 			}
 			));
 		}
