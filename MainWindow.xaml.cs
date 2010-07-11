@@ -17,6 +17,9 @@ namespace Video_converter
 		CheckBox[] resolutions;
 		CheckBox[] formats;
 
+		double totalProgress;
+		System.Windows.Threading.DispatcherTimer timer;
+
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -85,6 +88,11 @@ namespace Video_converter
 
 			taskBarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
 
+			timer = new System.Windows.Threading.DispatcherTimer();
+			timer.Tick += new EventHandler(timer_Tick);
+			timer.Interval = new TimeSpan(0,0,1);
+			timer.Start();
+
 			startTime = DateTime.Now;
 
 			foreach (CheckBox formatCheckBox in formats)
@@ -100,15 +108,17 @@ namespace Video_converter
 				}
 		}
 
+		void timer_Tick(object sender, EventArgs e)
+		{
+			taskBarItemInfo.ProgressValue = totalProgress;
+			progressBar.bar.Value = totalProgress * 100;
+			TimeSpan remain = new TimeSpan(0, 0, 0, 0, (int)((DateTime.Now - startTime).TotalMilliseconds * (1 - totalProgress) / totalProgress));
+			progressBar.textInfo.Text = "Hotovo: " + totalProgress.ToString("P") + ", zbývá " + remain.ToString();
+		}
+
 		void converter_ProgressChanged(object sender, EventArg<double> e)
 		{
-			Dispatcher.Invoke((Action)(() =>
-				{
-					taskBarItemInfo.ProgressValue = e.Data;
-					progressBar.bar.Value = e.Data * 100;
-					TimeSpan remain = new TimeSpan(0, 0, 0, 0, (int)( (DateTime.Now - startTime).TotalMilliseconds * (1 - e.Data) / e.Data));
-					progressBar.textInfo.Text = "Hotovo: " + e.Data.ToString("P") + ", zbývá " + remain.ToString();
-				}));
+			totalProgress = e.Data;
 		}
 
 		void converter_AllFinished(object sender, EventArgs e)
