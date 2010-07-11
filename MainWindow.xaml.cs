@@ -135,7 +135,7 @@ namespace Video_converter
 				{
 					taskBarItemInfo.ProgressValue = e.Data;
 					progressBar.bar.Value = e.Data * 100;
-					TimeSpan remain = new TimeSpan(0, 0, 0, 0, (int)( (DateTime.Now - startTime).TotalMilliseconds * (1 - e.Data) / e.Data));
+					TimeSpan remain = TimeSpan.FromMilliseconds((int)( (DateTime.Now - startTime).TotalMilliseconds * (1 - e.Data) / e.Data));
 					progressBar.textInfo.Text = "Hotovo: " + e.Data.ToString("P") + ", zbývá " + remain.ToString();
 				}));
 			totalProgress = e.Data;
