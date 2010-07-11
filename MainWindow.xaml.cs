@@ -116,7 +116,6 @@ namespace Video_converter
 						{
 							int height = int.Parse((string)resolutionCheckBox.Tag);
 							converter.Convert(format, height);
-							Converter.Convert(format, height);
 						}
 				}
 		}
