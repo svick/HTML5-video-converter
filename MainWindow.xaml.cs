@@ -15,6 +15,7 @@ namespace Video_converter
    } 
 
 		string fileName;
+		Converter converter;
 		
 		ProgressBar progressBar;
 		Log log;
@@ -64,12 +65,16 @@ namespace Video_converter
 		private void GetVideoInfo(string FileName)
 		{
 			Video video = new Video(FileName);
+			converter = new Converter(video);
+			converter.ProgressChanged += new ProgressChangedEventHandler(converter_ProgressChanged);
+			converter.AllFinished += new AllFinishedEventHander(converter_AllFinished);
 			Converter = new Converter(video);
 			Converter.ProgressChanged += new ProgressChangedEventHandler(converter_ProgressChanged);
 			Converter.AllFinished += new AllFinishedEventHander(converter_AllFinished);
 
 			try
 			{
+				converter.VideoInfo();
 				Converter.VideoInfo();
 				ConvertButton.IsEnabled = true;
 
@@ -110,6 +115,7 @@ namespace Video_converter
 						if (resolutionCheckBox.IsChecked == true)
 						{
 							int height = int.Parse((string)resolutionCheckBox.Tag);
+							converter.Convert(format, height);
 							Converter.Convert(format, height);
 						}
 				}
@@ -125,6 +131,13 @@ namespace Video_converter
 
 		void converter_ProgressChanged(object sender, EventArg<double> e)
 		{
+			Dispatcher.Invoke((Action)(() =>
+				{
+					taskBarItemInfo.ProgressValue = e.Data;
+					progressBar.bar.Value = e.Data * 100;
+					TimeSpan remain = new TimeSpan(0, 0, 0, 0, (int)( (DateTime.Now - startTime).TotalMilliseconds * (1 - e.Data) / e.Data));
+					progressBar.textInfo.Text = "Hotovo: " + e.Data.ToString("P") + ", zbývá " + remain.ToString();
+				}));
 			totalProgress = e.Data;
 		}
 
@@ -142,6 +155,7 @@ namespace Video_converter
 		void progressBar_Cancelled(object sender, EventArgs e)
 		{
 			Content = mainContent;
+			converter.StopAll();
 
 			if(Converter != null)
 				Converter.StopAll();
@@ -149,6 +163,7 @@ namespace Video_converter
 
 		private void Window_Closed(object sender, EventArgs e)
 		{
+			converter.StopAll();
 			Converter.StopAll();
 		}
 	}
