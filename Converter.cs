@@ -315,7 +315,7 @@ namespace Video_converter
 		void proc_Exited(object sender, EventArgs e)
 		{
 			App.Log.Add("Proces převodu skončil");
-			bool success = (ResultBuilder.ToString().IndexOf("video:") != -1);
+			bool success = ResultBuilder.ToString().IndexOf("video:") != -1;
 
 			if (!success)
 			{
