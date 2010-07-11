@@ -118,8 +118,17 @@ namespace Video_converter
 		{
 			taskBarItemInfo.ProgressValue = totalProgress;
 			progressBar.bar.Value = totalProgress * 100;
-			TimeSpan remain = TimeSpan.FromMilliseconds((DateTime.Now - startTime).TotalMilliseconds * (1 - totalProgress) / totalProgress);
-			progressBar.textInfo.Text = "Hotovo: " + totalProgress.ToString("P") + ", zbývá " + remain.ToString();
+
+			if (totalProgress != 0)
+			{
+				TimeSpan remain = TimeSpan.FromMilliseconds((DateTime.Now - startTime).TotalMilliseconds * (1 - totalProgress) / totalProgress);
+				progressBar.textInfo.Text = "Hotovo: " + totalProgress.ToString("P") + ", zbývá " + remain.ToString();
+			}
+			else
+			{
+				progressBar.textInfo.Text = "Hotovo: " + totalProgress.ToString("P");
+			}
+			
 		}
 
 		void converter_ProgressChanged(object sender, EventArg<double> e)
