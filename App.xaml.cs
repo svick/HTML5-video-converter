@@ -21,7 +21,14 @@ namespace Video_converter
 
 		public App()
 		{
-			locateFFmpegFile();
+			try
+			{
+				locateFFmpegFile();
+			}
+			catch (Exception e)
+			{
+				System.Windows.Forms.MessageBox.Show(e.Message, "", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+			}
 		}
 
 		private void locateFFmpegFile()
@@ -37,7 +44,7 @@ namespace Video_converter
 			}
 			else
 			{
-				throw new Exception("Soubor " + FfmpegLocation + " nebyl nalezen");
+				throw new Exception("Soubor " + Settings.Default.ffmpegLocation + " nebyl nalezen");
 			}
 		}
 
