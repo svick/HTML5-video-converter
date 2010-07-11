@@ -320,7 +320,7 @@ namespace Video_converter
 			if (!success)
 			{
 				System.Threading.Thread.Sleep(100);
-				success = (ResultBuilder.ToString().IndexOf("video:") != -1);
+				success = ResultBuilder.ToString().IndexOf("video:") != -1;
 			}
 
 			if (success)
