@@ -266,7 +266,7 @@ namespace Video_converter
 
 		public ConvertProcess(string parameters, bool outputAtEnd = true) 
 		{
-			((App)App.Current).Log.Add(parameters);
+			App.Log.Add(parameters);
 			this.parameters = parameters;
 			this.outputAtEnd = outputAtEnd;
 			Status = ProcessStatus.Waiting;
@@ -298,7 +298,7 @@ namespace Video_converter
 			{
 				proc.WaitForExit();
 				output = proc.StandardError.ReadToEnd();
-				((App)App.Current).Log.Add(output);
+				App.Log.Add(output);
 				proc.Close();
 				Status = ProcessStatus.Finished;
 			}
@@ -358,7 +358,7 @@ namespace Video_converter
 			if (e.Data == null)
 				return;
 
-			((App) App.Current).Log.Add(e.Data);
+			App.Log.Add(e.Data);
 
 			ResultBuilder.AppendLine(e.Data);
 

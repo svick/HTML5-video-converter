@@ -1,16 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Windows;
 using Video_converter.Properties;
 
 namespace Video_converter
 {
-	/// <summary>
-	/// Interaction logic for App.xaml
-	/// </summary>
 	public partial class App : Application
 	{
 		public string FfmpegLocation
@@ -19,7 +13,7 @@ namespace Video_converter
 			private set;
 		}
 
-		public Log Log;
+		public static Log Log;
 
 		public App()
 		{
