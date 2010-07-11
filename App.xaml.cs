@@ -22,7 +22,7 @@ namespace Video_converter
 
 		private void locateFFmpegFile()
 		{
-			if (Environment.Is64BitOperatingSystem && File.Exists(Settings.Default.ffmpegLocation64))
+			if (Settings.Default.use64bitFfmpegIfIsSupported && Environment.Is64BitOperatingSystem && File.Exists(Settings.Default.ffmpegLocation64))
 			{
 				// use 64 bit version of ffmpeg
 				FfmpegLocation = Settings.Default.ffmpegLocation64;
@@ -36,5 +36,11 @@ namespace Video_converter
 				throw new Exception("Soubor " + FfmpegLocation + " nebyl nalezen");
 			}
 		}
+
+		private void Application_Exit(object sender, ExitEventArgs e)
+		{
+			return;
+		}
+
 	}
 }

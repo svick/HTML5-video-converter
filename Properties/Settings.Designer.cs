@@ -40,5 +40,17 @@ namespace Video_converter.Properties {
                 return ((string)(this["ffmpegLocation64"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool use64bitFfmpegIfIsSupported {
+            get {
+                return ((bool)(this["use64bitFfmpegIfIsSupported"]));
+            }
+            set {
+                this["use64bitFfmpegIfIsSupported"] = value;
+            }
+        }
     }
 }

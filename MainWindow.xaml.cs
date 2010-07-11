@@ -8,8 +8,14 @@ namespace Video_converter
 {
 	public partial class MainWindow : Window
 	{
+		public Converter Converter 
+		{
+			get;
+      protected set;
+   } 
+
 		string fileName;
-		Converter converter;
+		
 		ProgressBar progressBar;
 		object mainContent;
 		DateTime startTime;
@@ -57,13 +63,13 @@ namespace Video_converter
 		private void GetVideoInfo(string FileName)
 		{
 			Video video = new Video(FileName);
-			converter = new Converter(video);
-			converter.ProgressChanged += new ProgressChangedEventHandler(converter_ProgressChanged);
-			converter.AllFinished += new AllFinishedEventHander(converter_AllFinished);
+			Converter = new Converter(video);
+			Converter.ProgressChanged += new ProgressChangedEventHandler(converter_ProgressChanged);
+			Converter.AllFinished += new AllFinishedEventHander(converter_AllFinished);
 
 			try
 			{
-				converter.VideoInfo();
+				Converter.VideoInfo();
 				ConvertButton.IsEnabled = true;
 
 				height1080.IsEnabled = (video.Size.Height >= 1080 || video.Size.Width >= 1920);
@@ -103,7 +109,7 @@ namespace Video_converter
 						if (resolutionCheckBox.IsChecked == true)
 						{
 							int height = int.Parse((string)resolutionCheckBox.Tag);
-							converter.Convert(format, height);
+							Converter.Convert(format, height);
 						}
 				}
 		}
@@ -134,12 +140,12 @@ namespace Video_converter
 		void progressBar_Cancelled(object sender, EventArgs e)
 		{
 			Content = mainContent;
-			converter.StopAll();
+			Converter.StopAll();
 		}
 
 		private void Window_Closed(object sender, EventArgs e)
 		{
-			converter.StopAll();
+			Converter.StopAll();
 		}
 	}
 }

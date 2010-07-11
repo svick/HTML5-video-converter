@@ -8,5 +8,8 @@
     <Setting Name="ffmpegLocation64" Type="System.String" Scope="Application">
       <Value Profile="(Default)">ffmpegBin\ffmpeg64.exe</Value>
     </Setting>
+    <Setting Name="use64bitFfmpegIfIsSupported" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
