@@ -108,7 +108,7 @@ namespace Video_converter
 				if (width > video.Size.Width)
 					width = video.Size.Width;
 
-				height = video.Size.Height * width / video.Size.Width;
+				height = (int)Math.Ceiling((double)video.Size.Height * width / video.Size.Width);
 			}
 			else
 			{
@@ -259,6 +259,8 @@ namespace Video_converter
 			ParamsBuilder parameters = DefaultParams(video, height, new ParamsBuilder());
 
 			BitRate bitRate = ComputeBitRate(video, height);
+
+			bitRate.Video = bitRate.Video * 12 / 10;
 
 			parameters.Add("f", "ogg");
 
