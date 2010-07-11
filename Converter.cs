@@ -215,6 +215,7 @@ namespace Video_converter
 		void process_ConvertExited(object sender, EventArg<bool> e)
 		{
 			--currentThreads;
+
 			foreach (ConvertProcess process in processes)
 			{
 				if (process.Status == ConvertProcess.ProcessStatus.Waiting)
@@ -231,23 +232,13 @@ namespace Video_converter
 			}
 		}
 
-		public void Stop(ConvertProcess process) 
-		{
-			process.Stop();
-
-			if (File.Exists(process.ProccesingFile))
-			{
-				File.Delete(process.ProccesingFile);
-			}
-		}
-
 		public void StopAll() 
 		{
 			foreach (ConvertProcess process in processes.ToArray())
 			{
 				if (process.Status == ConvertProcess.ProcessStatus.Running)
 				{
-					Stop(process);
+					process.Stop();
 				}
 				else if (process.Status == ConvertProcess.ProcessStatus.Waiting)
 				{
@@ -268,7 +259,6 @@ namespace Video_converter
 		public event DoneUpdatedEventHandler DoneUpdated;
 		public event ConvertExitedEventHandler ConvertExited;
 
-		private string ffmpegLocation;
 		private Process proc;
 		private string parameters;
 		private bool outputAtEnd;
@@ -276,20 +266,6 @@ namespace Video_converter
 
 		public ConvertProcess(string parameters, bool outputAtEnd = true) 
 		{
-			if (Environment.Is64BitOperatingSystem && File.Exists(Settings.Default.ffmpegLocation64))
-			{
-				// use 64 bit version of ffmpeg
-				ffmpegLocation = Settings.Default.ffmpegLocation64;
-			}
-			else if (File.Exists(Settings.Default.ffmpegLocation))
-			{
-				ffmpegLocation = Settings.Default.ffmpegLocation;
-			}
-			else
-			{
-				throw new Exception("Soubor " + ffmpegLocation + " nebyl nalezen");
-			}
-
 			this.parameters = parameters;
 			this.outputAtEnd = outputAtEnd;
 			Status = ProcessStatus.Waiting;
@@ -299,12 +275,12 @@ namespace Video_converter
 		{
 			string output = string.Empty;
 
-			ProcessStartInfo startInfo = new ProcessStartInfo(ffmpegLocation, parameters);
+			ProcessStartInfo startInfo = new ProcessStartInfo(((App) App.Current).FfmpegLocation, parameters);
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
 			startInfo.CreateNoWindow = true;
 
-			string dataDir = Path.GetDirectoryName(ffmpegLocation);
+			string dataDir = Path.GetDirectoryName(((App)App.Current).FfmpegLocation);
 
 			// datadir for libx264
 			if (!Path.IsPathRooted(dataDir))
@@ -349,6 +325,9 @@ namespace Video_converter
 				Status = ProcessStatus.Failed;
 			}
 
+			if (Status != ProcessStatus.Finished)
+				DeleteProcessingFile();
+
 			ConvertExited(this, new EventArg<bool>(success));
 		}
 
@@ -359,6 +338,14 @@ namespace Video_converter
 				proc.Kill();
 				proc.WaitForExit();
 				Status = ProcessStatus.Stopped;
+			}
+		}
+
+		public void DeleteProcessingFile()
+		{
+			if (File.Exists(ProccesingFile))
+			{
+				File.Delete(ProccesingFile);
 			}
 		}
 
