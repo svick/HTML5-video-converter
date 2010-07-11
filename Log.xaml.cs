@@ -27,7 +27,7 @@ namespace Video_converter
 		{
 			Dispatcher.Invoke((Action)(() =>
 			{
-				TextLog.AppendText(text + "\n");
+				TextLog.AppendText(DateTime.Now.ToString("HH:mm:ss.ff") + ": " +  text + "\n");
 				TextLog.ScrollToEnd();
 			}
 			));
