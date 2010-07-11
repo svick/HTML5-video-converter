@@ -314,7 +314,14 @@ namespace Video_converter
 
 		void proc_Exited(object sender, EventArgs e)
 		{
+			App.Log.Add("Proces převodu skončil");
 			bool success = (ResultBuilder.ToString().IndexOf("video:") != -1);
+
+			if (!success)
+			{
+				System.Threading.Thread.Sleep(100);
+				success = (ResultBuilder.ToString().IndexOf("video:") != -1);
+			}
 
 			if (success)
 			{
@@ -326,7 +333,10 @@ namespace Video_converter
 			}
 
 			if (Status != ProcessStatus.Finished)
+			{
+				App.Log.Add("Při převodu nastala chyba, výstupní soubor bude smazán");
 				DeleteProcessingFile();
+			}
 
 			ConvertExited(this, new EventArg<bool>(success));
 		}
