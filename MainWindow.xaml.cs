@@ -18,7 +18,6 @@ namespace Video_converter
 		Converter converter;
 		
 		ProgressBar progressBar;
-		Log log;
 		object mainContent;
 		DateTime startTime;
 
