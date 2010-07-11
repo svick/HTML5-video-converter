@@ -13,13 +13,12 @@ namespace Video_converter
 			private set;
 		}
 
-		public static Log Log;
+		public static Log Log = new Log();
 
 		public App()
 		{
 			locateFFmpegFile();
 
-			Log = new Log();
 			Log.Show();
 		}
 
