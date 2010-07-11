@@ -103,7 +103,7 @@ namespace Video_converter
 			// 16:9 and higger
 			if (( (double) video.Size.Width / video.Size.Height) > ( (double) 16 / 9))
 			{
-				width = height * 16 / 9;
+				width = (int)Math.Ceiling((double)height * 16 / 9);
 
 				if (width > video.Size.Width)
 					width = video.Size.Width;
@@ -115,7 +115,7 @@ namespace Video_converter
 				if (height > video.Size.Height)
 					height = video.Size.Height;
 
-				width = video.Size.Width * height / video.Size.Height;
+				width = (int)Math.Ceiling((double)video.Size.Width * height / video.Size.Height);
 			}
 			
 			return new Size { Height = height, Width = width };
