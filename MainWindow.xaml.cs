@@ -17,6 +17,7 @@ namespace Video_converter
 		string fileName;
 		
 		ProgressBar progressBar;
+		Log log;
 		object mainContent;
 		DateTime startTime;
 
@@ -131,6 +132,7 @@ namespace Video_converter
 		{
 			Dispatcher.Invoke((Action)(() =>
 			{
+				timer.Stop();
 				progressBar.bar.Value = 100;
 				progressBar.textInfo.Text = "Hotovo: 100 %";
 				taskBarItemInfo.ProgressState = TaskbarItemProgressState.None;
@@ -140,7 +142,9 @@ namespace Video_converter
 		void progressBar_Cancelled(object sender, EventArgs e)
 		{
 			Content = mainContent;
-			Converter.StopAll();
+
+			if(Converter != null)
+				Converter.StopAll();
 		}
 
 		private void Window_Closed(object sender, EventArgs e)
