@@ -276,12 +276,12 @@ namespace Video_converter
 		{
 			string output = string.Empty;
 
-			ProcessStartInfo startInfo = new ProcessStartInfo(((App) App.Current).FfmpegLocation, parameters);
+			ProcessStartInfo startInfo = new ProcessStartInfo(App.FfmpegLocation, parameters);
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
 			startInfo.CreateNoWindow = true;
 
-			string dataDir = Path.GetDirectoryName(((App)App.Current).FfmpegLocation);
+			string dataDir = Path.GetDirectoryName(App.FfmpegLocation);
 
 			// datadir for libx264
 			if (!Path.IsPathRooted(dataDir))

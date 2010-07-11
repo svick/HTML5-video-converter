@@ -7,7 +7,7 @@ namespace Video_converter
 {
 	public partial class App : Application
 	{
-		public string FfmpegLocation
+		public static string FfmpegLocation
 		{
 			get;
 			private set;
