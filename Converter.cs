@@ -63,6 +63,7 @@ namespace Video_converter
 	{
 		public event ProgressChangedEventHandler ProgressChanged;
 		public event AllFinishedEventHander AllFinished;
+		public string OutputFolder { get; private set; }
 
 		private Video video;
 		private ConvertProcesses convertProcesses;
@@ -154,9 +155,12 @@ namespace Video_converter
 		{
 			Format format = Format.GetFormatByName(formatName);
 
-			string outputFilePath = Path.GetDirectoryName(video.Path);
-			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(video.Path);
-			outputFilePath += "_" + height.ToString() + "p." + format.Extension;
+			if (OutputFolder == null)
+			{
+				OutputFolder = Path.GetDirectoryName(video.Path);
+			}
+
+			string outputFilePath = string.Format("{0}\\{1}_{2}p.{3}", OutputFolder, Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension);
 
 			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, height), outputFilePath);
 

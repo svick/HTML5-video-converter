@@ -14,7 +14,7 @@
 				    Zpět
 			</TextBlock>
 		</Button>
-		<Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="10" Name="ShowFolder">
+		<Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="10" Name="ShowFolder" Click="ShowFolder_Click">
 			<TextBlock Margin="10,1" FontSize="13">
 				    Zobrazit složku
 			</TextBlock>

@@ -20,6 +20,7 @@ namespace Video_converter
 	public partial class ConvertDone : UserControl
 	{
 		public event EventHandler BackButton = delegate { };
+		public event EventHandler ShowOutputFolder = delegate { };
 
 		public ConvertDone()
 		{
@@ -29,6 +30,11 @@ namespace Video_converter
 		private void Back_Click(object sender, RoutedEventArgs e)
 		{
 			BackButton(this, EventArgs.Empty);
+		}
+
+		private void ShowFolder_Click(object sender, RoutedEventArgs e)
+		{
+			ShowOutputFolder(this, EventArgs.Empty);
 		}
 	}
 }

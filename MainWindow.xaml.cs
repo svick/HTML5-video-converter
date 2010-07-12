@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -157,8 +158,14 @@ namespace Video_converter
 
 				convertDone = new ConvertDone();
 				convertDone.BackButton += new EventHandler(convertDone_BackButton);
+				convertDone.ShowOutputFolder += new EventHandler(convertDone_ShowOutputFolder);
 				Content = convertDone;
 			}));
+		}
+
+		void convertDone_ShowOutputFolder(object sender, EventArgs e)
+		{
+			Process.Start("explorer.exe", Converter.OutputFolder);
 		}
 
 		void convertDone_BackButton(object sender, EventArgs e)
