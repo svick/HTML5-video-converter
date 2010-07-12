@@ -19,6 +19,11 @@ namespace Video_converter
 			parameters.Add(key, value.ToString());
 		}
 
+		public bool Has(string key)
+		{
+			return parameters.ContainsKey(key);
+		}
+
 		public override string ToString()
 		{
 			StringBuilder builder = new StringBuilder();
@@ -214,15 +219,15 @@ namespace Video_converter
 
 			parameters.Add("f", "mp4");
 
-			if (video.Format != "h264")
+			if (video.Format == "h264" && !parameters.Has("s") && video.BitRate.Video != 0 && video.BitRate.Video < bitRate.Video)
 			{
-				parameters.Add("vcodec", "libx264");
-				parameters.Add("vpre", "normal");
-				parameters.Add("b", bitRate.Video.ToString() + "k");
+				parameters.Add("vcodec", "copy");
 			}
 			else
 			{
-				parameters.Add("vcodec", "copy");
+				parameters.Add("vcodec", "libx264");
+				parameters.Add("vpre", "default");
+				parameters.Add("b", bitRate.Video.ToString() + "k");
 			}
 
 			if (video.AudioFormat != "aac" || (video.BitRate.Audio != 0 && video.BitRate.Audio > bitRate.Audio))
