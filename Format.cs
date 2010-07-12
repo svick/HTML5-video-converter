@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
-
+using System.Text;
 
 namespace Video_converter
 {
@@ -19,7 +18,7 @@ namespace Video_converter
 			parameters.Add(key, value.ToString());
 		}
 
-		public bool Has(string key)
+		public bool Contains(string key)
 		{
 			return parameters.ContainsKey(key);
 		}
@@ -221,7 +220,7 @@ namespace Video_converter
 		{
 			parameters.Add("f", "mp4");
 
-			if (video.Format == "h264" && !parameters.Has("s") && video.BitRate.Video != 0 && video.BitRate.Video < bitRate.Video)
+			if (video.Format == "h264" && !parameters.Contains("s") && video.BitRate.Video != 0 && video.BitRate.Video < bitRate.Video)
 			{
 				parameters.Add("vcodec", "copy");
 			}
