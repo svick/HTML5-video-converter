@@ -43,7 +43,10 @@ namespace Video_converter
 	{
 		public abstract string Extension { get; }
 
-		public abstract string BuildParams(Video video, int height);
+		protected abstract void formatParams(BitRate bitRate);
+
+		protected Video video;
+		protected ParamsBuilder parameters;
 
 		public static Format GetFormatByName(string name)
 		{
@@ -60,61 +63,41 @@ namespace Video_converter
 			}
 		}
 
-		public ParamsBuilder DefaultParams(Video video, int height, ParamsBuilder parameters) 
+		public string BuildParams(Video video, int height)
 		{
+			this.video = video;
+			parameters = new ParamsBuilder();
+
 			parameters.Add("threads", Environment.ProcessorCount);
 
+			Size newSize;
 			if (height != 0)
 			{
-				Size size = Resize(video, height);
+				 newSize = resize(height);
 
-				if (size.Height != video.Size.Height)
+				if (newSize.Height != video.Size.Height)
 				{
-					parameters.Add("s", string.Format("{0}x{1}", size.Width.ToString(), size.Height.ToString()));
+					parameters.Add("s", string.Format("{0}x{1}", newSize.Width.ToString(), newSize.Height.ToString()));
 				}
-			}
-
-			return parameters;
-		}
-
-		public BitRate ComputeBitRate(Video video, int height)
-		{
-			int audioBitRate, videoBitRate;
-
-			if (height == 0)
-				height = video.Size.Height;
-
-			if (height >= 1080)
-			{
-				audioBitRate = 320;
-				videoBitRate = 4000;
-			}
-			else if (height >= 720)
-			{
-				audioBitRate = 256;
-				videoBitRate = 2000;
 			}
 			else
 			{
-				audioBitRate = 256;
-				videoBitRate = 1000;
+				newSize = video.Size;
 			}
 
-			if (video.BitRate.Video != 0 && videoBitRate > video.BitRate.Video)
-				videoBitRate = video.BitRate.Video;
+			BitRate bitRate = computeBitRate(newSize);
 
-			if (video.BitRate.Audio != 0 && audioBitRate > video.BitRate.Audio)
-				audioBitRate = video.BitRate.Audio;
+			formatParams(bitRate);
 
-			return new BitRate { Audio = audioBitRate, Video = videoBitRate };
+			return parameters.ToString();
 		}
 
-		public Size Resize(Video video, int height)
+		private Size resize(int height)
 		{
 			int width;
 
 			// 16:9 and higger
-			if (( (double) video.Size.Width / video.Size.Height) > ( (double) 16 / 9))
+			if (((double)video.Size.Width / video.Size.Height) > ((double)16 / 9))
 			{
 				width = (int)Math.Ceiling((double)height * 16 / 9);
 
@@ -130,8 +113,37 @@ namespace Video_converter
 
 				width = (int)Math.Ceiling((double)video.Size.Width * height / video.Size.Height);
 			}
-			
+
 			return new Size { Height = height, Width = width };
+		}
+
+		private BitRate computeBitRate(Size size)
+		{
+			BitRate bitRate = new BitRate();
+
+			if (size.Height >= 1080 || size.Width >= 1920)
+			{
+				bitRate.Audio = 320;
+				bitRate.Video = 4000;
+			}
+			else if (size.Height >= 720 || size.Width >= 1280)
+			{
+				bitRate.Audio = 256;
+				bitRate.Video = 2000;
+			}
+			else
+			{
+				bitRate.Audio = 256;
+				bitRate.Video = 1000;
+			}
+
+			if (video.BitRate.Video != 0 && bitRate.Video > video.BitRate.Video)
+				bitRate.Video = video.BitRate.Video;
+
+			if (video.BitRate.Audio != 0 && bitRate.Audio > video.BitRate.Audio)
+				bitRate.Audio = video.BitRate.Audio;
+
+			return bitRate;
 		}
 	}
 
@@ -157,12 +169,8 @@ namespace Video_converter
 			}
 		}
 
-		public override string BuildParams(Video video, int height = 0)
+		protected override void formatParams(BitRate bitRate)
 		{
-			ParamsBuilder parameters = DefaultParams(video, height, new ParamsBuilder());
-
-			BitRate bitRate = ComputeBitRate(video, height);
-			
 			parameters.Add("f", "webm");
 
 			if (video.Format != "vp8")
@@ -184,8 +192,6 @@ namespace Video_converter
 			{
 				parameters.Add("acodec", "copy");
 			}
-
-			return parameters.ToString();
 		}
 	}
 
@@ -211,12 +217,8 @@ namespace Video_converter
 			}
 		}
 
-		public override string BuildParams(Video video, int height)
+		protected override void formatParams(BitRate bitRate)
 		{
-			ParamsBuilder parameters = DefaultParams(video, height, new ParamsBuilder());
-
-			BitRate bitRate = ComputeBitRate(video, height);
-
 			parameters.Add("f", "mp4");
 
 			if (video.Format == "h264" && !parameters.Has("s") && video.BitRate.Video != 0 && video.BitRate.Video < bitRate.Video)
@@ -240,8 +242,6 @@ namespace Video_converter
 			{
 				parameters.Add("acodec", "copy");
 			}
-
-			return parameters.ToString();
 		}
 	}
 
@@ -267,12 +267,8 @@ namespace Video_converter
 			}
 		}
 
-		public override string BuildParams(Video video, int height)
+		protected override void formatParams(BitRate bitRate)
 		{
-			ParamsBuilder parameters = DefaultParams(video, height, new ParamsBuilder());
-
-			BitRate bitRate = ComputeBitRate(video, height);
-
 			parameters.Add("f", "ogg");
 
 			if (video.Format != "theora")
@@ -294,8 +290,6 @@ namespace Video_converter
 			{
 				parameters.Add("acodec", "copy");
 			}
-
-			return parameters.ToString();
 		}
 	}
 }
