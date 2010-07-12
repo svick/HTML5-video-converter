@@ -150,21 +150,19 @@ namespace Video_converter
 			return string.Empty;
 		}
 
-		public bool Convert(string formatName, int height)
+		public void Convert(string formatName, int height = 0)
 		{
 			Format format = Format.GetFormatByName(formatName);
 
 			string outputFilePath = Path.GetDirectoryName(video.Path);
 			outputFilePath += "\\" + Path.GetFileNameWithoutExtension(video.Path);
-			outputFilePath += "_" + height.ToString() + "." + format.Extension;
+			outputFilePath += "_" + height.ToString() + "p." + format.Extension;
 
 			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, height), outputFilePath);
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
 			process.ProccesingFile = outputFilePath;
 			convertProcesses.Add(process);
-
-			return true;
 		}
 
 		public void StopAll() 

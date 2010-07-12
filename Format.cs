@@ -14,18 +14,23 @@ namespace Video_converter
 			parameters.Add(key, value);
 		}
 
+		public void Add(string key, int value)
+		{
+			parameters.Add(key, value.ToString());
+		}
+
 		public override string ToString()
 		{
 			StringBuilder builder = new StringBuilder();
 			foreach (KeyValuePair<string, string> par in parameters)
 			{
-				if(par.Value == "")
+				if(par.Value == string.Empty)
 					builder.AppendFormat("-{0} ", par.Key);
 				else
 					builder.AppendFormat("-{0} {1} ", par.Key, par.Value);
 			}
 
-			return builder.ToString();
+			return builder.ToString().Trim();
 		}
 	}
 
@@ -52,7 +57,7 @@ namespace Video_converter
 
 		public ParamsBuilder DefaultParams(Video video, int height, ParamsBuilder parameters) 
 		{
-			parameters.Add("threads", Environment.ProcessorCount.ToString());
+			parameters.Add("threads", Environment.ProcessorCount);
 
 			if (height != 0)
 			{
@@ -259,8 +264,6 @@ namespace Video_converter
 			ParamsBuilder parameters = DefaultParams(video, height, new ParamsBuilder());
 
 			BitRate bitRate = ComputeBitRate(video, height);
-
-			bitRate.Video = bitRate.Video * 12 / 10;
 
 			parameters.Add("f", "ogg");
 
