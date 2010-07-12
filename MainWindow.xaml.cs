@@ -33,6 +33,29 @@ namespace Video_converter
 			formats = new CheckBox[] { webm, h264, theora };
 		}
 
+		private void getVideoInfo(string fileName)
+		{
+			Video video = new Video(fileName);
+			Converter = new Converter(video);
+			Converter.ProgressChanged += new ProgressChangedEventHandler(converter_ProgressChanged);
+			Converter.AllFinished += new AllFinishedEventHander(converter_AllFinished);
+
+			try
+			{
+				Converter.VideoInfo();
+				ConvertButton.IsEnabled = true;
+
+				height1080.IsEnabled = (video.Size.Height >= 1080 || video.Size.Width >= 1920);
+				height720.IsEnabled = (video.Size.Height >= 720 || video.Size.Width >= 1280);
+				height480.IsEnabled = (video.Size.Height >= 480 || video.Size.Width >= 854);
+			}
+			catch (Exception e)
+			{
+				ConvertButton.IsEnabled = false;
+				System.Windows.Forms.MessageBox.Show(e.Message);
+			}
+		}
+
 		private void File_Click(object sender, RoutedEventArgs e)
 		{
 			fileName = fileNameTextBox.Text;
@@ -56,30 +79,7 @@ namespace Video_converter
 				fileName = ofd.FileName;
 				fileNameTextBox.Text = fileName;
 				
-				GetVideoInfo(fileName);
-			}
-		}
-
-		private void GetVideoInfo(string FileName)
-		{
-			Video video = new Video(FileName);
-			Converter = new Converter(video);
-			Converter.ProgressChanged += new ProgressChangedEventHandler(converter_ProgressChanged);
-			Converter.AllFinished += new AllFinishedEventHander(converter_AllFinished);
-
-			try
-			{
-				Converter.VideoInfo();
-				ConvertButton.IsEnabled = true;
-
-				height1080.IsEnabled = (video.Size.Height >= 1080 || video.Size.Width >= 1920);
-				height720.IsEnabled  = (video.Size.Height >= 720  || video.Size.Width >= 1280);
-				height480.IsEnabled  = (video.Size.Height >= 480  || video.Size.Width >= 854);
-			}
-			catch (Exception e)
-			{
-				ConvertButton.IsEnabled = false;
-				System.Windows.Forms.MessageBox.Show(e.Message);
+				getVideoInfo(fileName);
 			}
 		}
 
@@ -166,6 +166,13 @@ namespace Video_converter
 		{
 			if (Converter != null)
 				Converter.StopAll();
+		}
+
+		private void Window_Drop(object sender, DragEventArgs e)
+		{
+			string[] a = (string[]) e.Data.GetData(System.Windows.DataFormats.FileDrop, false);
+			fileNameTextBox.Text = a[0];
+			getVideoInfo(a[0]);
 		}
 	}
 }
