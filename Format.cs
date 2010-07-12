@@ -76,6 +76,9 @@ namespace Video_converter
 		{
 			int audioBitRate, videoBitRate;
 
+			if (height == 0)
+				height = video.Size.Height;
+
 			if (height >= 1080)
 			{
 				audioBitRate = 320;

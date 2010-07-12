@@ -85,6 +85,9 @@ namespace Video_converter
 
 		private void Convert_Click(object sender, RoutedEventArgs e)
 		{
+			if (Converter == null)
+				return;
+
 			progressBar = new ProgressBar();
 
 			progressBar.Cancelled += new System.EventHandler(progressBar_Cancelled);
@@ -104,13 +107,17 @@ namespace Video_converter
 			foreach (CheckBox formatCheckBox in formats)
 				if (formatCheckBox.IsChecked == true)
 				{
+					bool nothingChecked = true;
 					string format = formatCheckBox.Name;
 					foreach (CheckBox resolutionCheckBox in resolutions)
 						if (resolutionCheckBox.IsChecked == true)
 						{
+							nothingChecked = false;
 							int height = int.Parse((string)resolutionCheckBox.Tag);
 							Converter.Convert(format, height);
 						}
+					if (nothingChecked)
+						Converter.Convert(format);
 				}
 		}
 
