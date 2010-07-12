@@ -157,7 +157,7 @@ namespace Video_converter
 		{
 			Format format = Format.GetFormatByName(formatName);
 
-			string outputFilePath = Path.Combine(OutputFolder, string.Format("{1}_{2}p.{3}",Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension));
+			string outputFilePath = Path.Combine(OutputFolder, string.Format("{0}_{1}p.{2}", Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension));
 
 			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, height), outputFilePath);
 
