@@ -18,7 +18,9 @@ namespace Video_converter
 		string fileName;
 		
 		ProgressBar progressBar;
-		object mainContent;
+		ConvertDone convertDone;
+
+		object originalContent;
 		DateTime startTime;
 
 		CheckBox[] resolutions;
@@ -89,10 +91,12 @@ namespace Video_converter
 			if (Converter == null)
 				return;
 
+			Win.AllowDrop = false;
+
 			progressBar = new ProgressBar();
 
 			progressBar.Cancelled += new System.EventHandler(progressBar_Cancelled);
-			mainContent = Content;
+			originalContent = Content;
 
 			Content = progressBar;
 
@@ -149,15 +153,24 @@ namespace Video_converter
 			Dispatcher.Invoke((Action)(() =>
 			{
 				timer.Stop();
-				progressBar.bar.Value = 100;
-				progressBar.textInfo.Text = "Hotovo: 100 %";
 				taskBarItemInfo.ProgressState = TaskbarItemProgressState.None;
+
+				convertDone = new ConvertDone();
+				convertDone.BackButton += new EventHandler(convertDone_BackButton);
+				Content = convertDone;
 			}));
+		}
+
+		void convertDone_BackButton(object sender, EventArgs e)
+		{
+			Content = originalContent;
+			Win.AllowDrop = true;
 		}
 
 		void progressBar_Cancelled(object sender, EventArgs e)
 		{
-			Content = mainContent;
+			Content = originalContent;
+			Win.AllowDrop = true;
 
 			if(Converter != null)
 				Converter.StopAll();

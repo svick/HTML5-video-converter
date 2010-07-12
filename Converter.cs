@@ -56,7 +56,7 @@ namespace Video_converter
 
 	public delegate void ProgressChangedEventHandler(object sender, EventArg<double> e);
 	public delegate void DoneUpdatedEventHandler(ConvertProcess sender, DataReceivedEventArgs e);
-	public delegate void ConvertExitedEventHandler(object sender, EventArg<bool> e);
+	public delegate void ConvertExitedEventHandler(ConvertProcess sender, EventArg<bool> e);
 	public delegate void AllFinishedEventHander(object sender, EventArgs e);
 
 	public class Converter
@@ -210,8 +210,9 @@ namespace Video_converter
 			ProgressChanged(this,	new EventArg<double>(avg));
 		}
 
-		void process_ConvertExited(object sender, EventArg<bool> e)
+		void process_ConvertExited(ConvertProcess sender, EventArg<bool> e)
 		{
+			processes.Remove(sender);
 			--currentThreads;
 
 			foreach (ConvertProcess process in processes)

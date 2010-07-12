@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="Video_converter.ConvertDone"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<TextBlock Grid.Row="0" FontSize="18" HorizontalAlignment="Center" Foreground="#003399" Margin="10">Převod dokončen</TextBlock>
+		<ProgressBar Grid.Row="1" Height="30" Margin="10" />
+		<Button Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10" Name="Back" Click="Back_Click">
+			<TextBlock Margin="20,1" FontSize="13">
+				    Zpět
+			</TextBlock>
+		</Button>
+	</Grid>
+</UserControl>
