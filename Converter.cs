@@ -75,6 +75,8 @@ namespace Video_converter
 			convertProcesses = new ConvertProcesses(Environment.ProcessorCount);
 			convertProcesses.ProgressChanged += new ProgressChangedEventHandler(convertProcesses_ProgressChanged);
 			convertProcesses.AllFinished += new AllFinishedEventHander(convertProcesses_AllFinished);
+
+			OutputFolder = Path.GetDirectoryName(video.Path);
 		}
 
 		void convertProcesses_AllFinished(object sender, EventArgs e)
@@ -155,12 +157,7 @@ namespace Video_converter
 		{
 			Format format = Format.GetFormatByName(formatName);
 
-			if (OutputFolder == null)
-			{
-				OutputFolder = Path.GetDirectoryName(video.Path);
-			}
-
-			string outputFilePath = string.Format("{0}\\{1}_{2}p.{3}", OutputFolder, Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension);
+			string outputFilePath = Path.Combine(OutputFolder, string.Format("{1}_{2}p.{3}",Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension));
 
 			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, height), outputFilePath);
 
