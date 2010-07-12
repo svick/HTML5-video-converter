@@ -214,7 +214,7 @@ namespace Video_converter
 
 			parameters.Add("f", "mp4");
 
-			if (video.Format != "theora")
+			if (video.Format != "h264")
 			{
 				parameters.Add("vcodec", "libx264");
 				parameters.Add("vpre", "normal");
@@ -225,7 +225,7 @@ namespace Video_converter
 				parameters.Add("vcodec", "copy");
 			}
 
-			if (video.AudioFormat != "aac")
+			if (video.AudioFormat != "aac" || (video.BitRate.Audio != 0 && video.BitRate.Audio > bitRate.Audio))
 			{
 				parameters.Add("strict", "experimental");
 				parameters.Add("acodec", "aac");
