@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shell;
+using Microsoft.Win32;
 
 namespace Video_converter
 {
@@ -52,14 +53,14 @@ namespace Video_converter
 			catch (Exception e)
 			{
 				ConvertButton.IsEnabled = false;
-				System.Windows.Forms.MessageBox.Show(e.Message);
+				MessageBox.Show(e.Message);
 			}
 		}
 
 		private void File_Click(object sender, RoutedEventArgs e)
 		{
 			fileName = fileNameTextBox.Text;
-			System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
+			OpenFileDialog ofd = new OpenFileDialog();
 
 			ofd.Filter = "Video|*.avi;*.mp4;*.wmv;*.ogv;*.webm;*.mkv;*.flv;*.mov;*.3gp|Všechny soubory|*.*";
 
@@ -74,7 +75,7 @@ namespace Video_converter
 			else
 				ofd.InitialDirectory = Path.GetDirectoryName(fileName);
 
-			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			if (ofd.ShowDialog() == true)
 			{
 				fileName = ofd.FileName;
 				fileNameTextBox.Text = fileName;
