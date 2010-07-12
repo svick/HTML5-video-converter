@@ -165,7 +165,7 @@ namespace Video_converter
 
 		void convertDone_ShowOutputFolder(object sender, EventArgs e)
 		{
-			Process.Start("explorer.exe", Converter.OutputFolder);
+			Process.Start(Converter.OutputFolder);
 		}
 
 		void convertDone_BackButton(object sender, EventArgs e)
