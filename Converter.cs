@@ -209,11 +209,11 @@ namespace Video_converter
 		{
 			double avg = processes.Select(p => p.Done.TotalMilliseconds).Average();
 			ProgressChanged(this,	new EventArg<double>(avg));
+			App.Log.Add("Průměrný čas: " + avg.ToString() + " ms");
 		}
 
 		void process_ConvertExited(ConvertProcess sender, EventArg<bool> e)
 		{
-			processes.Remove(sender);
 			--currentThreads;
 
 			foreach (ConvertProcess process in processes)
@@ -228,6 +228,7 @@ namespace Video_converter
 
 			if (currentThreads == 0)
 			{
+				processes = new List<ConvertProcess>(4);
 				AllFinished(this, new EventArgs());
 			}
 		}
@@ -346,7 +347,10 @@ namespace Video_converter
 			if (!proc.HasExited)
 			{
 				proc.Kill();
-				proc.WaitForExit();
+
+				if (!proc.HasExited)
+					proc.WaitForExit();
+
 				Status = ProcessStatus.Stopped;
 			}
 		}
