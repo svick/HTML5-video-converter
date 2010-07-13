@@ -209,7 +209,6 @@ namespace Video_converter
 		{
 			double avg = processes.Select(p => p.Done.TotalMilliseconds).Average();
 			ProgressChanged(this,	new EventArg<double>(avg));
-			App.Log.Add("Průměrný čas: " + avg.ToString() + " ms");
 		}
 
 		void process_ConvertExited(ConvertProcess sender, EventArg<bool> e)
@@ -228,22 +227,25 @@ namespace Video_converter
 
 			if (currentThreads == 0)
 			{
-				processes = new List<ConvertProcess>(4);
 				AllFinished(this, new EventArgs());
 			}
 		}
 
 		public void StopAll() 
 		{
-			foreach (ConvertProcess process in processes.ToArray())
+			foreach (ConvertProcess process in processes)
+			{ 
+				if (process.Status == ConvertProcess.ProcessStatus.Waiting)
+				{
+					process.Status = ConvertProcess.ProcessStatus.Stopped;
+				}
+			}
+
+			foreach (ConvertProcess process in processes)
 			{
 				if (process.Status == ConvertProcess.ProcessStatus.Running)
 				{
 					process.Stop();
-				}
-				else if (process.Status == ConvertProcess.ProcessStatus.Waiting)
-				{
-					processes.Remove(process);
 				}
 			}
 		}
@@ -263,9 +265,8 @@ namespace Video_converter
 		private Process proc;
 		private string parameters;
 		private bool outputAtEnd;
-		
 
-		public ConvertProcess(string parameters, bool outputAtEnd = true) 
+		public ConvertProcess(string parameters, bool outputAtEnd = true)
 		{
 			App.Log.Add(parameters);
 			this.parameters = parameters;
@@ -313,6 +314,25 @@ namespace Video_converter
 			return output;
 		}
 
+		public void Stop() 
+		{
+			Status = ProcessStatus.Stopped;
+			if (!proc.HasExited)
+			{
+				proc.Kill();
+				proc.WaitForExit(100);
+				App.Log.Add("Process byl zastaven");
+			}
+		}
+
+		public void DeleteProcessingFile()
+		{
+			if (File.Exists(ProccesingFile))
+			{
+				File.Delete(ProccesingFile);
+			}
+		}
+
 		void proc_Exited(object sender, EventArgs e)
 		{
 			App.Log.Add("Proces převodu skončil");
@@ -342,27 +362,6 @@ namespace Video_converter
 			ConvertExited(this, new EventArg<bool>(success));
 		}
 
-		public void Stop() 
-		{
-			if (!proc.HasExited)
-			{
-				proc.Kill();
-
-				if (!proc.HasExited)
-					proc.WaitForExit();
-
-				Status = ProcessStatus.Stopped;
-			}
-		}
-
-		public void DeleteProcessingFile()
-		{
-			if (File.Exists(ProccesingFile))
-			{
-				File.Delete(ProccesingFile);
-			}
-		}
-
 		static Regex timeRegex = new Regex(@"time=(\d*).(\d*)", RegexOptions.Compiled);
 
 		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
@@ -377,7 +376,7 @@ namespace Video_converter
 			Match m = timeRegex.Match(e.Data);
 			if (m.Success)
 			{
-				Done = new TimeSpan(0, 0, 0, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
+				Done = new TimeSpan(0, 0, 0, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value) * 10);
 				DoneUpdated(this, e);
 			}
 		}
