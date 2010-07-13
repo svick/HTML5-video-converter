@@ -149,7 +149,7 @@ namespace Video_converter
 			totalProgress = e.Data;
 		}
 
-		void converter_AllFinished(object sender, EventArgs e)
+		void converter_AllFinished(object sender, EventArg<bool> e)
 		{
 			Dispatcher.Invoke((Action)(() =>
 			{
@@ -159,7 +159,9 @@ namespace Video_converter
 				convertDone = new ConvertDone();
 				convertDone.BackButton += new EventHandler(convertDone_BackButton);
 				convertDone.ShowOutputFolder += new EventHandler(convertDone_ShowOutputFolder);
-				Content = convertDone;
+
+				if(e.Data)
+					Content = convertDone;
 			}));
 		}
 

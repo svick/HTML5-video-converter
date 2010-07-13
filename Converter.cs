@@ -57,7 +57,7 @@ namespace Video_converter
 	public delegate void ProgressChangedEventHandler(object sender, EventArg<double> e);
 	public delegate void DoneUpdatedEventHandler(ConvertProcess sender, DataReceivedEventArgs e);
 	public delegate void ConvertExitedEventHandler(ConvertProcess sender, EventArg<bool> e);
-	public delegate void AllFinishedEventHander(object sender, EventArgs e);
+	public delegate void AllFinishedEventHander(object sender, EventArg<bool> e);
 
 	public class Converter
 	{
@@ -79,7 +79,7 @@ namespace Video_converter
 			OutputFolder = Path.GetDirectoryName(video.Path);
 		}
 
-		void convertProcesses_AllFinished(object sender, EventArgs e)
+		void convertProcesses_AllFinished(object sender, EventArg<bool> e)
 		{
 			AllFinished(this, e);
 		}
@@ -227,12 +227,13 @@ namespace Video_converter
 
 			if (currentThreads == 0)
 			{
-				AllFinished(this, new EventArgs());
+				AllFinished(this, new EventArg<bool>(sender.Status == ConvertProcess.ProcessStatus.Finished));
 			}
 		}
 
 		public void StopAll() 
 		{
+			App.Log.Add("ConvertProcesses.StopAll()");
 			foreach (ConvertProcess process in processes)
 			{ 
 				if (process.Status == ConvertProcess.ProcessStatus.Waiting)
@@ -316,6 +317,7 @@ namespace Video_converter
 
 		public void Stop() 
 		{
+			App.Log.Add("ConvertProcess.Stop()");
 			Status = ProcessStatus.Stopped;
 			if (!proc.HasExited)
 			{
@@ -335,13 +337,23 @@ namespace Video_converter
 
 		void proc_Exited(object sender, EventArgs e)
 		{
-			App.Log.Add("Proces převodu skončil");
-			bool success = ResultBuilder.ToString().IndexOf("video:") != -1;
+			//proc.Close();
 
-			if (!success)
+			bool success;
+			if (Status == ProcessStatus.Stopped)
 			{
-				System.Threading.Thread.Sleep(100);
+				success = false;
+			}
+			else
+			{
+				App.Log.Add("Proces převodu skončil");
 				success = ResultBuilder.ToString().IndexOf("video:") != -1;
+
+				if (!success)
+				{
+					System.Threading.Thread.Sleep(100);
+					success = ResultBuilder.ToString().IndexOf("video:") != -1;
+				}
 			}
 
 			if (success)
