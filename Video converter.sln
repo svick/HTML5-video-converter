@@ -5,12 +5,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Video converter", "Video co
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0CC03A7A-D18E-46CA-8ADE-C25082BFBCDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CC03A7A-D18E-46CA-8ADE-C25082BFBCDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CC03A7A-D18E-46CA-8ADE-C25082BFBCDB}.Debug|x86.ActiveCfg = Debug|x86
 		{0CC03A7A-D18E-46CA-8ADE-C25082BFBCDB}.Debug|x86.Build.0 = Debug|x86
+		{0CC03A7A-D18E-46CA-8ADE-C25082BFBCDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CC03A7A-D18E-46CA-8ADE-C25082BFBCDB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0CC03A7A-D18E-46CA-8ADE-C25082BFBCDB}.Release|x86.ActiveCfg = Release|x86
 		{0CC03A7A-D18E-46CA-8ADE-C25082BFBCDB}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
