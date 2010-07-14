@@ -120,20 +120,22 @@ namespace Video_converter
 		{
 			BitRate bitRate = new BitRate();
 
+			bitRate.Video = (int)(size.Width * size.Height * 0.0018 + 300);
+
 			if (size.Height >= 1080 || size.Width >= 1920)
 			{
 				bitRate.Audio = 320;
-				bitRate.Video = 4000;
+				//bitRate.Video = 4000;
 			}
 			else if (size.Height >= 720 || size.Width >= 1280)
 			{
 				bitRate.Audio = 256;
-				bitRate.Video = 2000;
+				//bitRate.Video = 2000;
 			}
 			else
 			{
 				bitRate.Audio = 256;
-				bitRate.Video = 1000;
+				//bitRate.Video = 1000;
 			}
 
 			if (video.BitRate.Video != 0 && bitRate.Video > video.BitRate.Video)
