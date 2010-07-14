@@ -322,7 +322,6 @@ namespace Video_converter
 			if (!proc.HasExited)
 			{
 				proc.Kill();
-				proc.WaitForExit(100);
 				App.Log.Add("Process byl zastaven");
 			}
 		}
@@ -337,8 +336,6 @@ namespace Video_converter
 
 		void proc_Exited(object sender, EventArgs e)
 		{
-			//proc.Close();
-
 			bool success;
 			if (Status == ProcessStatus.Stopped)
 			{
