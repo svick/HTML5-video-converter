@@ -197,10 +197,5 @@ namespace Video_converter
 			fileNameTextBox.Text = a[0];
 			getVideoInfo(a[0]);
 		}
-
-/*		private void Win_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-		{
-
-		}*/
 	}
 }
