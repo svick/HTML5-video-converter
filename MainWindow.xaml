@@ -9,6 +9,13 @@
 		</TaskbarItemInfo>
 	</Window.TaskbarItemInfo>
 	
+	<Window.ContextMenu>
+		<ContextMenu>
+			<MenuItem Header=" Nastavení" />
+			<MenuItem Header=" Log" />
+		</ContextMenu>
+	</Window.ContextMenu>
+	
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />
