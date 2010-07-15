@@ -11,8 +11,7 @@
 	
 	<Window.ContextMenu>
 		<ContextMenu>
-			<MenuItem Header=" Nastavení" />
-			<MenuItem Header=" Log" />
+			<MenuItem Header="Zobrazit log" Click="MenuItem_Click" />
 		</ContextMenu>
 	</Window.ContextMenu>
 	

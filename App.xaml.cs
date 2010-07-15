@@ -18,8 +18,6 @@ namespace Video_converter
 		public App()
 		{
 			locateFFmpegFile();
-
-			Log.Show();
 		}
 
 		private void locateFFmpegFile()

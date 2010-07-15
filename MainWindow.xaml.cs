@@ -197,5 +197,10 @@ namespace Video_converter
 			fileNameTextBox.Text = a[0];
 			getVideoInfo(a[0]);
 		}
+
+		private void MenuItem_Click(object sender, RoutedEventArgs e)
+		{
+			App.Log.Show();
+		}
 	}
 }
