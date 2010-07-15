@@ -9,5 +9,8 @@
 				<GradientStop Offset="1.0" Color="#FFFFFF" />
 			</LinearGradientBrush.GradientStops>
 		</LinearGradientBrush>
+		<Style TargetType="MenuItem">
+			<Setter Property="Margin" Value="20" />
+		</Style>
 	</Application.Resources>
 </Application>
