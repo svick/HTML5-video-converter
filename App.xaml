@@ -10,7 +10,7 @@
 			</LinearGradientBrush.GradientStops>
 		</LinearGradientBrush>
 		<Style TargetType="MenuItem">
-			<Setter Property="Margin" Value="20" />
+			<Setter Property="Padding" Value="5 3" />
 		</Style>
 	</Application.Resources>
 </Application>
