@@ -98,6 +98,7 @@
       <DependentUpon>ProgressBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="TimeSpanExtension.cs" />
     <Page Include="ConvertDone.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

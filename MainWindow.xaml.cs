@@ -128,36 +128,6 @@ namespace Video_converter
 				}
 		}
 
-		string remainSeconds(TimeSpan remain)
-		{
-			if (remain.Seconds == 1)
-				return "1 sekunda";
-			else if (remain.Seconds <= 4)
-				return remain.Seconds.ToString() + " sekundy";
-			else
-				return remain.Seconds.ToString() + " sekund";
-		}
-
-		string remainMinutes(TimeSpan remain)
-		{
-			if (remain.Minutes == 1)
-				return "1 minuta";
-			else if (remain.Minutes <= 4)
-				return remain.Minutes.ToString() + " minuty";
-			else
-				return remain.Minutes.ToString() + " minut";
-		}
-
-		string remainHours(TimeSpan remain)
-		{
-			if (remain.Hours == 1)
-				return "1 hodina";
-			else if (remain.Hours <= 4)
-				return remain.Hours.ToString() + " hodiny";
-			else
-				return remain.Hours.ToString() + " hodin";
-		}
-
 		void timer_Tick(object sender, EventArgs e)
 		{
 			taskBarItemInfo.ProgressValue = totalProgress;
@@ -169,16 +139,7 @@ namespace Video_converter
 
 				string remainString = ", zbývá ";
 
-				if (remain.TotalSeconds < 10)
-					remainString += "několik sekund";
-				else if (remain.TotalSeconds < 60)
-					remainString += remainSeconds(remain);
-				else if (remain.TotalMinutes < 10)
-					remainString += remainMinutes(remain) + " a " + remainSeconds(remain);
-				else if (remain.TotalMinutes < 60)
-					remainString += remainMinutes(remain);
-				else
-					remainString += remainHours(remain) + " a " + remainMinutes(remain);
+				remainString += remain.ToLongString();
 
 				progressBar.textInfo.Text = "Hotovo: " + totalProgress.ToString("P") + remainString;
 			}
