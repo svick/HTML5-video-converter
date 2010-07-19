@@ -34,6 +34,7 @@ namespace Video_converter
 		public MainWindow()
 		{
 			InitializeComponent();
+
 			resolutions = new CheckBox[] { height480, height720, height1080 };
 			formats = new CheckBox[] { webm, h264, theora };
 		}
@@ -57,7 +58,7 @@ namespace Video_converter
 			catch (Exception e)
 			{
 				ConvertButton.IsEnabled = false;
-				MessageBox.Show(e.Message);
+				System.Windows.Forms.MessageBox.Show(e.Message, "", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
 			}
 		}
 
@@ -93,7 +94,10 @@ namespace Video_converter
 		private void Convert_Click(object sender, RoutedEventArgs e)
 		{
 			if (Converter == null)
+			{
+				System.Windows.Forms.MessageBox.Show("Nebylo vybráno žádné video pro převod", "", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
 				return;
+			}
 
 			Win.AllowDrop = false;
 
