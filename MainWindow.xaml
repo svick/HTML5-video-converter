@@ -12,6 +12,7 @@
 	<Window.ContextMenu>
 		<ContextMenu>
 			<MenuItem Header="Zobrazit log" Click="MenuItem_Click" />
+			<MenuItem Header="O aplikaci" Click="MenuItem_Click" />
 		</ContextMenu>
 	</Window.ContextMenu>
 	
