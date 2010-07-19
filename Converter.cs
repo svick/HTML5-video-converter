@@ -25,6 +25,7 @@ namespace Video_converter
 	{
 		public string Path { get; private set; }
 		public TimeSpan Duration { get; set; }
+		public int FrameCount { get; set; }
 		public string Format { get; set; }
 		public string AudioFormat { get; set; }
 		public BitRate BitRate = new BitRate();
@@ -131,6 +132,13 @@ namespace Video_converter
 				video.Duration = TimeSpan.Parse(m.Groups[1].Value);
 			}
 
+			m = Regex.Match(output, @"(\d*) fps");
+
+			if (m.Success)
+			{
+				video.FrameCount = (int)(video.Duration.TotalSeconds * float.Parse(m.Groups[1].Value));
+			}
+
 			return video;
 		}
 
@@ -159,14 +167,14 @@ namespace Video_converter
 
 			string outputFilePath = Path.Combine(OutputFolder, string.Format("{0}_{1}p.{2}", Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension));
 
-			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, height), outputFilePath);
+			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, height, pass), outputFilePath);
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
-			process.ProcessName = string.Format("{0}_{1}_{2}", formatName, height, "0");
+			process.ProcessName = string.Format("{0}_{1}_pass{2}", formatName, height, pass);
 			process.ProcessingFile = outputFilePath;
 
 			if(pass == 2)
-				process.ParentProcessName = string.Format("{0}_{1}_{2}", formatName, height, "1");
+				process.ParentProcessName = string.Format("{0}_{1}_pass{2}", formatName, height, 1);
 
 			convertProcesses.Add(process);
 		}
@@ -178,7 +186,7 @@ namespace Video_converter
 
 		void convertProcesses_ProgressChanged(object sender, EventArg<double> e)
 		{
-			double percent = e.Data / video.Duration.TotalMilliseconds;
+			double percent = e.Data / video.FrameCount;
 			ProgressChanged(this, new EventArg<double>(percent));
 		}
 	}
@@ -212,7 +220,7 @@ namespace Video_converter
 
 		void process_DoneUpdated(ConvertProcess sender, DataReceivedEventArgs e)
 		{
-			double avg = processes.Select(p => p.Done.TotalMilliseconds).Average();
+			double avg = processes.Select(p => p.Done).Average();
 			ProgressChanged(this,	new EventArg<double>(avg));
 		}
 
@@ -280,7 +288,7 @@ namespace Video_converter
 		public string ProcessName;
 		public string ParentProcessName;
 		public string ProcessingFile;
-		public TimeSpan Done;
+		public int Done;
 		public enum ProcessStatus { Waiting, Running, Finished, Failed, Stopped }
 		public ProcessStatus Status;
 		public StringBuilder ResultBuilder = new StringBuilder();
@@ -397,7 +405,7 @@ namespace Video_converter
 			ConvertExited(this, new EventArg<bool>(success));
 		}
 
-		static Regex timeRegex = new Regex(@"time=(\d*).(\d*)", RegexOptions.Compiled);
+		static Regex timeRegex = new Regex(@"frame=  (\d*)", RegexOptions.Compiled);
 
 		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
 		{
@@ -411,7 +419,7 @@ namespace Video_converter
 			Match m = timeRegex.Match(e.Data);
 			if (m.Success)
 			{
-				Done = new TimeSpan(0, 0, 0, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value) * 10);
+				Done = int.Parse(m.Groups[1].Value);
 				DoneUpdated(this, e);
 			}
 		}
