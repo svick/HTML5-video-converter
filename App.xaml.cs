@@ -17,7 +17,10 @@ namespace Video_converter
 
 		public App()
 		{
-			WPFLocalizeExtension.Engine.LocalizeDictionary.Instance.Culture = System.Threading.Thread.CurrentThread.CurrentCulture;
+			System.Globalization.CultureInfo culture = System.Threading.Thread.CurrentThread.CurrentCulture;
+			if (culture.Name == "sk-SK")
+				culture = System.Globalization.CultureInfo.CreateSpecificCulture("cs-CZ");
+			WPFLocalizeExtension.Engine.LocalizeDictionary.Instance.Culture = culture;
 			locateFFmpegFile();
 		}
 
