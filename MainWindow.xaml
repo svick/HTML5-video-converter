@@ -29,29 +29,27 @@
 		<StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
 			<TextBlock FontSize="18" HorizontalAlignment="Center" Foreground="#003399" Text="{loc:LocText Key=ConvertVideo, Assembly=Video_converter}" />
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-				<TextBox Name="fileNameTextBox" Width="150" Margin="5" IsReadOnly="True" PreviewMouseLeftButtonUp="File_Click"></TextBox>
+				<TextBox Name="fileNameTextBox" Width="150" Margin="5" IsReadOnly="True" PreviewMouseLeftButtonUp="File_Click" />
 				<Button Margin="5" Click="File_Click">
-					<TextBlock Margin="5,0" Text="Soubor" />
+					<TextBlock Margin="5,0" Text="{loc:LocText Key=File, Assembly=Video_converter}" />
 				</Button>
 			</StackPanel>
 		</StackPanel>
 		<StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0">
-			<TextBlock TextAlignment="Center">Formát</TextBlock>
+			<TextBlock TextAlignment="Center" Text="{loc:LocText Key=VideoFormat, Assembly=Video_converter}" />
 			<CheckBox Margin="3" Name="webm" IsChecked="True">WebM</CheckBox>
 			<CheckBox Margin="3" Name="h264" IsChecked="True">H.264</CheckBox>
 			<CheckBox Margin="3" Name="theora">Theora</CheckBox>
 		</StackPanel>
 		<StackPanel Grid.Row="1" Grid.Column="1">
-			<TextBlock TextAlignment="Center">Velikost</TextBlock>
+			<TextBlock TextAlignment="Center" Text="{loc:LocText Key=VideoSize, Assembly=Video_converter}" />
 			<CheckBox Margin="3" Name="height480" Tag="480">480p</CheckBox>
 			<CheckBox Margin="3" Name="height720" Tag="720">720p</CheckBox>
 			<CheckBox Margin="3" Name="height1080" Tag="1080">1080p</CheckBox>
 		</StackPanel>
 		<Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="#F0F0F0" BorderBrush="#DFDFDF" BorderThickness="0,1,0,0" SnapsToDevicePixels="True" Margin="0,8,0,0" Height="50" VerticalAlignment="Bottom">
 			<Button Margin="10" HorizontalAlignment="Center" Click="Convert_Click" Name="ConvertButton">
-				<TextBlock Margin="20,1" FontSize="13">
-				    Převést
-				</TextBlock>
+				<TextBlock Margin="20,1" FontSize="13" Text="{loc:LocText Key=Convert, Assembly=Video_converter}" />
 			</Button>
 		</Border>
 	</Grid>

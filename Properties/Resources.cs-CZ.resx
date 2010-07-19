@@ -120,7 +120,19 @@
   <data name="AllFiles" xml:space="preserve">
     <value>Všechny soubory</value>
   </data>
+  <data name="Convert" xml:space="preserve">
+    <value>Převést</value>
+  </data>
   <data name="ConvertVideo" xml:space="preserve">
     <value>Převést video</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Soubor</value>
+  </data>
+  <data name="VideoFormat" xml:space="preserve">
+    <value>Formát</value>
+  </data>
+  <data name="VideoSize" xml:space="preserve">
+    <value>Velikost</value>
   </data>
 </root>
