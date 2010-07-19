@@ -66,7 +66,7 @@ namespace Video_converter
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
 
-			ofd.Filter = "Video|" + Settings.Default.supportedFileExtension  + "|Všechny soubory|*.*";
+			ofd.Filter = "Video|" + Settings.Default.supportedFileExtension  + "|" + App.GetLocalizedString("AllFiles") + "|*.*";
 
 			ofd.CheckPathExists = true;
 			ofd.CheckFileExists = true;

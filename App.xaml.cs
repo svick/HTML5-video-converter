@@ -37,5 +37,16 @@ namespace Video_converter
 				throw new Exception("Soubor " + Settings.Default.ffmpegLocation + " nebyl nalezen");
 			}
 		}
+
+		public static string GetLocalizedString(string key)
+		{
+			string result;
+			new WPFLocalizeExtension.Extensions.LocTextExtension
+			{
+				Key = key,
+				Assembly = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name
+			}.ResolveLocalizedValue(out result);
+			return result;
+		}
 	}
 }
