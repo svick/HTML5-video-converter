@@ -58,7 +58,7 @@ namespace Video_converter
 			catch (Exception e)
 			{
 				ConvertButton.IsEnabled = false;
-				System.Windows.Forms.MessageBox.Show(e.Message, "", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+				MessageBox.Show(e.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
@@ -95,7 +95,7 @@ namespace Video_converter
 		{
 			if (Converter == null)
 			{
-				System.Windows.Forms.MessageBox.Show("Nebylo vybráno žádné video pro převod", "", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+				MessageBox.Show("Nebylo vybráno žádné video pro převod", "", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 
