@@ -153,7 +153,7 @@ namespace Video_converter
 			return string.Empty;
 		}
 
-		public void Convert(string formatName, int height = 0)
+		public void Convert(string formatName, int height = 0, int pass = 0)
 		{
 			Format format = Format.GetFormatByName(formatName);
 
@@ -162,7 +162,12 @@ namespace Video_converter
 			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, height), outputFilePath);
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
-			process.ProccesingFile = outputFilePath;
+			process.ProcessName = string.Format("{0}_{1}_{2}", formatName, height, "0");
+			process.ProcessingFile = outputFilePath;
+
+			if(pass == 2)
+				process.ParentProcessName = string.Format("{0}_{1}_{2}", formatName, height, "1");
+
 			convertProcesses.Add(process);
 		}
 
@@ -219,6 +224,24 @@ namespace Video_converter
 			{
 				if (process.Status == ConvertProcess.ProcessStatus.Waiting)
 				{
+					// depend process
+					if (process.ParentProcessName != null)
+					{
+						bool sucess = false;
+						foreach (ConvertProcess p in processes)
+						{
+							if (p.ProcessName == process.ParentProcessName)
+							{
+								if (p.Status == ConvertProcess.ProcessStatus.Finished)
+									sucess = true;
+								break;
+							}
+						}
+
+						if (!sucess)
+							break;
+					}
+
 					process.Run();
 					++currentThreads;
 					break;
@@ -254,7 +277,9 @@ namespace Video_converter
 
 	public class ConvertProcess
 	{
-		public string ProccesingFile;
+		public string ProcessName;
+		public string ParentProcessName;
+		public string ProcessingFile;
 		public TimeSpan Done;
 		public enum ProcessStatus { Waiting, Running, Finished, Failed, Stopped }
 		public ProcessStatus Status;
@@ -283,6 +308,7 @@ namespace Video_converter
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
 			startInfo.CreateNoWindow = true;
+			startInfo.WorkingDirectory = Path.GetDirectoryName(ProcessingFile);
 
 			string dataDir = Path.GetDirectoryName(App.FfmpegLocation);
 
@@ -328,9 +354,9 @@ namespace Video_converter
 
 		public void DeleteProcessingFile()
 		{
-			if (File.Exists(ProccesingFile))
+			if (File.Exists(ProcessingFile))
 			{
-				File.Delete(ProccesingFile);
+				File.Delete(ProcessingFile);
 			}
 		}
 
@@ -378,7 +404,7 @@ namespace Video_converter
 			if (e.Data == null)
 				return;
 
-			App.Log.Add(e.Data);
+			App.Log.Add(ProcessName + ": " + e.Data);
 
 			ResultBuilder.AppendLine(e.Data);
 
