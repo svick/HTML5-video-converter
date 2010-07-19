@@ -17,6 +17,7 @@ namespace Video_converter
 
 		public App()
 		{
+			WPFLocalizeExtension.Engine.LocalizeDictionary.Instance.Culture = System.Threading.Thread.CurrentThread.CurrentUICulture;
 			locateFFmpegFile();
 		}
 
