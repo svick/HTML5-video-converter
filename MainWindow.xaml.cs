@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shell;
 using Microsoft.Win32;
+using Video_converter.Properties;
 
 namespace Video_converter
 {
@@ -14,7 +15,7 @@ namespace Video_converter
 		{
 			get;
       protected set;
-   } 
+		} 
 
 		string fileName;
 		
@@ -64,16 +65,19 @@ namespace Video_converter
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
 
-			ofd.Filter = "Video|*.avi;*.mp4;*.wmv;*.ogv;*.webm;*.mkv;*.flv;*.mov;*.3gp|Všechny soubory|*.*";
+			ofd.Filter = "Video|" + Settings.Default.supportedFileExtension  + "|Všechny soubory|*.*";
 
 			ofd.CheckPathExists = true;
 			ofd.CheckFileExists = true;
 			ofd.Multiselect = false;
 
-			if (File.Exists(fileName))
-				ofd.FileName = fileName;
-			else if (Directory.Exists(Path.GetDirectoryName(fileName)))
+			if (Directory.Exists(Path.GetDirectoryName(fileName)))
+			{
 				ofd.InitialDirectory = Path.GetDirectoryName(fileName);
+
+				if (File.Exists(fileName))
+					ofd.FileName = fileName;
+			}
 			else
 				ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 
@@ -135,17 +139,12 @@ namespace Video_converter
 			{
 				TimeSpan remain = TimeSpan.FromMilliseconds((DateTime.Now - startTime).TotalMilliseconds * (1 - totalProgress) / totalProgress);
 
-				string remainString = ", zbývá ";
+				string remainString = "Zbývá ";
 
 				remainString += remain.ToLongString();
 
-				progressBar.textInfo.Text = "Hotovo: " + totalProgress.ToString("P") + remainString;
+				progressBar.textInfo.Text = remainString;
 			}
-			else
-			{
-				progressBar.textInfo.Text = "Hotovo: " + totalProgress.ToString("P");
-			}
-			
 		}
 
 		void converter_ProgressChanged(object sender, EventArg<double> e)
@@ -198,8 +197,9 @@ namespace Video_converter
 		private void Window_Drop(object sender, DragEventArgs e)
 		{
 			string[] a = (string[]) e.Data.GetData(System.Windows.DataFormats.FileDrop, false);
-			fileNameTextBox.Text = a[0];
-			getVideoInfo(a[0]);
+			fileName = a[0];
+			fileNameTextBox.Text = Path.GetFileName(fileName);
+			getVideoInfo(fileName);
 		}
 
 		private void MenuItem_Click(object sender, RoutedEventArgs e)

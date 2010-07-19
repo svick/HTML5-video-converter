@@ -52,5 +52,17 @@ namespace Video_converter.Properties {
                 this["use64bitFfmpegIfIsSupported"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("*.avi;*.mp4;*.wmv;*.ogv;*.webm;*.mkv;*.flv;*.mov;*.3gp")]
+        public string supportedFileExtension {
+            get {
+                return ((string)(this["supportedFileExtension"]));
+            }
+            set {
+                this["supportedFileExtension"] = value;
+            }
+        }
     }
 }

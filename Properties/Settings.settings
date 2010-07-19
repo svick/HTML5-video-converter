@@ -11,5 +11,8 @@
     <Setting Name="use64bitFfmpegIfIsSupported" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="supportedFileExtension" Type="System.String" Scope="User">
+      <Value Profile="(Default)">*.avi;*.mp4;*.wmv;*.ogv;*.webm;*.mkv;*.flv;*.mov;*.3gp</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
