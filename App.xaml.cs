@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using Video_converter.Properties;
 
+
 namespace Video_converter
 {
 	public partial class App : Application
@@ -17,6 +18,7 @@ namespace Video_converter
 
 		public App()
 		{
+			System.Windows.Forms.Application.EnableVisualStyles();
 			locateFFmpegFile();
 		}
 
@@ -36,6 +38,5 @@ namespace Video_converter
 				throw new Exception("Soubor " + Settings.Default.ffmpegLocation + " nebyl nalezen");
 			}
 		}
-
 	}
 }
