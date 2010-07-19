@@ -11,8 +11,8 @@
 	
 	<Window.ContextMenu>
 		<ContextMenu>
-			<MenuItem Header="Zobrazit log" Click="MenuItem_Click" />
-			<MenuItem Header="O aplikaci" Click="MenuItem_Click" />
+			<MenuItem Header="Zobrazit log" Click="ShowLog" />
+			<MenuItem Header="O aplikaci" Click="ShowAboutWindow" />
 		</ContextMenu>
 	</Window.ContextMenu>
 	
