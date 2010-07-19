@@ -33,7 +33,6 @@ namespace Video_converter
 		public MainWindow()
 		{
 			InitializeComponent();
-			fileNameTextBox.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 			resolutions = new CheckBox[] { height480, height720, height1080 };
 			formats = new CheckBox[] { webm, h264, theora };
 		}
@@ -63,7 +62,6 @@ namespace Video_converter
 
 		private void File_Click(object sender, RoutedEventArgs e)
 		{
-			fileName = fileNameTextBox.Text;
 			OpenFileDialog ofd = new OpenFileDialog();
 
 			ofd.Filter = "Video|*.avi;*.mp4;*.wmv;*.ogv;*.webm;*.mkv;*.flv;*.mov;*.3gp|Všechny soubory|*.*";
@@ -74,15 +72,15 @@ namespace Video_converter
 
 			if (File.Exists(fileName))
 				ofd.FileName = fileName;
-			else if (Directory.Exists(fileName))
-				ofd.InitialDirectory = fileName;
-			else
+			else if (Directory.Exists(Path.GetDirectoryName(fileName)))
 				ofd.InitialDirectory = Path.GetDirectoryName(fileName);
+			else
+				ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 
 			if (ofd.ShowDialog() == true)
 			{
 				fileName = ofd.FileName;
-				fileNameTextBox.Text = fileName;
+				fileNameTextBox.Text = Path.GetFileName(fileName);
 				
 				getVideoInfo(fileName);
 			}
