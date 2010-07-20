@@ -115,7 +115,7 @@ namespace Video_converter
 		{
 			int width;
 
-			// 16:9 and higger
+			// 16:9 and higher
 			if (((double)video.Size.Width / video.Size.Height) > ((double)16 / 9))
 			{
 				width = (int)Math.Ceiling((double)height * 16 / 9);
@@ -133,7 +133,7 @@ namespace Video_converter
 				width = (int)Math.Ceiling((double)video.Size.Width * height / video.Size.Height);
 			}
 
-			// Height and width must by division two
+			// Height and width must be divisible by two
 			if (height % 2 == 1)
 				height--;
 
