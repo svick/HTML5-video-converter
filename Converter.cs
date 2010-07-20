@@ -261,22 +261,11 @@ namespace Video_converter
 					// depend process
 					if (process.ParentProcess != null)
 					{
-						bool sucess = false;
-						foreach (ConvertProcess p in processes)
-						{
-							if (p == process.ParentProcess)
-							{
-								if (p.Status == ConvertProcess.ProcessStatus.Finished)
-									sucess = true;
-								else if (p.Status == ConvertProcess.ProcessStatus.Failed)
-									process.Status = ConvertProcess.ProcessStatus.Failed;
-
-								break;
-							}
-						}
-
-						if (!sucess)
+						ConvertProcess p = process.ParentProcess;
+						if (p.Status == ConvertProcess.ProcessStatus.Finished)
 							break;
+						else if (p.Status == ConvertProcess.ProcessStatus.Failed)
+							process.Status = ConvertProcess.ProcessStatus.Failed;
 					}
 
 					process.Run();
