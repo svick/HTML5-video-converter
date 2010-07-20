@@ -132,20 +132,11 @@ namespace Video_converter
 				video.Duration = TimeSpan.Parse(m.Groups[1].Value);
 			}
 
-			m = Regex.Match(output, @"([\d.]*) fps");
+			m = Regex.Match(output, @"([\d.]*) (?:fps|tbr)");
 
 			if (m.Success)
 			{
 				video.FrameCount = (int)(video.Duration.TotalSeconds * float.Parse(m.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture));
-			}
-			else
-			{
-				m = Regex.Match(output, @"([\d.]*) tbr");
-
-				if (m.Success)
-				{
-					video.FrameCount = (int)(video.Duration.TotalSeconds * float.Parse(m.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture));
-				}
 			}
 
 			return video;
