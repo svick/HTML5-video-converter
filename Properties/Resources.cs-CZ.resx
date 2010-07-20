@@ -142,7 +142,7 @@
     <value>Soubor</value>
   </data>
   <data name="FileNotFound" xml:space="preserve">
-    <value>Soubor {{0}} nebyl nalezen.</value>
+    <value>Soubor {0} nebyl nalezen.</value>
   </data>
   <data name="ShowFolder" xml:space="preserve">
     <value>Zobrazit složku</value>
@@ -196,7 +196,7 @@
     <value>Nebylo vybráno žádné video pro převod.</value>
   </data>
   <data name="Remaining" xml:space="preserve">
-    <value>Zbývá {{0}}</value>
+    <value>Zbývá {0}</value>
   </data>
   <data name="Second1" xml:space="preserve">
     <value>sekunda</value>
@@ -208,7 +208,7 @@
     <value>sekund</value>
   </data>
   <data name="UnknownFormat" xml:space="preserve">
-    <value>Neznámý formát {{0}}.</value>
+    <value>Neznámý formát {0}.</value>
   </data>
   <data name="VideoFormats" xml:space="preserve">
     <value>Video</value>

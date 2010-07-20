@@ -37,17 +37,18 @@ namespace Video_converter
 			}
 			else
 			{
-				throw new FileNotFoundException(string.Format(GetLocalizedString("FileNotFound"), Settings.Default.ffmpegLocation), Settings.Default.ffmpegLocation);
+				throw new FileNotFoundException(GetLocalizedString("FileNotFound", Settings.Default.ffmpegLocation), Settings.Default.ffmpegLocation);
 			}
 		}
 
-		public static string GetLocalizedString(string key)
+		public static string GetLocalizedString(string key, string formatSegment1 = null)
 		{
 			string result;
 			new WPFLocalizeExtension.Extensions.LocTextExtension
 			{
 				Key = key,
-				Assembly = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name
+				Assembly = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,
+				FormatSegment1 = formatSegment1
 			}.ResolveLocalizedValue(out result);
 			return result;
 		}
