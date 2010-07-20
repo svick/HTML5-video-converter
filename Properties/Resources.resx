@@ -142,7 +142,7 @@
     <value>File</value>
   </data>
   <data name="FileNotFound" xml:space="preserve">
-    <value>File {0} not found.</value>
+    <value>File {{0}} not found.</value>
   </data>
   <data name="ShowFolder" xml:space="preserve">
     <value>Show folder</value>
@@ -196,7 +196,7 @@
     <value>No video was selected for conversion.</value>
   </data>
   <data name="Remaining" xml:space="preserve">
-    <value>{0} remaining</value>
+    <value>{{0}} remaining</value>
   </data>
   <data name="Second1" xml:space="preserve">
     <value>second</value>
@@ -208,7 +208,7 @@
     <value>seconds</value>
   </data>
   <data name="UnknownFormat" xml:space="preserve">
-    <value>Unknown format {0}.</value>
+    <value>Unknown format {{0}}.</value>
   </data>
   <data name="VideoFormats" xml:space="preserve">
     <value>Video</value>
