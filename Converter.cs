@@ -105,7 +105,7 @@ namespace Video_converter
 
 			// TODO: Kontrola správnosti regexpů a ošetření chyb
 			// Video info
-			Match m = Regex.Match(output, @"Video: ([^,]*), [^,]*, (\d*)x(\d*), ");
+			Match m = Regex.Match(output, @"Video: ([^,]*), [^,]*, (\d*)x(\d*)");
 
 			if (m.Success)
 			{
@@ -262,10 +262,13 @@ namespace Video_converter
 					if (process.ParentProcess != null)
 					{
 						ConvertProcess p = process.ParentProcess;
-						if (p.Status == ConvertProcess.ProcessStatus.Finished)
-							break;
-						else if (p.Status == ConvertProcess.ProcessStatus.Failed)
+						if (p.Status == ConvertProcess.ProcessStatus.Failed)
+						{
 							process.Status = ConvertProcess.ProcessStatus.Failed;
+							continue;
+						}
+						else if (p.Status != ConvertProcess.ProcessStatus.Finished)
+							continue;
 					}
 
 					process.Run();
