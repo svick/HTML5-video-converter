@@ -120,8 +120,14 @@
   <data name="AllFiles" xml:space="preserve">
     <value>All files</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="Convert" xml:space="preserve">
     <value>Convert</value>
+  </data>
+  <data name="ConvertingVideo" xml:space="preserve">
+    <value>Converting video</value>
   </data>
   <data name="ConvertVideo" xml:space="preserve">
     <value>Convert video</value>
