@@ -216,4 +216,7 @@
   <data name="About" xml:space="preserve">
     <value>O aplikaci</value>
   </data>
+  <data name="ShowLog" xml:space="preserve">
+    <value>Zobrazit log</value>
+  </data>
 </root>
