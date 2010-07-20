@@ -66,7 +66,7 @@ namespace Video_converter
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
 
-			ofd.Filter = "Video|" + Settings.Default.supportedFileExtension  + "|" + App.GetLocalizedString("AllFiles") + "|*.*";
+			ofd.Filter =  App.GetLocalizedString("VideoFormats") + "|" + Settings.Default.supportedFileExtension  + "|" + App.GetLocalizedString("AllFiles") + "|*.*";
 
 			ofd.CheckPathExists = true;
 			ofd.CheckFileExists = true;
@@ -95,7 +95,7 @@ namespace Video_converter
 		{
 			if (Converter == null)
 			{
-				MessageBox.Show("Nebylo vybráno žádné video pro převod", "", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(App.GetLocalizedString("NoVideoSelected"), "", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 
@@ -141,13 +141,11 @@ namespace Video_converter
 
 			if (totalProgress != 0)
 			{
-				TimeSpan remain = TimeSpan.FromMilliseconds((DateTime.Now - startTime).TotalMilliseconds * (1 - totalProgress) / totalProgress);
+				TimeSpan remaining = TimeSpan.FromMilliseconds((DateTime.Now - startTime).TotalMilliseconds * (1 - totalProgress) / totalProgress);
 
-				string remainString = "Zbývá ";
+				string remaingString = string.Format(App.GetLocalizedString("Remaining"), remaining.ToLongString());
 
-				remainString += remain.ToLongString();
-
-				progressBar.textInfo.Text = remainString;
+				progressBar.textInfo.Text = remaingString;
 			}
 		}
 

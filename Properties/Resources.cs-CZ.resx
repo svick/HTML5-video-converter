@@ -162,7 +162,16 @@
   <data name="Log" xml:space="preserve">
     <value>Log</value>
   </data>
+  <data name="NoVideoSelected" xml:space="preserve">
+    <value>Nebylo vybráno žádné video pro převod.</value>
+  </data>
+  <data name="Remaining" xml:space="preserve">
+    <value>Zbývá {0}</value>
+  </data>
   <data name="UnknownFormat" xml:space="preserve">
     <value>Neznámý formát {0}.</value>
+  </data>
+  <data name="VideoFormats" xml:space="preserve">
+    <value>Video</value>
   </data>
 </root>

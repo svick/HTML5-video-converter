@@ -162,7 +162,16 @@
   <data name="Log" xml:space="preserve">
     <value>Log</value>
   </data>
+  <data name="NoVideoSelected" xml:space="preserve">
+    <value>No video was selected for conversion.</value>
+  </data>
+  <data name="Remaining" xml:space="preserve">
+    <value>{0} remaining</value>
+  </data>
   <data name="UnknownFormat" xml:space="preserve">
     <value>Unknown format {0}.</value>
+  </data>
+  <data name="VideoFormats" xml:space="preserve">
+    <value>Video</value>
   </data>
 </root>
