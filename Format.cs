@@ -133,6 +133,7 @@ namespace Video_converter
 				width = (int)Math.Ceiling((double)video.Size.Width * height / video.Size.Height);
 			}
 
+			// Height and width must by division two
 			if (height % 2 == 1)
 				height--;
 
