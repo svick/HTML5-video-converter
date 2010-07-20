@@ -6,10 +6,15 @@
 			<RowDefinition />
 			<RowDefinition />
 			<RowDefinition />
+			<RowDefinition />
 		</Grid.RowDefinitions>
-		<TextBlock Grid.Row="0" FontSize="18" HorizontalAlignment="Center" Foreground="#003399" Margin="10">Převod dokončen</TextBlock>
-		<ProgressBar Grid.Row="1" Height="30" Margin="10" Value="100"  />
-		<Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Margin="10" Name="Back" Click="Back_Click">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+		<TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontSize="18" HorizontalAlignment="Center" Foreground="#003399" Margin="10">Převod dokončen</TextBlock>
+		<ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Height="30" Margin="10" Value="100"  />
+		<Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Margin="10" Name="Back" Click="Back_Click">
 			<TextBlock Margin="10,1" FontSize="13">
 				    Zpět
 			</TextBlock>
