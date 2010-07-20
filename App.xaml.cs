@@ -17,7 +17,7 @@ namespace Video_converter
 
 		public App()
 		{
-			System.Globalization.CultureInfo culture = System.Threading.Thread.CurrentThread.CurrentCulture;
+			System.Globalization.CultureInfo culture = System.Threading.Thread.CurrentThread.CurrentUICulture;
 			if (culture.Name == "sk-SK")
 				culture = System.Globalization.CultureInfo.CreateSpecificCulture("cs-CZ");
 			WPFLocalizeExtension.Engine.LocalizeDictionary.Instance.Culture = culture;
