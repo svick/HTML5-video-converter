@@ -153,8 +153,29 @@
   <data name="VideoSize" xml:space="preserve">
     <value>Size</value>
   </data>
+  <data name="And" xml:space="preserve">
+    <value>and</value>
+  </data>
   <data name="CantConvert" xml:space="preserve">
     <value>This video format cannot be converted.</value>
+  </data>
+  <data name="Day1" xml:space="preserve">
+    <value>day</value>
+  </data>
+  <data name="Day24" xml:space="preserve">
+    <value>days</value>
+  </data>
+  <data name="Day5" xml:space="preserve">
+    <value>days</value>
+  </data>
+  <data name="Hour1" xml:space="preserve">
+    <value>hour</value>
+  </data>
+  <data name="Hour24" xml:space="preserve">
+    <value>hours</value>
+  </data>
+  <data name="Hour5" xml:space="preserve">
+    <value>hours</value>
   </data>
   <data name="InvalidInputFileFormat" xml:space="preserve">
     <value>Invalid input file format.</value>
@@ -162,11 +183,29 @@
   <data name="Log" xml:space="preserve">
     <value>Log</value>
   </data>
+  <data name="Minute1" xml:space="preserve">
+    <value>minute</value>
+  </data>
+  <data name="Minute24" xml:space="preserve">
+    <value>minutes</value>
+  </data>
+  <data name="Minute5" xml:space="preserve">
+    <value>minutes</value>
+  </data>
   <data name="NoVideoSelected" xml:space="preserve">
     <value>No video was selected for conversion.</value>
   </data>
   <data name="Remaining" xml:space="preserve">
     <value>{0} remaining</value>
+  </data>
+  <data name="Second1" xml:space="preserve">
+    <value>second</value>
+  </data>
+  <data name="Second24" xml:space="preserve">
+    <value>seconds</value>
+  </data>
+  <data name="Second5" xml:space="preserve">
+    <value>seconds</value>
   </data>
   <data name="UnknownFormat" xml:space="preserve">
     <value>Unknown format {0}.</value>

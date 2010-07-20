@@ -153,8 +153,29 @@
   <data name="VideoSize" xml:space="preserve">
     <value>Velikost</value>
   </data>
+  <data name="And" xml:space="preserve">
+    <value>a</value>
+  </data>
   <data name="CantConvert" xml:space="preserve">
     <value>Tento formát videa nelze převést.</value>
+  </data>
+  <data name="Day1" xml:space="preserve">
+    <value>den</value>
+  </data>
+  <data name="Day24" xml:space="preserve">
+    <value>dny</value>
+  </data>
+  <data name="Day5" xml:space="preserve">
+    <value>dní</value>
+  </data>
+  <data name="Hour1" xml:space="preserve">
+    <value>hodina</value>
+  </data>
+  <data name="Hour24" xml:space="preserve">
+    <value>hodiny</value>
+  </data>
+  <data name="Hour5" xml:space="preserve">
+    <value>hodin</value>
   </data>
   <data name="InvalidInputFileFormat" xml:space="preserve">
     <value>Neplatný formát vstupního souboru.</value>
@@ -162,11 +183,29 @@
   <data name="Log" xml:space="preserve">
     <value>Log</value>
   </data>
+  <data name="Minute1" xml:space="preserve">
+    <value>minuta</value>
+  </data>
+  <data name="Minute24" xml:space="preserve">
+    <value>minuty</value>
+  </data>
+  <data name="Minute5" xml:space="preserve">
+    <value>minut</value>
+  </data>
   <data name="NoVideoSelected" xml:space="preserve">
     <value>Nebylo vybráno žádné video pro převod.</value>
   </data>
   <data name="Remaining" xml:space="preserve">
     <value>Zbývá {0}</value>
+  </data>
+  <data name="Second1" xml:space="preserve">
+    <value>sekunda</value>
+  </data>
+  <data name="Second24" xml:space="preserve">
+    <value>sekundy</value>
+  </data>
+  <data name="Second5" xml:space="preserve">
+    <value>sekund</value>
   </data>
   <data name="UnknownFormat" xml:space="preserve">
     <value>Neznámý formát {0}.</value>
