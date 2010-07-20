@@ -6,8 +6,7 @@
 	Title="HTML 5" Width="240" Height="250" ResizeMode="CanMinimize" Background="{StaticResource gradient}" Closed="Window_Closed" Icon="videoConverter.ico" AllowDrop="True" Drop="Window_Drop" Name="Win">
 
 	<Window.TaskbarItemInfo>
-		<TaskbarItemInfo x:Name="taskBarItemInfo"> 
-		</TaskbarItemInfo>
+		<TaskbarItemInfo /> 
 	</Window.TaskbarItemInfo>
 	
 	<Window.ContextMenu>

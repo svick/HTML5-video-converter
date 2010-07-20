@@ -108,7 +108,7 @@ namespace Video_converter
 
 			Content = progressBar;
 
-			taskBarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+			TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
 
 			timer = new System.Windows.Threading.DispatcherTimer();
 			timer.Tick += new EventHandler(timer_Tick);
@@ -136,7 +136,7 @@ namespace Video_converter
 
 		void timer_Tick(object sender, EventArgs e)
 		{
-			taskBarItemInfo.ProgressValue = totalProgress;
+			TaskbarItemInfo.ProgressValue = totalProgress;
 			progressBar.bar.Value = totalProgress * 100;
 
 			if (totalProgress != 0)
@@ -159,7 +159,7 @@ namespace Video_converter
 			Dispatcher.Invoke((Action)(() =>
 			{
 				timer.Stop();
-				taskBarItemInfo.ProgressState = TaskbarItemProgressState.None;
+				TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
 				convertDone = new ConvertDone();
 				convertDone.BackButton += new EventHandler(convertDone_BackButton);
