@@ -33,7 +33,7 @@ namespace Video_converter
 		public Video(string path)
 		{
 			if (!File.Exists(path))
-				throw new Exception("File not found");
+				throw new FileNotFoundException(string.Format(App.GetLocalizedString("FileNotFound"), path), path);
 
 			this.Path = path;
 		}
@@ -93,12 +93,12 @@ namespace Video_converter
 			// is regular video file
 			if (output.Contains("Invalid data found when processing input"))
 			{
-				throw new Exception("Neplatný formát vstupního souboru");
+				throw new Exception(App.GetLocalizedString("InvalidInputFileFormat"));
 			}
 
 			if (output.Contains("could not find codec parameters"))
 			{
-				throw new Exception("Tento formát videa nelze převést");
+				throw new Exception(App.GetLocalizedString("CantConvert"));
 			}
 
 			// TODO: Kontrola správnosti regexpů a ošetření chyb

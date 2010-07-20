@@ -153,4 +153,10 @@
   <data name="VideoSize" xml:space="preserve">
     <value>Size</value>
   </data>
+  <data name="CantConvert" xml:space="preserve">
+    <value>This video format cannot be converted.</value>
+  </data>
+  <data name="InvalidInputFileFormat" xml:space="preserve">
+    <value>Invalid input file format.</value>
+  </data>
 </root>

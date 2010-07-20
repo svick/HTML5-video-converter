@@ -153,4 +153,10 @@
   <data name="VideoSize" xml:space="preserve">
     <value>Velikost</value>
   </data>
+  <data name="CantConvert" xml:space="preserve">
+    <value>Tento formát videa nelze převést.</value>
+  </data>
+  <data name="InvalidInputFileFormat" xml:space="preserve">
+    <value>Neplatný formát vstupního souboru.</value>
+  </data>
 </root>
