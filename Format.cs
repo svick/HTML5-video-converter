@@ -72,7 +72,7 @@ namespace Video_converter
 			case "theora":
 				return TheoraFormat.Instance;
 			default:
-				throw new Exception(string.Format("Neznámý formát {0}.", name));
+				throw new Exception(string.Format(App.GetLocalizedString("UnknownFormat"), name));
 			}
 		}
 

@@ -1,19 +1,19 @@
 ﻿<UserControl x:Class="Video_converter.ProgressBar"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:loc="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition />
 			<RowDefinition />
 			<RowDefinition />
+			<RowDefinition />
 		</Grid.RowDefinitions>
-		<TextBlock Grid.Row="0" FontSize="18" HorizontalAlignment="Center" Foreground="#003399" Margin="10">Převádění videa</TextBlock>
+		<TextBlock Grid.Row="0" FontSize="18" HorizontalAlignment="Center" Foreground="#003399" Margin="10" Text="{loc:LocText Key=ConvertingVideo, Assembly=Video_converter}" />
 		<ProgressBar Grid.Row="1" Height="30" Margin="10" Name="bar" />
-		<TextBlock Grid.Row="2" Name="textInfo" Margin="10 0"></TextBlock>
+		<TextBlock Grid.Row="2" Name="textInfo" Margin="10 0" />
 		<Button Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10" Name="Cancel" Click="Cancel_Click">
-			<TextBlock Margin="20,1" FontSize="13">
-				    Zrušit
-			</TextBlock>
+			<TextBlock Margin="20,1" FontSize="13" Text="{loc:LocText Key=Cancel, Assembly=Video_converter}" />
 		</Button>
 	</Grid>
 </UserControl>
