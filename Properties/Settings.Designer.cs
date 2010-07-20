@@ -55,7 +55,7 @@ namespace Video_converter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("*.avi;*.mp4;*.wmv;*.ogv;*.webm;*.mkv;*.flv;*.mov;*.3gp")]
+        [global::System.Configuration.DefaultSettingValueAttribute("*.avi;*.mp4;*.wmv;*.ogv;*.webm;*.mkv;*.flv;*.mov;*.3gp;*.mpg")]
         public string supportedFileExtension {
             get {
                 return ((string)(this["supportedFileExtension"]));
