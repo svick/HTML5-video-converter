@@ -40,11 +40,21 @@ namespace Video_converter
 			}
 		}
 
+		public static string[] getLocalizedForms(string unitName)
+		{
+			return new string[]
+			{
+				App.GetLocalizedString(unitName + "1"),
+				App.GetLocalizedString(unitName + "24"),
+				App.GetLocalizedString(unitName + "5")
+			};
+		}
+
 		static readonly Unit[] units = new Unit[] {
-			new Unit(ts => ts.Days, new string[] { "den", "dny", "dní" }),
-			new Unit(ts => ts.Hours, new string[] { "hodina", "hodiny", "hodin" }),
-			new Unit(ts => ts.Minutes, new string[] { "minuta", "minuty", "minut" }),
-			new Unit(ts => ts.Seconds, new string[] { "sekunda", "sekundy", "sekund" })
+			new Unit(ts => ts.Days, getLocalizedForms("Day")),
+			new Unit(ts => ts.Hours, getLocalizedForms("Hour")),
+			new Unit(ts => ts.Minutes, getLocalizedForms("Minute")),
+			new Unit(ts => ts.Seconds, getLocalizedForms("Second"))
 		};
 
 		public static string ToLongString(this TimeSpan timeSpan)
@@ -54,7 +64,7 @@ namespace Video_converter
 			{
 				if (result != null)
 				{
-					result += " a " + unit.Format(timeSpan);
+					result += " " + App.GetLocalizedString("And") + " " + unit.Format(timeSpan);
 					break;
 				}
 				else

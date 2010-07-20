@@ -17,6 +17,10 @@ namespace Video_converter
 
 		public App()
 		{
+			System.Globalization.CultureInfo culture = System.Threading.Thread.CurrentThread.CurrentCulture;
+			if (culture.Name == "sk-SK")
+				culture = System.Globalization.CultureInfo.CreateSpecificCulture("cs-CZ");
+			WPFLocalizeExtension.Engine.LocalizeDictionary.Instance.Culture = culture;
 			locateFFmpegFile();
 		}
 
@@ -33,8 +37,19 @@ namespace Video_converter
 			}
 			else
 			{
-				throw new Exception("Soubor " + Settings.Default.ffmpegLocation + " nebyl nalezen");
+				throw new FileNotFoundException(string.Format(GetLocalizedString("FileNotFound"), Settings.Default.ffmpegLocation), Settings.Default.ffmpegLocation);
 			}
+		}
+
+		public static string GetLocalizedString(string key)
+		{
+			string result;
+			new WPFLocalizeExtension.Extensions.LocTextExtension
+			{
+				Key = key,
+				Assembly = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name
+			}.ResolveLocalizedValue(out result);
+			return result;
 		}
 	}
 }

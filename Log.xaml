@@ -1,6 +1,7 @@
 ﻿<Window x:Class="Video_converter.Log"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	Title="Log" Height="400" Width="800" Closing="Window_Closing">
+	xmlns:loc="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
+	Title="{loc:LocText Key=Log, Assembly=Video_converter}" Height="400" Width="800" Closing="Window_Closing">
 	<TextBox Name="TextLog" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
 </Window>

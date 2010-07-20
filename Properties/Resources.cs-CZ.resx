@@ -118,102 +118,102 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AllFiles" xml:space="preserve">
-    <value>All files</value>
+    <value>Všechny soubory</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Zpět</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Zrušit</value>
   </data>
   <data name="Convert" xml:space="preserve">
-    <value>Convert</value>
+    <value>Převést</value>
   </data>
   <data name="ConvertDone" xml:space="preserve">
-    <value>Conversion finished</value>
+    <value>Převod dokončen</value>
   </data>
   <data name="ConvertingVideo" xml:space="preserve">
-    <value>Converting video</value>
+    <value>Převádění videa</value>
   </data>
   <data name="ConvertVideo" xml:space="preserve">
-    <value>Convert video</value>
+    <value>Převést video</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Soubor</value>
   </data>
   <data name="FileNotFound" xml:space="preserve">
-    <value>File {0} not found.</value>
+    <value>Soubor {0} nebyl nalezen.</value>
   </data>
   <data name="ShowFolder" xml:space="preserve">
-    <value>Show folder</value>
+    <value>Zobrazit složku</value>
   </data>
   <data name="VideoFormat" xml:space="preserve">
-    <value>Format</value>
+    <value>Formát</value>
   </data>
   <data name="VideoSize" xml:space="preserve">
-    <value>Size</value>
+    <value>Velikost</value>
   </data>
   <data name="And" xml:space="preserve">
-    <value>and</value>
+    <value>a</value>
   </data>
   <data name="CantConvert" xml:space="preserve">
-    <value>This video format cannot be converted.</value>
+    <value>Tento formát videa nelze převést.</value>
   </data>
   <data name="Day1" xml:space="preserve">
-    <value>day</value>
+    <value>den</value>
   </data>
   <data name="Day24" xml:space="preserve">
-    <value>days</value>
+    <value>dny</value>
   </data>
   <data name="Day5" xml:space="preserve">
-    <value>days</value>
+    <value>dní</value>
   </data>
   <data name="Hour1" xml:space="preserve">
-    <value>hour</value>
+    <value>hodina</value>
   </data>
   <data name="Hour24" xml:space="preserve">
-    <value>hours</value>
+    <value>hodiny</value>
   </data>
   <data name="Hour5" xml:space="preserve">
-    <value>hours</value>
+    <value>hodin</value>
   </data>
   <data name="InvalidInputFileFormat" xml:space="preserve">
-    <value>Invalid input file format.</value>
+    <value>Neplatný formát vstupního souboru.</value>
   </data>
   <data name="Log" xml:space="preserve">
     <value>Log</value>
   </data>
   <data name="Minute1" xml:space="preserve">
-    <value>minute</value>
+    <value>minuta</value>
   </data>
   <data name="Minute24" xml:space="preserve">
-    <value>minutes</value>
+    <value>minuty</value>
   </data>
   <data name="Minute5" xml:space="preserve">
-    <value>minutes</value>
+    <value>minut</value>
   </data>
   <data name="NoVideoSelected" xml:space="preserve">
-    <value>No video was selected for conversion.</value>
+    <value>Nebylo vybráno žádné video pro převod.</value>
   </data>
   <data name="Remaining" xml:space="preserve">
-    <value>{0} remaining</value>
+    <value>Zbývá {0}</value>
   </data>
   <data name="Second1" xml:space="preserve">
-    <value>second</value>
+    <value>sekunda</value>
   </data>
   <data name="Second24" xml:space="preserve">
-    <value>seconds</value>
+    <value>sekundy</value>
   </data>
   <data name="Second5" xml:space="preserve">
-    <value>seconds</value>
+    <value>sekund</value>
   </data>
   <data name="UnknownFormat" xml:space="preserve">
-    <value>Unknown format {0}.</value>
+    <value>Neznámý formát {0}.</value>
   </data>
   <data name="VideoFormats" xml:space="preserve">
     <value>Video</value>
   </data>
   <data name="About" xml:space="preserve">
-    <value>About</value>
+    <value>O aplikaci</value>
   </data>
 </root>
