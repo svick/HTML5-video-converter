@@ -11,8 +11,8 @@
 	
 	<Window.ContextMenu>
 		<ContextMenu>
-			<MenuItem Header="Zobrazit log" Click="ShowLog" />
-			<MenuItem Header="O aplikaci" Click="ShowAboutWindow" />
+			<MenuItem Header="{loc:LocText Key=ShowLog, Assembly=Video_converter}" Click="ShowLog" />
+			<MenuItem Header="{loc:LocText Key=About, Assembly=Video_converter}" Click="ShowAboutWindow" />
 		</ContextMenu>
 	</Window.ContextMenu>
 	
