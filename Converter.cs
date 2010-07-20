@@ -247,8 +247,7 @@ namespace Video_converter
 
 			if (currentThreads < maxThreads)
 			{
-				++currentThreads;
-				process.Run();
+				runNext();
 			}
 		}
 
@@ -262,6 +261,16 @@ namespace Video_converter
 		{
 			--currentThreads;
 
+			runNext();
+
+			if (currentThreads == 0)
+			{
+				AllFinished(this, new EventArg<bool>(sender.Status == ConvertProcess.ProcessStatus.Finished));
+			}
+		}
+
+		private void runNext() 
+		{
 			foreach (ConvertProcess process in processes)
 			{
 				if (process.Status == ConvertProcess.ProcessStatus.Waiting)
@@ -283,11 +292,6 @@ namespace Video_converter
 					++currentThreads;
 					break;
 				}
-			}
-
-			if (currentThreads == 0)
-			{
-				AllFinished(this, new EventArg<bool>(sender.Status == ConvertProcess.ProcessStatus.Finished));
 			}
 		}
 
@@ -431,6 +435,7 @@ namespace Video_converter
 			}
 			else if (parameters.Contains("pass") && parameters.Get("pass") == "1")
 			{
+				App.Log.Add("První průchod ukončen, výstupní soubor bude smazán");
 				DeleteProcessingFile();
 			}
 
