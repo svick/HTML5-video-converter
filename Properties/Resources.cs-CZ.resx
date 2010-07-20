@@ -213,4 +213,7 @@
   <data name="VideoFormats" xml:space="preserve">
     <value>Video</value>
   </data>
+  <data name="About" xml:space="preserve">
+    <value>O aplikaci</value>
+  </data>
 </root>
