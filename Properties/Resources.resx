@@ -159,4 +159,7 @@
   <data name="InvalidInputFileFormat" xml:space="preserve">
     <value>Invalid input file format.</value>
   </data>
+  <data name="UnknownFormat" xml:space="preserve">
+    <value>Unknown format {0}.</value>
+  </data>
 </root>

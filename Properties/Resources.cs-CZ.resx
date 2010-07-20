@@ -159,4 +159,7 @@
   <data name="InvalidInputFileFormat" xml:space="preserve">
     <value>Neplatný formát vstupního souboru.</value>
   </data>
+  <data name="UnknownFormat" xml:space="preserve">
+    <value>Neznámý formát {0}.</value>
+  </data>
 </root>
