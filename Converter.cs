@@ -168,9 +168,25 @@ namespace Video_converter
 			return string.Empty;
 		}
 
-		public void Convert(string formatName, int height = 0, int pass = 0)
+		public void Convert(string formatName, int height = 0, int passNumber = 1)
 		{
-			pass = 1;
+			if (passNumber == 1)
+			{
+				createConvertProcess(formatName, height, 0);
+			}
+			else if (passNumber == 2)
+			{
+				ConvertProcess parentProcess = createConvertProcess(formatName, height, 1);
+				createConvertProcess(formatName, height, 2, parentProcess);
+			}
+			else
+			{
+				throw new Exception(string.Format("Wrong pass number {0}. Must be 1 or 2.", passNumber));
+			}
+		}
+
+		private ConvertProcess createConvertProcess(string formatName, int height = 0, int pass = 0, ConvertProcess parentProcess = null)
+		{
 			Format format = Format.GetFormatByName(formatName);
 
 			ParamsBuilder parameters = format.BuildParams(video, height, pass);
@@ -181,10 +197,12 @@ namespace Video_converter
 			ConvertProcess process = new ConvertProcess(parameters, false);
 			process.ProcessName = string.Format("{0}_{1}_pass{2}", formatName, height, pass);
 
-			if(pass == 2)
-				process.ParentProcessName = string.Format("{0}_{1}_pass{2}", formatName, height, 1);
+			if (parentProcess != null)
+				process.ParentProcess = parentProcess;
 
 			convertProcesses.Add(process);
+
+			return process;
 		}
 
 		public void StopAll() 
@@ -241,15 +259,18 @@ namespace Video_converter
 				if (process.Status == ConvertProcess.ProcessStatus.Waiting)
 				{
 					// depend process
-					if (process.ParentProcessName != null)
+					if (process.ParentProcess != null)
 					{
 						bool sucess = false;
 						foreach (ConvertProcess p in processes)
 						{
-							if (p.ProcessName == process.ParentProcessName)
+							if (p == process.ParentProcess)
 							{
 								if (p.Status == ConvertProcess.ProcessStatus.Finished)
 									sucess = true;
+								else if (p.Status == ConvertProcess.ProcessStatus.Failed)
+									process.Status = ConvertProcess.ProcessStatus.Failed;
+
 								break;
 							}
 						}
@@ -294,7 +315,7 @@ namespace Video_converter
 	public class ConvertProcess
 	{
 		public string ProcessName;
-		public string ParentProcessName;
+		public ConvertProcess ParentProcess;
 		public int Done;
 		public enum ProcessStatus { Waiting, Running, Finished, Failed, Stopped }
 		public ProcessStatus Status;
