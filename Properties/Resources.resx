@@ -135,6 +135,9 @@
   <data name="File" xml:space="preserve">
     <value>File</value>
   </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>File {0} not found.</value>
+  </data>
   <data name="VideoFormat" xml:space="preserve">
     <value>Format</value>
   </data>

@@ -135,6 +135,9 @@
   <data name="File" xml:space="preserve">
     <value>Soubor</value>
   </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>Soubor {0} nebyl nalezen.</value>
+  </data>
   <data name="VideoFormat" xml:space="preserve">
     <value>Formát</value>
   </data>

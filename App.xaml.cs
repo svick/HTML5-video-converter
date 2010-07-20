@@ -37,7 +37,7 @@ namespace Video_converter
 			}
 			else
 			{
-				throw new Exception("Soubor " + Settings.Default.ffmpegLocation + " nebyl nalezen");
+				throw new FileNotFoundException(string.Format(GetLocalizedString("FileNotFound"), Settings.Default.ffmpegLocation), Settings.Default.ffmpegLocation);
 			}
 		}
 
