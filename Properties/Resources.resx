@@ -120,11 +120,17 @@
   <data name="AllFiles" xml:space="preserve">
     <value>All files</value>
   </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
   <data name="Convert" xml:space="preserve">
     <value>Convert</value>
+  </data>
+  <data name="ConvertDone" xml:space="preserve">
+    <value>Conversion finished</value>
   </data>
   <data name="ConvertingVideo" xml:space="preserve">
     <value>Converting video</value>
@@ -137,6 +143,9 @@
   </data>
   <data name="FileNotFound" xml:space="preserve">
     <value>File {0} not found.</value>
+  </data>
+  <data name="ShowFolder" xml:space="preserve">
+    <value>Show folder</value>
   </data>
   <data name="VideoFormat" xml:space="preserve">
     <value>Format</value>
