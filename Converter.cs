@@ -25,6 +25,7 @@ namespace Video_converter
 	{
 		public string Path { get; private set; }
 		public TimeSpan Duration { get; set; }
+		public int FrameCount { get; set; }
 		public string Format { get; set; }
 		public string AudioFormat { get; set; }
 		public BitRate BitRate = new BitRate();
@@ -86,7 +87,8 @@ namespace Video_converter
 
 		public Video VideoInfo() 
 		{
-			string parameters = string.Format("-i \"{0}\"", video.Path);
+			ParamsBuilder parameters = new ParamsBuilder();
+			parameters.InputFile = video.Path;
 
 			string output = new ConvertProcess(parameters).Run();
 
@@ -131,6 +133,13 @@ namespace Video_converter
 				video.Duration = TimeSpan.Parse(m.Groups[1].Value);
 			}
 
+			m = Regex.Match(output, @"([\d.]*) fps");
+
+			if (m.Success)
+			{
+				video.FrameCount = (int)(video.Duration.TotalSeconds * float.Parse(m.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture));
+			}
+
 			return video;
 		}
 
@@ -141,7 +150,13 @@ namespace Video_converter
 			int height = 100;
 			int width = video.Size.Width / (video.Size.Height / height);
 
-			string parameters = string.Format("-i \"{0}\" -an -vframes 1 -s {1}x{2} -ss 00:00:10 -f image2 {3}", video.Path, width, height, imageFileName);
+			ParamsBuilder parameters = new ParamsBuilder();
+			parameters.Add("an");
+			parameters.Add("vframes", 1);
+			parameters.Add("s", string.Format("{1}x{2}", width, height));
+			parameters.Add("f", "image2");
+			parameters.OutputFile = imageFileName;
+			parameters.InputFile = video.Path;
 
 			string output = new ConvertProcess(parameters).Run();
 
@@ -153,17 +168,41 @@ namespace Video_converter
 			return string.Empty;
 		}
 
-		public void Convert(string formatName, int height = 0)
+		public void Convert(string formatName, int height = 0, int passNumber = 1)
+		{
+			if (passNumber == 1)
+			{
+				createConvertProcess(formatName, height, 0);
+			}
+			else if (passNumber == 2)
+			{
+				ConvertProcess parentProcess = createConvertProcess(formatName, height, 1);
+				createConvertProcess(formatName, height, 2, parentProcess);
+			}
+			else
+			{
+				throw new Exception(string.Format("Wrong pass number {0}. Must be 1 or 2.", passNumber));
+			}
+		}
+
+		private ConvertProcess createConvertProcess(string formatName, int height = 0, int pass = 0, ConvertProcess parentProcess = null)
 		{
 			Format format = Format.GetFormatByName(formatName);
 
-			string outputFilePath = Path.Combine(OutputFolder, string.Format("{0}_{1}p.{2}", Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension));
-
-			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, height), outputFilePath);
+			ParamsBuilder parameters = format.BuildParams(video, height, pass);
+			parameters.Add("y");
+			parameters.InputFile = video.Path;
+			parameters.OutputFile = Path.Combine(OutputFolder, string.Format("{0}_{1}p.{2}", Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension));
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
-			process.ProccesingFile = outputFilePath;
+			process.ProcessName = string.Format("{0}_{1}_pass{2}", formatName, height, pass);
+
+			if (parentProcess != null)
+				process.ParentProcess = parentProcess;
+
 			convertProcesses.Add(process);
+
+			return process;
 		}
 
 		public void StopAll() 
@@ -173,7 +212,7 @@ namespace Video_converter
 
 		void convertProcesses_ProgressChanged(object sender, EventArg<double> e)
 		{
-			double percent = e.Data / video.Duration.TotalMilliseconds;
+			double percent = e.Data / video.FrameCount;
 			ProgressChanged(this, new EventArg<double>(percent));
 		}
 	}
@@ -207,7 +246,7 @@ namespace Video_converter
 
 		void process_DoneUpdated(ConvertProcess sender, DataReceivedEventArgs e)
 		{
-			double avg = processes.Select(p => p.Done.TotalMilliseconds).Average();
+			double avg = processes.Select(p => p.Done).Average();
 			ProgressChanged(this,	new EventArg<double>(avg));
 		}
 
@@ -219,6 +258,16 @@ namespace Video_converter
 			{
 				if (process.Status == ConvertProcess.ProcessStatus.Waiting)
 				{
+					// depend process
+					if (process.ParentProcess != null)
+					{
+						ConvertProcess p = process.ParentProcess;
+						if (p.Status == ConvertProcess.ProcessStatus.Finished)
+							break;
+						else if (p.Status == ConvertProcess.ProcessStatus.Failed)
+							process.Status = ConvertProcess.ProcessStatus.Failed;
+					}
+
 					process.Run();
 					++currentThreads;
 					break;
@@ -254,8 +303,9 @@ namespace Video_converter
 
 	public class ConvertProcess
 	{
-		public string ProccesingFile;
-		public TimeSpan Done;
+		public string ProcessName;
+		public ConvertProcess ParentProcess;
+		public int Done;
 		public enum ProcessStatus { Waiting, Running, Finished, Failed, Stopped }
 		public ProcessStatus Status;
 		public StringBuilder ResultBuilder = new StringBuilder();
@@ -264,12 +314,12 @@ namespace Video_converter
 		public event ConvertExitedEventHandler ConvertExited;
 
 		private Process proc;
-		private string parameters;
+		private ParamsBuilder parameters;
 		private bool outputAtEnd;
 
-		public ConvertProcess(string parameters, bool outputAtEnd = true)
+		public ConvertProcess(ParamsBuilder parameters, bool outputAtEnd = true)
 		{
-			App.Log.Add(parameters);
+			App.Log.Add(parameters.ToString());
 			this.parameters = parameters;
 			this.outputAtEnd = outputAtEnd;
 			Status = ProcessStatus.Waiting;
@@ -279,10 +329,11 @@ namespace Video_converter
 		{
 			string output = string.Empty;
 
-			ProcessStartInfo startInfo = new ProcessStartInfo(App.FfmpegLocation, parameters);
+			ProcessStartInfo startInfo = new ProcessStartInfo(App.FfmpegLocation, parameters.ToString());
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
 			startInfo.CreateNoWindow = true;
+			startInfo.WorkingDirectory = Path.GetDirectoryName(parameters.OutputFile);
 
 			string dataDir = Path.GetDirectoryName(App.FfmpegLocation);
 
@@ -328,9 +379,9 @@ namespace Video_converter
 
 		public void DeleteProcessingFile()
 		{
-			if (File.Exists(ProccesingFile))
+			if (File.Exists(parameters.OutputFile))
 			{
-				File.Delete(ProccesingFile);
+				File.Delete(parameters.OutputFile);
 			}
 		}
 
@@ -367,25 +418,29 @@ namespace Video_converter
 				App.Log.Add("Při převodu nastala chyba, výstupní soubor bude smazán");
 				DeleteProcessingFile();
 			}
+			else if (parameters.Contains("pass") && parameters.Get("pass") == "1")
+			{
+				DeleteProcessingFile();
+			}
 
 			ConvertExited(this, new EventArg<bool>(success));
 		}
 
-		static Regex timeRegex = new Regex(@"time=(\d*).(\d*)", RegexOptions.Compiled);
+		static Regex timeRegex = new Regex(@"frame=[ ]*(\d*)", RegexOptions.Compiled);
 
 		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
 		{
 			if (e.Data == null)
 				return;
 
-			App.Log.Add(e.Data);
+			App.Log.Add(ProcessName + ": " + e.Data);
 
 			ResultBuilder.AppendLine(e.Data);
 
 			Match m = timeRegex.Match(e.Data);
 			if (m.Success)
 			{
-				Done = new TimeSpan(0, 0, 0, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value) * 10);
+				Done = int.Parse(m.Groups[1].Value);
 				DoneUpdated(this, e);
 			}
 		}

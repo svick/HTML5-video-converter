@@ -7,6 +7,8 @@ namespace Video_converter
 	public class ParamsBuilder 
 	{
 		private Dictionary<string, string> parameters = new Dictionary<string, string>();
+		public string OutputFile { get; set; }
+		public string InputFile { get; set; }
 
 		public void Add(string key, string value = "") 
 		{
@@ -23,9 +25,18 @@ namespace Video_converter
 			return parameters.ContainsKey(key);
 		}
 
+		public string Get(string key)
+		{
+			return parameters[key];
+		}
+
 		public override string ToString()
 		{
 			StringBuilder builder = new StringBuilder();
+
+			if (InputFile != null)
+				builder.AppendFormat("-i \"{0}\" ", InputFile);
+
 			foreach (KeyValuePair<string, string> par in parameters)
 			{
 				if(par.Value == string.Empty)
@@ -33,6 +44,9 @@ namespace Video_converter
 				else
 					builder.AppendFormat("-{0} {1} ", par.Key, par.Value);
 			}
+
+			if (OutputFile != null)
+				builder.AppendFormat("\"{0}\"", OutputFile);
 
 			return builder.ToString().Trim();
 		}
@@ -42,7 +56,7 @@ namespace Video_converter
 	{
 		public abstract string Extension { get; }
 
-		protected abstract void formatParams(BitRate bitRate);
+		protected abstract void formatParams(BitRate bitRate, int pass = 0);
 
 		protected Video video;
 		protected ParamsBuilder parameters;
@@ -62,12 +76,18 @@ namespace Video_converter
 			}
 		}
 
-		public string BuildParams(Video video, int height)
+		public ParamsBuilder BuildParams(Video video, int height, int pass = 0)
 		{
 			this.video = video;
 			parameters = new ParamsBuilder();
 
 			parameters.Add("threads", Environment.ProcessorCount);
+
+			if (pass != 0)
+			{
+				parameters.Add("pass", pass);
+				parameters.Add("passlogfile", Extension + "_" + height.ToString());
+			}
 
 			Size newSize;
 			if (height != 0)
@@ -86,9 +106,9 @@ namespace Video_converter
 
 			BitRate bitRate = computeBitRate(newSize);
 
-			formatParams(bitRate);
+			formatParams(bitRate, pass);
 
-			return parameters.ToString();
+			return parameters;
 		}
 
 		private Size resize(int height)
@@ -113,6 +133,13 @@ namespace Video_converter
 				width = (int)Math.Ceiling((double)video.Size.Width * height / video.Size.Height);
 			}
 
+			// Height and width must by division two
+			if (height % 2 == 1)
+				height--;
+
+			if (width % 2 == 1)
+				width--;
+
 			return new Size { Height = height, Width = width };
 		}
 
@@ -120,7 +147,7 @@ namespace Video_converter
 		{
 			BitRate bitRate = new BitRate();
 
-			bitRate.Video = (int)(size.Width * size.Height * 0.0018 + 300);
+			bitRate.Video = (int)(size.Width * size.Height * 0.002 + 300);
 
 			if (size.Height >= 1080 || size.Width >= 1920)
 			{
@@ -163,28 +190,21 @@ namespace Video_converter
 			}
 		}
 
-		protected override void formatParams(BitRate bitRate)
+		protected override void formatParams(BitRate bitRate, int pass = 0)
 		{
 			parameters.Add("f", "webm");
 
-			if (video.Format != "vp8")
+			parameters.Add("vcodec", "libvpx");
+			parameters.Add("b", bitRate.Video.ToString() + "k");
+
+			if (pass == 1)
 			{
-				parameters.Add("vcodec", "libvpx");
-				parameters.Add("b", bitRate.Video.ToString() + "k");
+				parameters.Add("an");
 			}
 			else
-			{
-				parameters.Add("vcodec", "copy");
-			}
-
-			if (video.AudioFormat != "vorbis")
 			{
 				parameters.Add("acodec", "libvorbis");
 				parameters.Add("ab", bitRate.Audio.ToString() + "k");
-			}
-			else
-			{
-				parameters.Add("acodec", "copy");
 			}
 		}
 	}
@@ -211,30 +231,23 @@ namespace Video_converter
 			}
 		}
 
-		protected override void formatParams(BitRate bitRate)
+		protected override void formatParams(BitRate bitRate, int pass = 0)
 		{
 			parameters.Add("f", "mp4");
 
-			if (video.Format == "h264" && !parameters.Contains("s") && video.BitRate.Video != 0 && video.BitRate.Video < bitRate.Video)
+			parameters.Add("vcodec", "libx264");
+			parameters.Add("vpre", "default");
+			parameters.Add("b", bitRate.Video.ToString() + "k");
+
+			if (pass == 1)
 			{
-				parameters.Add("vcodec", "copy");
+				parameters.Add("an");
 			}
 			else
-			{
-				parameters.Add("vcodec", "libx264");
-				parameters.Add("vpre", "default");
-				parameters.Add("b", bitRate.Video.ToString() + "k");
-			}
-
-			if (video.AudioFormat != "aac" || (video.BitRate.Audio != 0 && video.BitRate.Audio > bitRate.Audio))
 			{
 				parameters.Add("strict", "experimental");
 				parameters.Add("acodec", "aac");
 				parameters.Add("ab", bitRate.Audio.ToString() + "k");
-			}
-			else
-			{
-				parameters.Add("acodec", "copy");
 			}
 		}
 	}
@@ -261,28 +274,21 @@ namespace Video_converter
 			}
 		}
 
-		protected override void formatParams(BitRate bitRate)
+		protected override void formatParams(BitRate bitRate, int pass = 0)
 		{
 			parameters.Add("f", "ogg");
 
-			if (video.Format != "theora")
+			parameters.Add("vcodec", "libtheora");
+			parameters.Add("b", bitRate.Video.ToString() + "k");
+
+			if (pass == 1)
 			{
-				parameters.Add("vcodec", "libtheora");
-				parameters.Add("b", bitRate.Video.ToString() + "k");
+				parameters.Add("an");
 			}
 			else
-			{
-				parameters.Add("vcodec", "copy");
-			}
-
-			if (video.AudioFormat != "vorbis")
 			{
 				parameters.Add("acodec", "libvorbis");
 				parameters.Add("ab", bitRate.Audio.ToString() + "k");
-			}
-			else
-			{
-				parameters.Add("acodec", "copy");
 			}
 		}
 	}

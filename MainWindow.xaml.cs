@@ -204,9 +204,15 @@ namespace Video_converter
 			getVideoInfo(fileName);
 		}
 
-		private void MenuItem_Click(object sender, RoutedEventArgs e)
+		private void ShowLog(object sender, RoutedEventArgs e)
 		{
 			App.Log.Show();
+		}
+
+		private void ShowAboutWindow(object sender, RoutedEventArgs e)
+		{
+			About about = new About();
+			about.Show();
 		}
 	}
 }
