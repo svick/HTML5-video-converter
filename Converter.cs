@@ -87,7 +87,8 @@ namespace Video_converter
 
 		public Video VideoInfo() 
 		{
-			string parameters = string.Format("-i \"{0}\"", video.Path);
+			ParamsBuilder parameters = new ParamsBuilder();
+			parameters.InputFile = video.Path;
 
 			string output = new ConvertProcess(parameters).Run();
 
@@ -149,7 +150,13 @@ namespace Video_converter
 			int height = 100;
 			int width = video.Size.Width / (video.Size.Height / height);
 
-			string parameters = string.Format("-i \"{0}\" -an -vframes 1 -s {1}x{2} -ss 00:00:10 -f image2 {3}", video.Path, width, height, imageFileName);
+			ParamsBuilder parameters = new ParamsBuilder();
+			parameters.Add("an");
+			parameters.Add("vframes", 1);
+			parameters.Add("s", string.Format("{1}x{2}", width, height));
+			parameters.Add("f", "image2");
+			parameters.OutputFile = imageFileName;
+			parameters.InputFile = video.Path;
 
 			string output = new ConvertProcess(parameters).Run();
 
@@ -163,15 +170,16 @@ namespace Video_converter
 
 		public void Convert(string formatName, int height = 0, int pass = 0)
 		{
+			pass = 1;
 			Format format = Format.GetFormatByName(formatName);
 
-			string outputFilePath = Path.Combine(OutputFolder, string.Format("{0}_{1}p.{2}", Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension));
-
-			string parameters = string.Format("-y -i \"{0}\" {1} \"{2}\"", video.Path, format.BuildParams(video, height, pass), outputFilePath);
+			ParamsBuilder parameters = format.BuildParams(video, height, pass);
+			parameters.Add("y");
+			parameters.InputFile = video.Path;
+			parameters.OutputFile = Path.Combine(OutputFolder, string.Format("{0}_{1}p.{2}", Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension));
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
 			process.ProcessName = string.Format("{0}_{1}_pass{2}", formatName, height, pass);
-			process.ProcessingFile = outputFilePath;
 
 			if(pass == 2)
 				process.ParentProcessName = string.Format("{0}_{1}_pass{2}", formatName, height, 1);
@@ -287,7 +295,6 @@ namespace Video_converter
 	{
 		public string ProcessName;
 		public string ParentProcessName;
-		public string ProcessingFile;
 		public int Done;
 		public enum ProcessStatus { Waiting, Running, Finished, Failed, Stopped }
 		public ProcessStatus Status;
@@ -297,12 +304,12 @@ namespace Video_converter
 		public event ConvertExitedEventHandler ConvertExited;
 
 		private Process proc;
-		private string parameters;
+		private ParamsBuilder parameters;
 		private bool outputAtEnd;
 
-		public ConvertProcess(string parameters, bool outputAtEnd = true)
+		public ConvertProcess(ParamsBuilder parameters, bool outputAtEnd = true)
 		{
-			App.Log.Add(parameters);
+			App.Log.Add(parameters.ToString());
 			this.parameters = parameters;
 			this.outputAtEnd = outputAtEnd;
 			Status = ProcessStatus.Waiting;
@@ -312,11 +319,11 @@ namespace Video_converter
 		{
 			string output = string.Empty;
 
-			ProcessStartInfo startInfo = new ProcessStartInfo(App.FfmpegLocation, parameters);
+			ProcessStartInfo startInfo = new ProcessStartInfo(App.FfmpegLocation, parameters.ToString());
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
 			startInfo.CreateNoWindow = true;
-			startInfo.WorkingDirectory = Path.GetDirectoryName(ProcessingFile);
+			startInfo.WorkingDirectory = Path.GetDirectoryName(parameters.OutputFile);
 
 			string dataDir = Path.GetDirectoryName(App.FfmpegLocation);
 
@@ -362,9 +369,9 @@ namespace Video_converter
 
 		public void DeleteProcessingFile()
 		{
-			if (File.Exists(ProcessingFile))
+			if (File.Exists(parameters.OutputFile))
 			{
-				File.Delete(ProcessingFile);
+				File.Delete(parameters.OutputFile);
 			}
 		}
 
@@ -401,11 +408,15 @@ namespace Video_converter
 				App.Log.Add("Při převodu nastala chyba, výstupní soubor bude smazán");
 				DeleteProcessingFile();
 			}
+			else if (parameters.Contains("pass") && parameters.Get("pass") == "1")
+			{
+				DeleteProcessingFile();
+			}
 
 			ConvertExited(this, new EventArg<bool>(success));
 		}
 
-		static Regex timeRegex = new Regex(@"frame=  (\d*)", RegexOptions.Compiled);
+		static Regex timeRegex = new Regex(@"frame=[ ]*(\d*)", RegexOptions.Compiled);
 
 		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
 		{

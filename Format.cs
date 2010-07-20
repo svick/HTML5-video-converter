@@ -7,6 +7,8 @@ namespace Video_converter
 	public class ParamsBuilder 
 	{
 		private Dictionary<string, string> parameters = new Dictionary<string, string>();
+		public string OutputFile { get; set; }
+		public string InputFile { get; set; }
 
 		public void Add(string key, string value = "") 
 		{
@@ -23,9 +25,18 @@ namespace Video_converter
 			return parameters.ContainsKey(key);
 		}
 
+		public string Get(string key)
+		{
+			return parameters[key];
+		}
+
 		public override string ToString()
 		{
 			StringBuilder builder = new StringBuilder();
+
+			if (InputFile != null)
+				builder.AppendFormat("-i \"{0}\" ", InputFile);
+
 			foreach (KeyValuePair<string, string> par in parameters)
 			{
 				if(par.Value == string.Empty)
@@ -33,6 +44,9 @@ namespace Video_converter
 				else
 					builder.AppendFormat("-{0} {1} ", par.Key, par.Value);
 			}
+
+			if (OutputFile != null)
+				builder.AppendFormat("\"{0}\"", OutputFile);
 
 			return builder.ToString().Trim();
 		}
@@ -62,7 +76,7 @@ namespace Video_converter
 			}
 		}
 
-		public string BuildParams(Video video, int height, int pass = 0)
+		public ParamsBuilder BuildParams(Video video, int height, int pass = 0)
 		{
 			this.video = video;
 			parameters = new ParamsBuilder();
@@ -72,7 +86,7 @@ namespace Video_converter
 			if (pass != 0)
 			{
 				parameters.Add("pass", pass);
-				parameters.Add("passlogfile", Extension + "_" + height);
+				parameters.Add("passlogfile", Extension + "_" + height.ToString());
 			}
 
 			Size newSize;
@@ -94,7 +108,7 @@ namespace Video_converter
 
 			formatParams(bitRate, pass);
 
-			return parameters.ToString();
+			return parameters;
 		}
 
 		private Size resize(int height)
@@ -132,7 +146,7 @@ namespace Video_converter
 		{
 			BitRate bitRate = new BitRate();
 
-			bitRate.Video = (int)(size.Width * size.Height * 0.0018 + 300);
+			bitRate.Video = (int)(size.Width * size.Height * 0.002 + 300);
 
 			if (size.Height >= 1080 || size.Width >= 1920)
 			{
