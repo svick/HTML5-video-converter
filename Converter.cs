@@ -106,7 +106,7 @@ namespace Video_converter
 
 			if (output.Contains("could not find codec parameters"))
 			{
-				throw new Exception(App.GetLocalizedString("CantConvert"));
+				throw new ConverterException(App.GetLocalizedString("CantConvert"));
 			}
 
 			// TODO: Kontrola správnosti regexpů a ošetření chyb
@@ -381,12 +381,11 @@ namespace Video_converter
 
 		public void Stop() 
 		{
-			App.Log.Add("ConvertProcess.Stop()");
 			Status = ProcessStatus.Stopped;
 			if (!proc.HasExited)
 			{
 				proc.Kill();
-				App.Log.Add("Process byl zastaven");
+				App.Log.Add(string.Format("Process {0} byl zastaven", ProcessName));
 			}
 		}
 
@@ -428,12 +427,12 @@ namespace Video_converter
 
 			if (Status != ProcessStatus.Finished)
 			{
-				App.Log.Add("Při převodu nastala chyba, výstupní soubor bude smazán");
+				App.Log.Add(ProcessName + " Při převodu nastala chyba, výstupní soubor bude smazán");
 				DeleteProcessingFile();
 			}
 			else if (parameters.Contains("pass") && parameters.Get("pass") == "1")
 			{
-				App.Log.Add("První průchod ukončen, výstupní soubor bude smazán");
+				App.Log.Add(ProcessName + " První průchod ukončen, výstupní soubor bude smazán");
 				DeleteProcessingFile();
 			}
 
