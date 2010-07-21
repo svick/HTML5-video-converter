@@ -119,6 +119,13 @@ namespace Video_converter
 				video.Size.Height =  int.Parse(m.Groups[3].Value);
 			}
 
+			m = Regex.Match(output, @"Video: .* (\d*) kb/s");
+
+			if (m.Success)
+			{
+				video.BitRate.Video = int.Parse(m.Groups[1].Value);
+			}
+
 			// Audio info
 			m = Regex.Match(output, @"Audio: ([^,]*), [^,]*, [^,]*, [^,]*(?:, (\d*))?");
 
@@ -128,6 +135,18 @@ namespace Video_converter
 
 				if(m.Groups[2].Value != String.Empty)
 					video.BitRate.Audio = int.Parse(m.Groups[2].Value);
+			}
+
+			if (video.BitRate.Video == 0 && video.BitRate.Audio != 0)
+			{
+				m = Regex.Match(output, @"bitrate: (\d*) kb/s");
+
+				if (m.Success)
+				{
+					// Video bitrate = total bitrate - audio bitrate 
+					int bitrate = int.Parse(m.Groups[1].Value);
+					video.BitRate.Video = bitrate - video.BitRate.Audio;
+				}
 			}
 
 			// Duration
