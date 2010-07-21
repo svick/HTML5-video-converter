@@ -9,16 +9,12 @@
 			<RowDefinition />
 			<RowDefinition />
 		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition />
-			<ColumnDefinition />
-		</Grid.ColumnDefinitions>
 		<TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontSize="18" HorizontalAlignment="Center" Foreground="#003399" Margin="10" Text="{loc:LocText Key=ConvertDone, Assembly=Video_converter}" />
 		<ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Height="30" Margin="10" Value="100"  />
-		<Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Margin="10" Name="Back" Click="Back_Click">
+		<Button Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Margin="10" Name="Back" Click="Back_Click">
 			<TextBlock Margin="10,1" FontSize="13" Text="{loc:LocText Key=Back, Assembly=Video_converter}" />
 		</Button>
-		<Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="10" Name="ShowFolder" Click="ShowFolder_Click">
+		<Button Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="10" Name="ShowFolder" Click="ShowFolder_Click">
 			<TextBlock Margin="10,1" FontSize="13" Text="{loc:LocText Key=ShowFolder, Assembly=Video_converter}" />
 		</Button>
 	</Grid>
