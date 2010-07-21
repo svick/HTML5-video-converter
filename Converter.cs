@@ -71,6 +71,7 @@ namespace Video_converter
 		public event ProgressChangedEventHandler ProgressChanged;
 		public event AllFinishedEventHander AllFinished;
 		public string OutputFolder { get; private set; }
+		public string TempFolder { get; private set; }
 
 		private Video video;
 		private ConvertProcesses convertProcesses;
@@ -84,10 +85,16 @@ namespace Video_converter
 			convertProcesses.AllFinished += new AllFinishedEventHander(convertProcesses_AllFinished);
 
 			OutputFolder = Path.GetDirectoryName(video.Path);
+			TempFolder = Path.Combine(OutputFolder, Path.GetFileNameWithoutExtension(video.Path) + ".tmp");
 		}
 
 		void convertProcesses_AllFinished(object sender, EventArg<bool> e)
 		{
+			if (Directory.Exists(TempFolder))
+			{
+				Directory.Delete(TempFolder, true);
+			}
+
 			AllFinished(this, e);
 		}
 
@@ -223,6 +230,7 @@ namespace Video_converter
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
 			process.ProcessName = string.Format("{0} {1}p{2}", formatName, height, (pass != 0 ? " pass " + pass.ToString() : string.Empty));
+			process.TempFolder = TempFolder;
 			process.Pass = pass;
 
 			if (parentProcess != null)
@@ -341,6 +349,7 @@ namespace Video_converter
 	{
 		public string ProcessName;
 		public ConvertProcess ParentProcess;
+		public string TempFolder;
 		public int Pass;
 		public int Done;
 		public enum ProcessStatus { Waiting, Running, Finished, Failed, Stopped }
@@ -370,7 +379,16 @@ namespace Video_converter
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
 			startInfo.CreateNoWindow = true;
-			startInfo.WorkingDirectory = Path.GetDirectoryName(parameters.OutputFile);
+
+			if (Pass != 0)
+			{
+				if (!Directory.Exists(TempFolder))
+				{
+					Directory.CreateDirectory(TempFolder);
+				}
+
+				startInfo.WorkingDirectory = TempFolder;
+			}
 
 			string dataDir = Path.GetDirectoryName(App.FfmpegLocation);
 
@@ -445,11 +463,6 @@ namespace Video_converter
 			{
 				App.Log.Add(ProcessName + ": Při převodu nastala chyba, výstupní soubor bude smazán");
 				deleteProcessingFile();
-
-				if(Pass == 1)
-				{
-					deletePassLogFile();
-				}
 			}
 			else if (Pass == 1)
 			{
@@ -458,7 +471,6 @@ namespace Video_converter
 			else if (Pass == 2)
 			{
 				App.Log.Add(ProcessName + ": Druhý průchod ukončen, passlogfile bude smazán");
-				deletePassLogFile();
 			}
 
 			ConvertExited(this, new EventArg<bool>(success));
@@ -488,16 +500,6 @@ namespace Video_converter
 			if (File.Exists(parameters.OutputFile))
 			{
 				File.Delete(parameters.OutputFile);
-			}
-		}
-
-		private void deletePassLogFile()
-		{
-			string passLogFile = Path.Combine(Path.GetDirectoryName(parameters.OutputFile), parameters.Get("passlogfile") + "-0.log");
-
-			if (File.Exists(passLogFile))
-			{
-				File.Delete(passLogFile);
 			}
 		}
 	}
