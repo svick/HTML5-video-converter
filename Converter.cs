@@ -59,6 +59,13 @@ namespace Video_converter
 	public delegate void ConvertExitedEventHandler(ConvertProcess sender, EventArg<bool> e);
 	public delegate void AllFinishedEventHander(object sender, EventArg<bool> e);
 
+	public class ConverterException : Exception 
+	{
+		public ConverterException() : base() { }
+		public ConverterException(string message) : base(message) { }
+		public ConverterException(string message, System.Exception inner) : base(message, inner) { }
+	}
+
 	public class Converter
 	{
 		public event ProgressChangedEventHandler ProgressChanged;
@@ -94,7 +101,7 @@ namespace Video_converter
 			// is regular video file
 			if (output.Contains("Invalid data found when processing input"))
 			{
-				throw new Exception(App.GetLocalizedString("InvalidInputFileFormat"));
+				throw new ConverterException(App.GetLocalizedString("InvalidInputFileFormat"));
 			}
 
 			if (output.Contains("could not find codec parameters"))

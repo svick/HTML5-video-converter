@@ -55,7 +55,7 @@ namespace Video_converter
 				height720.IsEnabled = (video.Size.Height >= 720 || video.Size.Width >= 1280);
 				height480.IsEnabled = (video.Size.Height >= 480 || video.Size.Width >= 854);
 			}
-			catch (Exception e)
+			catch (ConverterException e)
 			{
 				ConvertButton.IsEnabled = false;
 				MessageBox.Show(e.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -142,9 +142,7 @@ namespace Video_converter
 			if (totalProgress != 0)
 			{
 				TimeSpan remaining = TimeSpan.FromMilliseconds((DateTime.Now - startTime).TotalMilliseconds * (1 - totalProgress) / totalProgress);
-
 				string remaingString = string.Format(App.GetLocalizedString("Remaining"), remaining.ToLongString());
-
 				progressBar.textInfo.Text = remaingString;
 			}
 		}
