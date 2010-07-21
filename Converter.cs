@@ -93,8 +93,7 @@ namespace Video_converter
 
 		public Video VideoInfo() 
 		{
-			ParamsBuilder parameters = new ParamsBuilder();
-			parameters.InputFile = video.Path;
+			ParamsBuilder parameters = new ParamsBuilder { InputFile = video.Path };
 
 			string output = new ConvertProcess(parameters).Run();
 
