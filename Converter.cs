@@ -194,7 +194,7 @@ namespace Video_converter
 			parameters.OutputFile = Path.Combine(OutputFolder, string.Format("{0}_{1}p.{2}", Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension));
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
-			process.ProcessName = string.Format("{0}_{1}_pass{2}", formatName, height, pass);
+			process.ProcessName = string.Format("{0} {1}p{2}", formatName, height, (pass != 0 ? " pass " + pass.ToString() : string.Empty));
 
 			if (parentProcess != null)
 				process.ParentProcess = parentProcess;
