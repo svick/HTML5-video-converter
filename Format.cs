@@ -27,7 +27,10 @@ namespace Video_converter
 
 		public string Get(string key)
 		{
-			return parameters[key];
+			if (Contains(key))
+				return parameters[key];
+			else
+				return null;
 		}
 
 		public override string ToString()
@@ -45,8 +48,11 @@ namespace Video_converter
 					builder.AppendFormat("-{0} {1} ", par.Key, par.Value);
 			}
 
-			if (OutputFile != null)
+			if (OutputFile == null || Get("pass") == "1")
+				builder.AppendFormat("NUL", OutputFile);
+			else
 				builder.AppendFormat("\"{0}\"", OutputFile);
+				
 
 			return builder.ToString().Trim();
 		}
@@ -86,7 +92,6 @@ namespace Video_converter
 			if (pass != 0)
 			{
 				parameters.Add("pass", pass);
-				parameters.Add("passlogfile", Extension + "_" + height.ToString());
 			}
 
 			Size newSize;

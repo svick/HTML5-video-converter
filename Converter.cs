@@ -218,8 +218,12 @@ namespace Video_converter
 			parameters.InputFile = video.Path;
 			parameters.OutputFile = Path.Combine(OutputFolder, string.Format("{0}_{1}p.{2}", Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension));
 
+			if (pass != 0)
+				parameters.Add("passlogfile", formatName + "_" + height.ToString());
+
 			ConvertProcess process = new ConvertProcess(parameters, false);
 			process.ProcessName = string.Format("{0} {1}p{2}", formatName, height, (pass != 0 ? " pass " + pass.ToString() : string.Empty));
+			process.Pass = pass;
 
 			if (parentProcess != null)
 				process.ParentProcess = parentProcess;
@@ -281,6 +285,7 @@ namespace Video_converter
 
 			if (currentThreads == 0)
 			{
+				processes.Clear();
 				AllFinished(this, new EventArg<bool>(sender.Status == ConvertProcess.ProcessStatus.Finished));
 			}
 		}
@@ -336,6 +341,7 @@ namespace Video_converter
 	{
 		public string ProcessName;
 		public ConvertProcess ParentProcess;
+		public int Pass;
 		public int Done;
 		public enum ProcessStatus { Waiting, Running, Finished, Failed, Stopped }
 		public ProcessStatus Status;
@@ -407,14 +413,6 @@ namespace Video_converter
 			}
 		}
 
-		public void DeleteProcessingFile()
-		{
-			if (File.Exists(parameters.OutputFile))
-			{
-				File.Delete(parameters.OutputFile);
-			}
-		}
-
 		void proc_Exited(object sender, EventArgs e)
 		{
 			bool success;
@@ -445,13 +443,22 @@ namespace Video_converter
 
 			if (Status != ProcessStatus.Finished)
 			{
-				App.Log.Add(ProcessName + " Při převodu nastala chyba, výstupní soubor bude smazán");
-				DeleteProcessingFile();
+				App.Log.Add(ProcessName + ": Při převodu nastala chyba, výstupní soubor bude smazán");
+				deleteProcessingFile();
+
+				if(Pass == 1)
+				{
+					deletePassLogFile();
+				}
 			}
-			else if (parameters.Contains("pass") && parameters.Get("pass") == "1")
+			else if (Pass == 1)
 			{
-				App.Log.Add(ProcessName + " První průchod ukončen, výstupní soubor bude smazán");
-				DeleteProcessingFile();
+				App.Log.Add(ProcessName + ": První průchod ukončen");
+			}
+			else if (Pass == 2)
+			{
+				App.Log.Add(ProcessName + ": Druhý průchod ukončen, passlogfile bude smazán");
+				deletePassLogFile();
 			}
 
 			ConvertExited(this, new EventArg<bool>(success));
@@ -473,6 +480,24 @@ namespace Video_converter
 			{
 				Done = int.Parse(m.Groups[1].Value);
 				DoneUpdated(this, e);
+			}
+		}
+
+		private void deleteProcessingFile()
+		{
+			if (File.Exists(parameters.OutputFile))
+			{
+				File.Delete(parameters.OutputFile);
+			}
+		}
+
+		private void deletePassLogFile()
+		{
+			string passLogFile = Path.Combine(Path.GetDirectoryName(parameters.OutputFile), parameters.Get("passlogfile") + "-0.log");
+
+			if (File.Exists(passLogFile))
+			{
+				File.Delete(passLogFile);
 			}
 		}
 	}
