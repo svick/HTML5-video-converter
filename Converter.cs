@@ -59,6 +59,13 @@ namespace Video_converter
 	public delegate void ConvertExitedEventHandler(ConvertProcess sender, EventArg<bool> e);
 	public delegate void AllFinishedEventHander(object sender, EventArg<bool> e);
 
+	public class ConverterException : Exception 
+	{
+		public ConverterException() : base() { }
+		public ConverterException(string message) : base(message) { }
+		public ConverterException(string message, System.Exception inner) : base(message, inner) { }
+	}
+
 	public class Converter
 	{
 		public event ProgressChangedEventHandler ProgressChanged;
@@ -86,20 +93,19 @@ namespace Video_converter
 
 		public Video VideoInfo() 
 		{
-			ParamsBuilder parameters = new ParamsBuilder();
-			parameters.InputFile = video.Path;
+			ParamsBuilder parameters = new ParamsBuilder { InputFile = video.Path };
 
 			string output = new ConvertProcess(parameters).Run();
 
 			// is regular video file
 			if (output.Contains("Invalid data found when processing input"))
 			{
-				throw new Exception(App.GetLocalizedString("InvalidInputFileFormat"));
+				throw new ConverterException(App.GetLocalizedString("InvalidInputFileFormat"));
 			}
 
 			if (output.Contains("could not find codec parameters"))
 			{
-				throw new Exception(App.GetLocalizedString("CantConvert"));
+				throw new ConverterException(App.GetLocalizedString("CantConvert"));
 			}
 
 			// TODO: Kontrola správnosti regexpů a ošetření chyb
@@ -113,6 +119,13 @@ namespace Video_converter
 				video.Size.Height =  int.Parse(m.Groups[3].Value);
 			}
 
+			m = Regex.Match(output, @"Video: .* (\d*) kb/s");
+
+			if (m.Success)
+			{
+				video.BitRate.Video = int.Parse(m.Groups[1].Value);
+			}
+
 			// Audio info
 			m = Regex.Match(output, @"Audio: ([^,]*), [^,]*, [^,]*, [^,]*(?:, (\d*))?");
 
@@ -122,6 +135,18 @@ namespace Video_converter
 
 				if(m.Groups[2].Value != String.Empty)
 					video.BitRate.Audio = int.Parse(m.Groups[2].Value);
+			}
+
+			if (video.BitRate.Video == 0 && video.BitRate.Audio != 0)
+			{
+				m = Regex.Match(output, @"bitrate: (\d*) kb/s");
+
+				if (m.Success)
+				{
+					// Video bitrate = total bitrate - audio bitrate 
+					int bitrate = int.Parse(m.Groups[1].Value);
+					video.BitRate.Video = bitrate - video.BitRate.Audio;
+				}
 			}
 
 			// Duration
@@ -194,7 +219,7 @@ namespace Video_converter
 			parameters.OutputFile = Path.Combine(OutputFolder, string.Format("{0}_{1}p.{2}", Path.GetFileNameWithoutExtension(video.Path), height.ToString(), format.Extension));
 
 			ConvertProcess process = new ConvertProcess(parameters, false);
-			process.ProcessName = string.Format("{0}_{1}_pass{2}", formatName, height, pass);
+			process.ProcessName = string.Format("{0} {1}p{2}", formatName, height, (pass != 0 ? " pass " + pass.ToString() : string.Empty));
 
 			if (parentProcess != null)
 				process.ParentProcess = parentProcess;
@@ -374,12 +399,11 @@ namespace Video_converter
 
 		public void Stop() 
 		{
-			App.Log.Add("ConvertProcess.Stop()");
 			Status = ProcessStatus.Stopped;
 			if (!proc.HasExited)
 			{
 				proc.Kill();
-				App.Log.Add("Process byl zastaven");
+				App.Log.Add(string.Format("Process {0} byl zastaven", ProcessName));
 			}
 		}
 
@@ -421,12 +445,12 @@ namespace Video_converter
 
 			if (Status != ProcessStatus.Finished)
 			{
-				App.Log.Add("Při převodu nastala chyba, výstupní soubor bude smazán");
+				App.Log.Add(ProcessName + " Při převodu nastala chyba, výstupní soubor bude smazán");
 				DeleteProcessingFile();
 			}
 			else if (parameters.Contains("pass") && parameters.Get("pass") == "1")
 			{
-				App.Log.Add("První průchod ukončen, výstupní soubor bude smazán");
+				App.Log.Add(ProcessName + " První průchod ukončen, výstupní soubor bude smazán");
 				DeleteProcessingFile();
 			}
 
