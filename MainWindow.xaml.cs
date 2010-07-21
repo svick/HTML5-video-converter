@@ -143,7 +143,7 @@ namespace Video_converter
 			{
 				TimeSpan remaining = TimeSpan.FromMilliseconds((DateTime.Now - startTime).TotalMilliseconds * (1 - totalProgress) / totalProgress);
 
-				string remaingString = string.Format(App.GetLocalizedString("Remaining"), remaining.ToLongString());
+				string remaingString = App.GetLocalizedString("Remaining", remaining.ToLongString());
 
 				progressBar.textInfo.Text = remaingString;
 			}
