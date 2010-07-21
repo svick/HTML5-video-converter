@@ -127,10 +127,10 @@ namespace Video_converter
 						{
 							nothingChecked = false;
 							int height = int.Parse((string)resolutionCheckBox.Tag);
-							Converter.Convert(format, height);
+							Converter.Convert(format, height, Settings.Default.numberOfPass);
 						}
 					if (nothingChecked)
-						Converter.Convert(format);
+						Converter.Convert(format, 0, Settings.Default.numberOfPass);
 				}
 		}
 
