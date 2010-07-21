@@ -241,8 +241,12 @@ namespace Video_converter
 			parameters.Add("f", "mp4");
 
 			parameters.Add("vcodec", "libx264");
-			parameters.Add("vpre", "default");
 			parameters.Add("b", bitRate.Video.ToString() + "k");
+
+			if (pass == 0 || pass == 2)
+				parameters.Add("vpre", "slow");
+			else
+				parameters.Add("vpre", "slow_firstpass");
 
 			if (pass == 1)
 			{
