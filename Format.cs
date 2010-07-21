@@ -49,7 +49,7 @@ namespace Video_converter
 			}
 
 			if (OutputFile == null || Get("pass") == "1")
-				builder.AppendFormat("NUL", OutputFile);
+				builder.Append("NUL");
 			else
 				builder.AppendFormat("\"{0}\"", OutputFile);
 				
