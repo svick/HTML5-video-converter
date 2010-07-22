@@ -22,6 +22,8 @@ namespace Video_converter
 				culture = System.Globalization.CultureInfo.CreateSpecificCulture("cs-CZ");
 			WPFLocalizeExtension.Engine.LocalizeDictionary.Instance.Culture = culture;
 
+			InitializeComponent();
+
 			try
 			{
 				locateFFmpegFile();
@@ -31,8 +33,7 @@ namespace Video_converter
 				ErrorMessageBox(e.Message);
 				Environment.Exit(0);
 			}
-
-			InitializeComponent();
+			
 			Log.Add("Jazyk aplikace: " + culture);
 		}
 
