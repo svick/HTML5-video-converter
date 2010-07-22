@@ -200,7 +200,7 @@ namespace Video_converter
 			parameters.Add("f", "webm");
 
 			parameters.Add("vcodec", "libvpx");
-			parameters.Add("b", bitRate.Video.ToString() + "k");
+			parameters.Add("b", string.Format("{0}k", bitRate.Video));
 
 			if (pass == 1)
 			{
@@ -209,7 +209,7 @@ namespace Video_converter
 			else
 			{
 				parameters.Add("acodec", "libvorbis");
-				parameters.Add("ab", bitRate.Audio.ToString() + "k");
+				parameters.Add("ab", string.Format("{0}k", bitRate.Audio));
 			}
 		}
 	}
@@ -241,22 +241,19 @@ namespace Video_converter
 			parameters.Add("f", "mp4");
 
 			parameters.Add("vcodec", "libx264");
-			parameters.Add("b", bitRate.Video.ToString() + "k");
-
-			if (pass == 1)
-				parameters.Add("vpre", "slow_firstpass");
-			else
-				parameters.Add("vpre", "slow");
+			parameters.Add("b", string.Format("{0}k", bitRate.Video));
 
 			if (pass == 1)
 			{
 				parameters.Add("an");
+				parameters.Add("vpre", "slow_firstpass");
 			}
 			else
 			{
-				parameters.Add("strict", "experimental");
 				parameters.Add("acodec", "aac");
-				parameters.Add("ab", bitRate.Audio.ToString() + "k");
+				parameters.Add("strict", "experimental"); // acc acodec
+				parameters.Add("ab", string.Format("{0}k", bitRate.Audio));
+				parameters.Add("vpre", "slow");
 			}
 		}
 	}
@@ -288,7 +285,7 @@ namespace Video_converter
 			parameters.Add("f", "ogg");
 
 			parameters.Add("vcodec", "libtheora");
-			parameters.Add("b", bitRate.Video.ToString() + "k");
+			parameters.Add("b", string.Format("{0}k", bitRate.Video));
 
 			if (pass == 1)
 			{
@@ -297,7 +294,7 @@ namespace Video_converter
 			else
 			{
 				parameters.Add("acodec", "libvorbis");
-				parameters.Add("ab", bitRate.Audio.ToString() + "k");
+				parameters.Add("ab", string.Format("{0}k", bitRate.Audio));
 			}
 		}
 	}
