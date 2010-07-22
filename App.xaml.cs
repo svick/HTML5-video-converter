@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using Video_converter.Properties;
 
@@ -14,6 +15,8 @@ namespace Video_converter
 
 		public App()
 		{
+			Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
 			System.Globalization.CultureInfo culture = System.Threading.Thread.CurrentThread.CurrentUICulture;
 			if (culture.Name == "sk-SK")
 				culture = System.Globalization.CultureInfo.CreateSpecificCulture("cs-CZ");
