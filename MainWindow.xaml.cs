@@ -48,7 +48,6 @@ namespace Video_converter
 			try
 			{
 				Converter.VideoInfo();
-				ConvertButton.IsEnabled = true;
 
 				height1080.IsEnabled = (video.Size.Height >= 1080 || video.Size.Width >= 1920);
 				height720.IsEnabled = (video.Size.Height >= 720 || video.Size.Width >= 1280);
@@ -56,7 +55,6 @@ namespace Video_converter
 			}
 			catch (ConverterException e)
 			{
-				ConvertButton.IsEnabled = false;
 				MessageBox.Show(e.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
@@ -90,7 +88,7 @@ namespace Video_converter
 			}
 		}
 
-		private void Convert_Click(object sender, RoutedEventArgs e)
+		private void Convert_Click(object sender, RoutedEventArgs eventArgs)
 		{
 			if (Converter == null)
 			{
@@ -116,21 +114,29 @@ namespace Video_converter
 
 			startTime = DateTime.Now;
 
-			foreach (CheckBox formatCheckBox in formats)
-				if (formatCheckBox.IsChecked == true)
-				{
-					bool nothingChecked = true;
-					string format = formatCheckBox.Name;
-					foreach (CheckBox resolutionCheckBox in resolutions)
-						if (resolutionCheckBox.IsChecked == true && resolutionCheckBox.IsEnabled)
-						{
-							nothingChecked = false;
-							int height = int.Parse((string)resolutionCheckBox.Tag);
-							Converter.Convert(format, height, Settings.Default.numberOfPass);
-						}
-					if (nothingChecked)
-						Converter.Convert(format, 0, Settings.Default.numberOfPass);
-				}
+			try
+			{
+				foreach (CheckBox formatCheckBox in formats)
+					if (formatCheckBox.IsChecked == true)
+					{
+						bool nothingChecked = true;
+						string format = formatCheckBox.Name;
+						foreach (CheckBox resolutionCheckBox in resolutions)
+							if (resolutionCheckBox.IsChecked == true && resolutionCheckBox.IsEnabled)
+							{
+								nothingChecked = false;
+								int height = int.Parse((string)resolutionCheckBox.Tag);
+								Converter.Convert(format, height, Settings.Default.numberOfPass);
+							}
+						if (nothingChecked)
+							Converter.Convert(format, 0, Settings.Default.numberOfPass);
+					}
+			}
+			catch (ConverterException e)
+			{
+				allFinished(true);
+				MessageBox.Show(e.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 		}
 
 		void timer_Tick(object sender, EventArgs e)
@@ -151,17 +157,30 @@ namespace Video_converter
 			totalProgress = e.Data;
 		}
 
+		private void allFinished(bool showMain = false, bool allOk = true)
+		{
+			timer.Stop();
+			TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+
+			if (showMain)
+			{
+				Content = originalContent;
+				AllowDrop = true;
+			}
+			else
+			{
+				convertDone = new ConvertDone(allOk);
+				convertDone.BackButton += new EventHandler(convertDone_BackButton);
+				convertDone.ShowOutputFolder += new EventHandler(convertDone_ShowOutputFolder);
+				Content = convertDone;
+			}
+		}
+
 		void converter_AllFinished(object sender, EventArg<bool> e)
 		{
 			Dispatcher.Invoke((Action)(() =>
 			{
-				timer.Stop();
-				TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
-
-				convertDone = new ConvertDone(e.Data);
-				convertDone.BackButton += new EventHandler(convertDone_BackButton);
-				convertDone.ShowOutputFolder += new EventHandler(convertDone_ShowOutputFolder);
-				Content = convertDone;
+				allFinished(false, e.Data);
 			}));
 		}
 
@@ -172,14 +191,12 @@ namespace Video_converter
 
 		void convertDone_BackButton(object sender, EventArgs e)
 		{
-			Content = originalContent;
-			AllowDrop = true;
+			allFinished(true);
 		}
 
 		void progressBar_Cancelled(object sender, EventArgs e)
 		{
-			Content = originalContent;
-			AllowDrop = true;
+			allFinished(true);
 
 			if(Converter != null)
 				Converter.StopAll();
