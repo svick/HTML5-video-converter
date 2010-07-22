@@ -86,7 +86,9 @@ namespace Video_converter
 		{
 			this.video = video;
 			parameters = new ParamsBuilder();
-
+#if DEBUG
+			parameters.Add("loglevel", "debug");
+#endif
 			parameters.Add("threads", Environment.ProcessorCount);
 
 			if (pass != 0)
