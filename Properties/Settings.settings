@@ -2,10 +2,10 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Video_converter.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ffmpegLocation" Type="System.String" Scope="Application">
+    <Setting Name="ffmpegLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)">ffmpegBin\ffmpeg.exe</Value>
     </Setting>
-    <Setting Name="ffmpegLocation64" Type="System.String" Scope="Application">
+    <Setting Name="ffmpegLocation64" Type="System.String" Scope="User">
       <Value Profile="(Default)">ffmpegBin\ffmpeg64.exe</Value>
     </Setting>
     <Setting Name="use64bitFfmpegIfIsSupported" Type="System.Boolean" Scope="User">
