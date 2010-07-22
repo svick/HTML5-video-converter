@@ -223,9 +223,11 @@ namespace Video_converter
 			ParamsBuilder parameters = format.BuildParams(video, height, pass);
 			parameters.Add("y");
 			parameters.InputFile = video.Path;
-			parameters.OutputFile = Path.Combine(OutputFolder, string.Format("{0}{1}.{2}", Path.GetFileNameWithoutExtension(video.Path), 
-																																										 (height != 0 ? "_" + height.ToString() + "p" : ""), 
-																																										 format.Extension));
+			parameters.OutputFile = Path.Combine(OutputFolder, string.Format(
+				"{0}{1}.{2}",
+				Path.GetFileNameWithoutExtension(video.Path),
+				(height != 0 ? "_" + height.ToString() + "p" : ""),
+				format.Extension));
 
 			if (pass != 0)
 				parameters.Add("passlogfile", formatName + "_" + height.ToString());
