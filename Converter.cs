@@ -103,7 +103,7 @@ namespace Video_converter
 		public Video VideoInfo() 
 		{
 			if (!video.Exist())
-				throw new ConverterException(string.Format(App.GetLocalizedString("FileNotFound"), video.Path));
+				throw new ConverterException(App.GetLocalizedString("FileNotFound", video.Path));
 
 			ParamsBuilder parameters = new ParamsBuilder { InputFile = video.Path };
 
@@ -182,7 +182,7 @@ namespace Video_converter
 		public string PreviewImage()
 		{
 			if (!video.Exist())
-				throw new ConverterException(string.Format(App.GetLocalizedString("FileNotFound"), video.Path));
+				throw new ConverterException(App.GetLocalizedString("FileNotFound", video.Path));
 
 			string imageFileName = System.Guid.NewGuid().ToString() + ".png";
 
@@ -210,7 +210,7 @@ namespace Video_converter
 		public void Convert(string formatName, int height = 0, int passNumber = 1)
 		{
 			if (!video.Exist())
-				throw new ConverterException(string.Format(App.GetLocalizedString("FileNotFound"), video.Path));
+				throw new ConverterException(App.GetLocalizedString("FileNotFound", video.Path));
 
 			if (passNumber == 1)
 			{
