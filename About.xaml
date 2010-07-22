@@ -5,7 +5,7 @@
 	Title="{loc:LocText Key=About, Assembly=Video_converter}" Height="300" Width="300" Icon="images/Converter.ico" ResizeMode="CanMinimize">
 	<Grid>
 		<Grid.Background>
-			<ImageBrush ImageSource="images/Logo.png" Opacity="0.3" Stretch="Uniform" />
+			<ImageBrush ImageSource="images/Logo.png" Opacity="0.3" Stretch="None" />
 		</Grid.Background>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
