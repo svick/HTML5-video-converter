@@ -17,5 +17,17 @@
     <Setting Name="numberOfPass" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
+    <Setting Name="libvpxVersion" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0.9.1</Value>
+    </Setting>
+    <Setting Name="libx264Version" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">1629</Value>
+    </Setting>
+    <Setting Name="libtheoraVersion" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">1.1.1</Value>
+    </Setting>
+    <Setting Name="ffmpegVersion" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">24417</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
