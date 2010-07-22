@@ -427,20 +427,17 @@ namespace Video_converter
 			if (!proc.HasExited)
 			{
 				proc.Kill();
-				App.Log.Add(string.Format("Process {0} byl zastaven", ProcessName));
+				App.Log.Add(string.Format("{0}: Process byl zastaven", ProcessName));
 			}
 		}
 
 		void proc_Exited(object sender, EventArgs e)
 		{
-			bool success;
-			if (Status == ProcessStatus.Stopped)
+			bool success = false;
+
+			if(Status != ProcessStatus.Stopped)
 			{
-				success = false;
-			}
-			else
-			{
-				App.Log.Add("Proces převodu skončil");
+				App.Log.Add(string.Format("{0}: Process převodu skončil", ProcessName));
 				success = ResultBuilder.ToString().IndexOf("video:") != -1;
 
 				if (!success)
@@ -448,29 +445,31 @@ namespace Video_converter
 					System.Threading.Thread.Sleep(100);
 					success = ResultBuilder.ToString().IndexOf("video:") != -1;
 				}
+
+				if (success)
+					Status = ProcessStatus.Finished;
+				else
+					Status = ProcessStatus.Failed;
 			}
 
-			if (success)
+			if (Status == ProcessStatus.Failed)
 			{
-				Status = ProcessStatus.Finished;
-			}
-			else if (Status != ProcessStatus.Stopped)
-			{
-				Status = ProcessStatus.Failed;
-			}
-
-			if (Status != ProcessStatus.Finished)
-			{
-				App.Log.Add(ProcessName + ": Při převodu nastala chyba, výstupní soubor bude smazán");
+				App.Log.Add(string.Format("{0}: Při převodu nastala chyba, výstupní soubor bude smazán", ProcessName));
 				deleteProcessingFile();
 			}
-			else if (Pass == 1)
+			else if (Status == ProcessStatus.Stopped)
 			{
-				App.Log.Add(ProcessName + ": První průchod ukončen");
+				App.Log.Add(string.Format("{0}: Převod byl zastaven, výstupní soubor bude smazán", ProcessName));
+				deleteProcessingFile();
 			}
-			else if (Pass == 2)
+			else if(Status == ProcessStatus.Finished)
 			{
-				App.Log.Add(ProcessName + ": Druhý průchod ukončen");
+				if (Pass == 1)
+					App.Log.Add(string.Format("{0}: První průchod byl úspěšně dokončen", ProcessName));
+				else if (Pass == 2)
+					App.Log.Add(string.Format("{0}: Druhý průchod byl úspěšně dokončen", ProcessName));
+				else
+					App.Log.Add(string.Format("{0}: Převod byl úspěšně dokončen", ProcessName));
 			}
 
 			ConvertExited(this, new EventArg<bool>(success));
