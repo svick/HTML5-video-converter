@@ -20,8 +20,10 @@ namespace Video_converter
 			System.Globalization.CultureInfo culture = System.Threading.Thread.CurrentThread.CurrentUICulture;
 			if (culture.Name == "sk-SK")
 				culture = System.Globalization.CultureInfo.CreateSpecificCulture("cs-CZ");
-			Log.Add("Jazyk aplikace: " + culture);
 			WPFLocalizeExtension.Engine.LocalizeDictionary.Instance.Culture = culture;
+
+			InitializeComponent();
+			Log.Add("Jazyk aplikace: " + culture);
 			locateFFmpegFile();
 		}
 
