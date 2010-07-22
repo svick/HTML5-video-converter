@@ -11,12 +11,12 @@
 		</Grid.RowDefinitions>
 		<TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Name="versionTextBlock" />
 		<TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{loc:LocText Key=Credits, Assembly=Video_converter}" />
-		<TextBlock Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10" TextWrapping="Wrap">
+		<TextBlock Name="librariesVersionsTextBlock" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10" TextWrapping="Wrap">
 			<Run Text="{loc:LocText Key=LibrariesVersions, Assembly=Video_converter}" /><LineBreak />
-			ffmpeg<LineBreak />
-			libvpx<LineBreak />
-			libx264<LineBreak />
-			libtheora
+			ffmpeg <Run Text="{Binding ffmpegVersion, Mode=OneWay}" /><LineBreak />
+			libvpx <Run Text="{Binding libvpxVersion, Mode=OneWay}" /><LineBreak />
+			libx264 <Run Text="{Binding libx264Version, Mode=OneWay}" /><LineBreak />
+			libtheora <Run Text="{Binding libtheoraVersion, Mode=OneWay}" />
 		</TextBlock>
 	</Grid>
 </Window>
