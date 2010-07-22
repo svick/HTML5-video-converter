@@ -102,7 +102,7 @@ namespace Video_converter
 			Win.AllowDrop = false;
 
 			progressBar = new ProgressBar();
-
+			progressBar.bar.Value = 0;
 			progressBar.Cancelled += new System.EventHandler(progressBar_Cancelled);
 			originalContent = Content;
 
