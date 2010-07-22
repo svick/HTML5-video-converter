@@ -4,6 +4,14 @@
 	xmlns:loc="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
 	Title="{loc:LocText Key=About, Assembly=Video_converter}" Height="300" Width="300" Icon="videoConverter.ico">
 	<Grid>
-
+		<TextBlock Margin="83,63,112,172">Verze 1356</TextBlock>
+		<TextBlock Margin="47,127,33,104">Vytvořil Jakub a Petr Onderka</TextBlock>
+		<TextBlock Margin="12,163,161,12" TextWrapping="Wrap">
+			Verze knihoven:<LineBreak />
+			ffmpeg<LineBreak />
+			libvpx<LineBreak />
+			libx264<LineBreak />
+			libtheora<LineBreak />
+		</TextBlock>
 	</Grid>
 </Window>
