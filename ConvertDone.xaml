@@ -4,13 +4,12 @@
 	xmlns:loc="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension">
 	<Grid>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
 			<RowDefinition />
-			<RowDefinition />
-			<RowDefinition />
-			<RowDefinition />
+			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 		<TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontSize="18" HorizontalAlignment="Center" Foreground="#003399" Margin="10" Text="{loc:LocText Key=ConvertDone, Assembly=Video_converter}" />
-		<ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Height="30" Margin="10" Value="100"  />
+		<Image Source="ConvertDone.png" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Width="104" Height="100" VerticalAlignment="Center" />
 		<Button Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Margin="10" Name="Back" Click="Back_Click">
 			<TextBlock Margin="10,1" FontSize="13" Text="{loc:LocText Key=Back, Assembly=Video_converter}" />
 		</Button>

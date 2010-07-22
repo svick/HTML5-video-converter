@@ -34,7 +34,6 @@ namespace Video_converter
 		public MainWindow()
 		{
 			InitializeComponent();
-
 			resolutions = new CheckBox[] { height480, height720, height1080 };
 			formats = new CheckBox[] { webm, h264, theora };
 		}
@@ -159,12 +158,10 @@ namespace Video_converter
 				timer.Stop();
 				TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
-				convertDone = new ConvertDone();
+				convertDone = new ConvertDone(e.Data);
 				convertDone.BackButton += new EventHandler(convertDone_BackButton);
 				convertDone.ShowOutputFolder += new EventHandler(convertDone_ShowOutputFolder);
-
-				if(e.Data)
-					Content = convertDone;
+				Content = convertDone;
 			}));
 		}
 
