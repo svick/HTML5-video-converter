@@ -111,35 +111,11 @@ namespace Video_converter
 				newSize = video.Size;
 			}
 
-			BitRate bitRate = computeBitRate(newSize);
+			BitRate bitRate = video.ComputeNewBitRate(newSize);
 
 			formatParams(bitRate, pass);
 
 			return parameters;
-		}
-
-		private BitRate computeBitRate(Size size)
-		{
-			BitRate bitRate = new BitRate();
-
-			bitRate.Video = (int)(size.Width * size.Height * 0.002 + 300);
-
-			if (size.Height >= 1080 || size.Width >= 1920)
-			{
-				bitRate.Audio = 320;
-			}
-			else
-			{
-				bitRate.Audio = 256;
-			}
-
-			if (video.BitRate.Video != 0 && bitRate.Video > video.BitRate.Video)
-				bitRate.Video = video.BitRate.Video;
-
-			if (video.BitRate.Audio != 0 && bitRate.Audio > video.BitRate.Audio)
-				bitRate.Audio = video.BitRate.Audio;
-
-			return bitRate;
 		}
 	}
 

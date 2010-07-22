@@ -71,6 +71,30 @@ namespace Video_converter
 
 			return new Size { Height = height, Width = width };
 		}
+
+		public BitRate ComputeNewBitRate(Size size)
+		{
+			BitRate bitRate = new BitRate();
+
+			bitRate.Video = (int)(size.Width * size.Height * 0.002 + 300);
+
+			if (size.Height >= 1080 || size.Width >= 1920)
+			{
+				bitRate.Audio = 320;
+			}
+			else
+			{
+				bitRate.Audio = 256;
+			}
+
+			if (BitRate.Video != 0 && bitRate.Video > BitRate.Video)
+				bitRate.Video = BitRate.Video;
+
+			if (BitRate.Audio != 0 && bitRate.Audio > BitRate.Audio)
+				bitRate.Audio = BitRate.Audio;
+
+			return bitRate;
+		}
 	}
 
 	public class EventArg<T> : EventArgs
