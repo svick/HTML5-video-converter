@@ -29,5 +29,11 @@
     <Setting Name="ffmpegVersion" Type="System.String" Scope="Application">
       <Value Profile="(Default)">24417</Value>
     </Setting>
+    <Setting Name="bitRateLinear" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.002</Value>
+    </Setting>
+    <Setting Name="bitRateOffset" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">300</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

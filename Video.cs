@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Video_converter.Properties;
 
 namespace Video_converter
 {
@@ -71,7 +72,7 @@ namespace Video_converter
 		{
 			BitRate bitRate = new BitRate();
 
-			bitRate.Video = (int)(size.Width * size.Height * 0.002 + 300);
+			bitRate.Video = (int)(size.Width * size.Height * Settings.Default.bitRateLinear + Settings.Default.bitRateOffset);
 
 			if (size.Height >= 1080 || size.Width >= 1920)
 			{
