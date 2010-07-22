@@ -39,6 +39,38 @@ namespace Video_converter
 		{
 			return File.Exists(Path);
 		}
+
+		public Size NewSize(int height)
+		{
+			int width;
+
+			// 16:9 and higher
+			if (((double)Size.Width / Size.Height) > ((double)16 / 9))
+			{
+				width = (int)Math.Ceiling((double)height * 16 / 9);
+
+				if (width > Size.Width)
+					width = Size.Width;
+
+				height = (int)Math.Ceiling((double)Size.Height * width / Size.Width);
+			}
+			else
+			{
+				if (height > Size.Height)
+					height = Size.Height;
+
+				width = (int)Math.Ceiling((double)Size.Width * height / Size.Height);
+			}
+
+			// Height and width must be divisible by two
+			if (height % 2 == 1)
+				height--;
+
+			if (width % 2 == 1)
+				width--;
+
+			return new Size { Height = height, Width = width };
+		}
 	}
 
 	public class EventArg<T> : EventArgs

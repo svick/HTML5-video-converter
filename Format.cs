@@ -99,7 +99,7 @@ namespace Video_converter
 			Size newSize;
 			if (height != 0)
 			{
-				 newSize = resize(height);
+				 newSize = video.NewSize(height);
 
 				if (newSize.Height != video.Size.Height)
 				{
@@ -116,38 +116,6 @@ namespace Video_converter
 			formatParams(bitRate, pass);
 
 			return parameters;
-		}
-
-		private Size resize(int height)
-		{
-			int width;
-
-			// 16:9 and higher
-			if (((double)video.Size.Width / video.Size.Height) > ((double)16 / 9))
-			{
-				width = (int)Math.Ceiling((double)height * 16 / 9);
-
-				if (width > video.Size.Width)
-					width = video.Size.Width;
-
-				height = (int)Math.Ceiling((double)video.Size.Height * width / video.Size.Width);
-			}
-			else
-			{
-				if (height > video.Size.Height)
-					height = video.Size.Height;
-
-				width = (int)Math.Ceiling((double)video.Size.Width * height / video.Size.Height);
-			}
-
-			// Height and width must be divisible by two
-			if (height % 2 == 1)
-				height--;
-
-			if (width % 2 == 1)
-				width--;
-
-			return new Size { Height = height, Width = width };
 		}
 
 		private BitRate computeBitRate(Size size)
