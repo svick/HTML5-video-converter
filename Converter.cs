@@ -39,6 +39,7 @@ namespace Video_converter
 	{
 		public event ProgressChangedEventHandler ProgressChanged;
 		public event AllFinishedEventHander AllFinished;
+		public bool ConvertSupported { get; private set; }
 		public string OutputFolder { get; private set; }
 		public string TempFolder { get; private set; }
 
@@ -55,6 +56,7 @@ namespace Video_converter
 
 			OutputFolder = Path.GetDirectoryName(video.Path);
 			TempFolder = Path.Combine(OutputFolder, Path.GetFileNameWithoutExtension(video.Path) + ".tmp");
+			ConvertSupported = false;
 		}
 
 		void convertProcesses_AllFinished(object sender, EventArg<bool> e)
@@ -69,8 +71,11 @@ namespace Video_converter
 
 		public Video VideoInfo() 
 		{
-			if (!video.Exist())
+			if (!video.Exist()) 
+			{
+				ConvertSupported = false;
 				throw new ConverterException(App.GetLocalizedString("FileNotFound", video.Path));
+			}
 
 			ParamsBuilder parameters = new ParamsBuilder { InputFile = video.Path };
 
@@ -142,6 +147,8 @@ namespace Video_converter
 			{
 				video.FrameCount = (int)(video.Duration.TotalSeconds * float.Parse(m.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture));
 			}
+
+			ConvertSupported = true;
 
 			return video;
 		}

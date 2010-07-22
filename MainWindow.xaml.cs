@@ -101,7 +101,13 @@ namespace Video_converter
 		{
 			if (Converter == null)
 			{
-				MessageBox.Show(App.GetLocalizedString("NoVideoSelected"), "", MessageBoxButton.OK, MessageBoxImage.Error);
+				App.ErrorMessageBox(App.GetLocalizedString("NoVideoSelected"));
+				return;
+			}
+
+			if (!Converter.ConvertSupported)
+			{
+				App.ErrorMessageBox(App.GetLocalizedString("CantConvert"));
 				return;
 			}
 
