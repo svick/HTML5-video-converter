@@ -64,7 +64,7 @@ namespace Video_converter
 			}
 			catch (ConverterException e)
 			{
-				MessageBox.Show(e.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+				App.ErrorMessageBox(e.Message);
 			}
 		}
 
@@ -144,7 +144,7 @@ namespace Video_converter
 			catch (ConverterException e)
 			{
 				allFinished(true);
-				MessageBox.Show(e.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+				App.ErrorMessageBox(e.Message);
 			}
 		}
 

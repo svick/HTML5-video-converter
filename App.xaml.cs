@@ -57,5 +57,10 @@ namespace Video_converter
 			}.ResolveLocalizedValue(out result);
 			return result;
 		}
+
+		public static void ErrorMessageBox(string message)
+		{ 
+			MessageBox.Show(message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+		}
 	}
 }
