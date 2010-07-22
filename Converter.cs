@@ -476,7 +476,7 @@ namespace Video_converter
 			ConvertExited(this, new EventArg<bool>(success));
 		}
 
-		static Regex timeRegex = new Regex(@"frame=[ ]*(\d*)", RegexOptions.Compiled);
+		static Regex frameCountRegex = new Regex(@"frame=[ ]*(\d*)", RegexOptions.Compiled);
 
 		private void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
 		{
@@ -487,7 +487,7 @@ namespace Video_converter
 
 			ResultBuilder.AppendLine(e.Data);
 
-			Match m = timeRegex.Match(e.Data);
+			Match m = frameCountRegex.Match(e.Data);
 			if (m.Success)
 			{
 				Done = int.Parse(m.Groups[1].Value);
