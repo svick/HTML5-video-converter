@@ -122,7 +122,7 @@ namespace Video_converter
 					bool nothingChecked = true;
 					string format = formatCheckBox.Name;
 					foreach (CheckBox resolutionCheckBox in resolutions)
-						if (resolutionCheckBox.IsChecked == true && resolutionCheckBox.IsEnabled == true)
+						if (resolutionCheckBox.IsChecked == true && resolutionCheckBox.IsEnabled)
 						{
 							nothingChecked = false;
 							int height = int.Parse((string)resolutionCheckBox.Tag);
