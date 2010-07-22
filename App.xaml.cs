@@ -20,6 +20,7 @@ namespace Video_converter
 			System.Globalization.CultureInfo culture = System.Threading.Thread.CurrentThread.CurrentUICulture;
 			if (culture.Name == "sk-SK")
 				culture = System.Globalization.CultureInfo.CreateSpecificCulture("cs-CZ");
+			Log.Add("Jazyk aplikace: " + culture);
 			WPFLocalizeExtension.Engine.LocalizeDictionary.Instance.Culture = culture;
 			locateFFmpegFile();
 		}
@@ -29,10 +30,12 @@ namespace Video_converter
 			if (Settings.Default.use64bitFfmpegIfIsSupported && Environment.Is64BitOperatingSystem && File.Exists(Settings.Default.ffmpegLocation64))
 			{
 				// use 64 bit version of ffmpeg
+				Log.Add("Používám 64 bitovou verzi ffmpeg");
 				FfmpegLocation = Settings.Default.ffmpegLocation64;
 			}
 			else if (File.Exists(Settings.Default.ffmpegLocation))
 			{
+				Log.Add("Používám 32 bitovou verzi ffmpeg");
 				FfmpegLocation = Settings.Default.ffmpegLocation;
 			}
 			else

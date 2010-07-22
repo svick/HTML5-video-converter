@@ -470,7 +470,7 @@ namespace Video_converter
 			}
 			else if (Pass == 2)
 			{
-				App.Log.Add(ProcessName + ": Druhý průchod ukončen, passlogfile bude smazán");
+				App.Log.Add(ProcessName + ": Druhý průchod ukončen");
 			}
 
 			ConvertExited(this, new EventArg<bool>(success));
