@@ -36,6 +36,18 @@ namespace Video_converter
 			InitializeComponent();
 			resolutions = new CheckBox[] { height480, height720, height1080 };
 			formats = new CheckBox[] { webm, h264, theora };
+
+			if (App.StartupFile != null)
+			{
+				selectedFile(App.StartupFile);
+			}
+		}
+
+		private void selectedFile(string fileName)
+		{
+			this.fileName = fileName;
+			fileNameTextBox.Text = Path.GetFileName(fileName);
+			getVideoInfo(fileName);
 		}
 
 		private void getVideoInfo(string fileName)
@@ -90,10 +102,7 @@ namespace Video_converter
 
 			if (ofd.ShowDialog() == true)
 			{
-				fileName = ofd.FileName;
-				fileNameTextBox.Text = Path.GetFileName(fileName);
-				
-				getVideoInfo(fileName);
+				selectedFile(fileName);
 			}
 		}
 
@@ -226,9 +235,7 @@ namespace Video_converter
 		private void Window_Drop(object sender, DragEventArgs e)
 		{
 			string[] a = (string[]) e.Data.GetData(System.Windows.DataFormats.FileDrop, false);
-			fileName = a[0];
-			fileNameTextBox.Text = Path.GetFileName(fileName);
-			getVideoInfo(fileName);
+			selectedFile(a[0]);
 		}
 
 		private void ShowLog(object sender, RoutedEventArgs e)

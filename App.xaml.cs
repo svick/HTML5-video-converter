@@ -7,11 +7,8 @@ namespace Video_converter
 {
 	public partial class App : Application
 	{
-		public static string FfmpegLocation
-		{
-			get;
-			private set;
-		}
+		public static string FfmpegLocation	{	get; private set;	}
+		public static string StartupFile { get; private set; }
 
 		public static Log Log = new Log();
 
@@ -71,6 +68,12 @@ namespace Video_converter
 		public static void ErrorMessageBox(string message)
 		{ 
 			MessageBox.Show(message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+		}
+
+		private void Application_Startup(object sender, StartupEventArgs e)
+		{
+			if (e.Args.Length > 0)
+				StartupFile = e.Args[0];
 		}
 	}
 }
