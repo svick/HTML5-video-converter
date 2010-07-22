@@ -2,8 +2,11 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:loc="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
-	Title="{loc:LocText Key=About, Assembly=Video_converter}" Height="300" Width="300" Icon="videoConverter.ico">
+	Title="{loc:LocText Key=About, Assembly=Video_converter}" Height="300" Width="300" Icon="images/Converter.ico">
 	<Grid>
+		<Grid.Background>
+			<ImageBrush ImageSource="images/Logo.png" Opacity="0.3" Stretch="Uniform" />
+		</Grid.Background>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
 			<RowDefinition />
