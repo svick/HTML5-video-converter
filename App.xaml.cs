@@ -22,9 +22,18 @@ namespace Video_converter
 				culture = System.Globalization.CultureInfo.CreateSpecificCulture("cs-CZ");
 			WPFLocalizeExtension.Engine.LocalizeDictionary.Instance.Culture = culture;
 
+			try
+			{
+				locateFFmpegFile();
+			}
+			catch (ConverterException e)
+			{
+				ErrorMessageBox(e.Message);
+				Environment.Exit(0);
+			}
+
 			InitializeComponent();
 			Log.Add("Jazyk aplikace: " + culture);
-			locateFFmpegFile();
 		}
 
 		private void locateFFmpegFile()
@@ -42,7 +51,7 @@ namespace Video_converter
 			}
 			else
 			{
-				throw new FileNotFoundException(GetLocalizedString("FileNotFound", Settings.Default.ffmpegLocation), Settings.Default.ffmpegLocation);
+				throw new ConverterException(GetLocalizedString("FileNotFound", Settings.Default.ffmpegLocation));
 			}
 		}
 
