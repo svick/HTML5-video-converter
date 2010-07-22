@@ -97,6 +97,7 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Class1.cs" />
     <Compile Include="ConvertDone.xaml.cs">
       <DependentUpon>ConvertDone.xaml</DependentUpon>
     </Compile>
@@ -113,6 +114,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="TimeSpanExtension.cs" />
+    <Compile Include="Video.cs" />
     <Page Include="About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
