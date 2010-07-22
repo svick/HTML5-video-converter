@@ -98,7 +98,7 @@ namespace Video_converter
 				return;
 			}
 
-			Win.AllowDrop = false;
+			AllowDrop = false;
 
 			progressBar = new ProgressBar();
 			progressBar.bar.Value = 0;
@@ -173,13 +173,13 @@ namespace Video_converter
 		void convertDone_BackButton(object sender, EventArgs e)
 		{
 			Content = originalContent;
-			Win.AllowDrop = true;
+			AllowDrop = true;
 		}
 
 		void progressBar_Cancelled(object sender, EventArgs e)
 		{
 			Content = originalContent;
-			Win.AllowDrop = true;
+			AllowDrop = true;
 
 			if(Converter != null)
 				Converter.StopAll();

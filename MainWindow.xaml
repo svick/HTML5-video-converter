@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:local="clr-namespace:Video_converter"
 	xmlns:loc="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
-	Title="HTML 5" Width="240" Height="250" ResizeMode="CanMinimize" Background="{StaticResource gradient}" Closed="Window_Closed" Icon="images/Converter.ico" AllowDrop="True" Drop="Window_Drop" Name="Win">
+	Title="HTML 5" Width="240" Height="250" ResizeMode="CanMinimize" Background="{StaticResource gradient}" Closed="Window_Closed" Icon="images/Converter.ico" AllowDrop="True" Drop="Window_Drop">
 
 	<Window.TaskbarItemInfo>
 		<TaskbarItemInfo /> 
