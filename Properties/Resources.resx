@@ -219,4 +219,13 @@
   <data name="ShowLog" xml:space="preserve">
     <value>Show log</value>
   </data>
+  <data name="Credits" xml:space="preserve">
+    <value>Created by Jakub and Petr Onderka</value>
+  </data>
+  <data name="LibrariesVersions" xml:space="preserve">
+    <value>Libraries versions:</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
 </root>

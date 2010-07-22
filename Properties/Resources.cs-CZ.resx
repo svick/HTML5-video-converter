@@ -219,4 +219,13 @@
   <data name="ShowLog" xml:space="preserve">
     <value>Zobrazit log</value>
   </data>
+  <data name="Credits" xml:space="preserve">
+    <value>Vytvořili Jakub a Petr Onderkovi</value>
+  </data>
+  <data name="LibrariesVersions" xml:space="preserve">
+    <value>Verze knihoven:</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Verze {0}</value>
+  </data>
 </root>
