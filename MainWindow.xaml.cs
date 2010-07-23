@@ -102,7 +102,7 @@ namespace Video_converter
 
 			if (ofd.ShowDialog() == true)
 			{
-				selectedFile(fileName);
+				selectedFile(ofd.FileName);
 			}
 		}
 
