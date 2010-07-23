@@ -15,14 +15,12 @@ namespace Video_converter
 
 		public App()
 		{
-			Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-
 			System.Globalization.CultureInfo culture = System.Threading.Thread.CurrentThread.CurrentUICulture;
 			if (culture.Name == "sk-SK")
 				culture = System.Globalization.CultureInfo.CreateSpecificCulture("cs-CZ");
 			WPFLocalizeExtension.Engine.LocalizeDictionary.Instance.Culture = culture;
 
-			InitializeComponent();
+			Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
 			try
 			{
@@ -33,8 +31,8 @@ namespace Video_converter
 				ErrorMessageBox(e.Message);
 				Environment.Exit(0);
 			}
-			
-			Log.Add("Jazyk aplikace: " + culture);
+
+			InitializeComponent();
 		}
 
 		private void locateFFmpegFile()
@@ -42,12 +40,10 @@ namespace Video_converter
 			if (Settings.Default.use64bitFfmpegIfIsSupported && Environment.Is64BitOperatingSystem && File.Exists(Settings.Default.ffmpegLocation64))
 			{
 				// use 64 bit version of ffmpeg
-				Log.Add("Používám 64 bitovou verzi ffmpeg");
 				FfmpegLocation = Settings.Default.ffmpegLocation64;
 			}
 			else if (File.Exists(Settings.Default.ffmpegLocation))
 			{
-				Log.Add("Používám 32 bitovou verzi ffmpeg");
 				FfmpegLocation = Settings.Default.ffmpegLocation;
 			}
 			else
