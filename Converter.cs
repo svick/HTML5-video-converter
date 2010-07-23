@@ -26,7 +26,7 @@ namespace Video_converter
 	public delegate void ProgressChangedEventHandler(object sender, EventArg<double> e);
 	public delegate void DoneUpdatedEventHandler(ConvertProcess sender, DataReceivedEventArgs e);
 	public delegate void ConvertExitedEventHandler(ConvertProcess sender, EventArg<bool> e);
-	public delegate void AllFinishedEventHander(object sender, EventArg<bool> e);
+	public delegate void AllFinishedEventHander(object sender, EventArg<ConvertProcess.ProcessStatus> e);
 
 	public class ConverterException : Exception 
 	{
@@ -62,7 +62,7 @@ namespace Video_converter
 			ConvertSupported = false;
 		}
 
-		void convertProcesses_AllFinished(object sender, EventArg<bool> e)
+		void convertProcesses_AllFinished(object sender, EventArg<ConvertProcess.ProcessStatus> e)
 		{
 			if (Directory.Exists(TempFolder))
 			{
@@ -285,8 +285,23 @@ namespace Video_converter
 
 			if (currentThreads == 0)
 			{
+				ConvertProcess.ProcessStatus status = ConvertProcess.ProcessStatus.Finished;
+				foreach (ConvertProcess process in processes)
+				{
+					if (process.Status == ConvertProcess.ProcessStatus.Stopped)
+					{
+						status = process.Status;
+						break;
+					}
+					else if (process.Status == ConvertProcess.ProcessStatus.Failed)
+					{
+						status = process.Status;
+						break;
+					}
+				}
 				processes.Clear();
-				AllFinished(this, new EventArg<bool>(sender.Status == ConvertProcess.ProcessStatus.Finished));
+
+				AllFinished(this, new EventArg<ConvertProcess.ProcessStatus>(status));
 			}
 		}
 

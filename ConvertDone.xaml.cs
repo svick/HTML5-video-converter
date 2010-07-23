@@ -9,7 +9,7 @@ namespace Video_converter
 		public event EventHandler BackButton = delegate { };
 		public event EventHandler ShowOutputFolder = delegate { };
 
-		public ConvertDone(bool sucess)
+		public ConvertDone(ConvertProcess.ProcessStatus status)
 		{
 			InitializeComponent();
 		}

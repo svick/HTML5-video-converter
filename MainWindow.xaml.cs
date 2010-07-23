@@ -181,26 +181,26 @@ namespace Video_converter
 			totalProgress = e.Data;
 		}
 
-		private void allFinished(bool showMain = false, bool allOk = true)
+		private void allFinished(bool showMain = false, ConvertProcess.ProcessStatus status = ConvertProcess.ProcessStatus.Waiting)
 		{
 			timer.Stop();
 			TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
-			if (showMain)
+			if (showMain || status == ConvertProcess.ProcessStatus.Stopped)
 			{
 				Content = originalContent;
 				AllowDrop = true;
 			}
 			else
 			{
-				convertDone = new ConvertDone(allOk);
+				convertDone = new ConvertDone(status);
 				convertDone.BackButton += new EventHandler(convertDone_BackButton);
 				convertDone.ShowOutputFolder += new EventHandler(convertDone_ShowOutputFolder);
 				Content = convertDone;
 			}
 		}
 
-		void converter_AllFinished(object sender, EventArg<bool> e)
+		void converter_AllFinished(object sender, EventArg<ConvertProcess.ProcessStatus> e)
 		{
 			Dispatcher.Invoke((Action)(() =>
 			{
