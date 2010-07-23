@@ -47,10 +47,10 @@ namespace Video_converter
 		{
 			this.fileName = fileName;
 			fileNameTextBox.Text = Path.GetFileName(fileName);
-			getVideoInfo(fileName);
+			getVideoInfo();
 		}
 
-		private void getVideoInfo(string fileName)
+		private void getVideoInfo()
 		{
 			Video video = new Video(fileName);
 			Converter = new Converter(video);
