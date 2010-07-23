@@ -3,18 +3,19 @@ using System.Windows;
 
 namespace Video_converter
 {
-	public partial class Log : Window
+	public partial class LogWindow : Window
 	{
-		public Log()
+		public LogWindow()
 		{
 			InitializeComponent();
+			TextLog.AppendText(App.Log.Get());
 		}
 
 		public void Add(string text)
 		{
 			Dispatcher.Invoke((Action)(() =>
 			{
-				TextLog.AppendText(DateTime.Now.ToString("HH:mm:ss.ff") + ": " +  text + "\n");
+				TextLog.AppendText(text + "\n");
 				TextLog.ScrollToEnd();
 			}
 			));
@@ -22,8 +23,7 @@ namespace Video_converter
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			e.Cancel = true;
-			Hide();
+			App.LogWindow = null;
 		}
 	}
 }

@@ -12,6 +12,7 @@ namespace Video_converter
 		public static string StartupFile { get; private set; }
 
 		public static Log Log = new Log();
+		public static LogWindow LogWindow;
 
 		public App()
 		{
@@ -19,6 +20,7 @@ namespace Video_converter
 			if (culture.Name == "sk-SK")
 				culture = System.Globalization.CultureInfo.CreateSpecificCulture("cs-CZ");
 			WPFLocalizeExtension.Engine.LocalizeDictionary.Instance.Culture = culture;
+			Log.Add("Nastaven jazyk: " + culture);
 
 			Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
@@ -41,10 +43,12 @@ namespace Video_converter
 			{
 				// use 64 bit version of ffmpeg
 				FfmpegLocation = Settings.Default.ffmpegLocation64;
+				Log.Add("Použita 64 bitová verze ffmpeg");
 			}
 			else if (File.Exists(Settings.Default.ffmpegLocation))
 			{
 				FfmpegLocation = Settings.Default.ffmpegLocation;
+				Log.Add("Použita 32 bitová verze ffmpeg");
 			}
 			else
 			{

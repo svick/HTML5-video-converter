@@ -31,7 +31,10 @@ namespace Video_converter
 	public class ConverterException : Exception 
 	{
 		public ConverterException() : base() { }
-		public ConverterException(string message) : base(message) { }
+		public ConverterException(string message) : base(message) 
+		{
+			App.Log.Add("Nastala vyjímka: " + message);
+		}
 		public ConverterException(string message, System.Exception inner) : base(message, inner) { }
 	}
 
