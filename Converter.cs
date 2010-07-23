@@ -361,7 +361,6 @@ namespace Video_converter
 		public int Done;
 		public enum ProcessStatus { Waiting, Running, Finished, Failed, Stopped }
 		public ProcessStatus Status;
-		public StringBuilder ResultBuilder = new StringBuilder();
 
 		public event DoneUpdatedEventHandler DoneUpdated;
 		public event ConvertExitedEventHandler ConvertExited;
@@ -369,6 +368,7 @@ namespace Video_converter
 		private Process proc;
 		private ParamsBuilder parameters;
 		private bool outputAtEnd;
+		private bool converSucesfullyEnded = false;
 
 		public ConvertProcess(ParamsBuilder parameters, bool outputAtEnd = true)
 		{
@@ -445,15 +445,13 @@ namespace Video_converter
 			if(Status != ProcessStatus.Stopped)
 			{
 				App.Log.Add(string.Format("{0}: Process převodu skončil", ProcessName));
-				success = ResultBuilder.ToString().IndexOf("video:") != -1;
 
-				if (!success)
+				if (!converSucesfullyEnded)
 				{
 					System.Threading.Thread.Sleep(100);
-					success = ResultBuilder.ToString().IndexOf("video:") != -1;
 				}
 
-				if (success)
+				if (converSucesfullyEnded)
 					Status = ProcessStatus.Finished;
 				else
 					Status = ProcessStatus.Failed;
@@ -491,7 +489,11 @@ namespace Video_converter
 
 			App.Log.Add(ProcessName + ": " + e.Data);
 
-			ResultBuilder.AppendLine(e.Data);
+			if (e.Data.IndexOf("video:") != -1)
+			{
+				converSucesfullyEnded = true;
+				return;
+			}
 
 			Match m = frameCountRegex.Match(e.Data);
 			if (m.Success)
