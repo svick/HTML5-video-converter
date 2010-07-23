@@ -9,7 +9,7 @@ namespace Video_converter
 		public int Width { get; set; }
 		public int Height { get; set; }
 
-		public override string ToString(string separator = "x")
+		public string ToString(string separator = "x")
 		{
 			return string.Format("{0}{1}{2}", Width, separator, Height);
 		}
