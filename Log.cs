@@ -15,7 +15,7 @@ namespace Video_converter
 
 		public void Add(string line)
 		{
-			line = (log == "" ? "" : Environment.NewLine) + DateTime.Now.ToString("HH:mm:ss.ff") + ": " + line;
+			line = string.Format("{0}{1:HH:mm:ss.ff}: {2}", log == "" ? "" : Environment.NewLine, DateTime.Now, line.TrimEnd());
 			log += line;
 
 			App.Current.Dispatcher.BeginInvoke((Action)(() =>
