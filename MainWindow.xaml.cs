@@ -66,13 +66,13 @@ namespace Video_converter
 				height480.IsEnabled = (video.Size.Height >= 480 || video.Size.Width >= 854);
 
 				if (height1080.IsEnabled)
-					height1080.ToolTip = string.Format("{0}×{1}", video.NewSize(1080).Width, video.NewSize(1080).Height);
+					height1080.ToolTip = video.NewSize(1080).ToString("×");
 
 				if (height720.IsEnabled)
-					height720.ToolTip = string.Format("{0}×{1}", video.NewSize(720).Width, video.NewSize(720).Height);
+					height720.ToolTip = video.NewSize(720).ToString("×");
 
 				if (height480.IsEnabled)
-					height480.ToolTip = string.Format("{0}×{1}", video.NewSize(480).Width, video.NewSize(480).Height);
+					height480.ToolTip = video.NewSize(480).ToString("×");
 			}
 			catch (ConverterException e)
 			{

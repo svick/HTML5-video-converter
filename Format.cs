@@ -103,7 +103,7 @@ namespace Video_converter
 
 				if (newSize.Height != video.Size.Height)
 				{
-					parameters.Add("s", string.Format("{0}x{1}", newSize.Width, newSize.Height));
+					parameters.Add("s", newSize.ToString());
 				}
 			}
 			else
