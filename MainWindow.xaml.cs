@@ -240,9 +240,7 @@ namespace Video_converter
 
 		private void ShowLog(object sender, RoutedEventArgs e)
 		{
-			App.LogWindow = new LogWindow();
-			App.Log.Window = App.LogWindow;
-			App.LogWindow.Show();
+			App.Log.ShowWindow();
 		}
 
 		private void ShowAboutWindow(object sender, RoutedEventArgs e)

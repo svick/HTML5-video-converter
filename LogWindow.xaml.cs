@@ -8,17 +8,22 @@ namespace Video_converter
 		public LogWindow()
 		{
 			InitializeComponent();
-			TextLog.AppendText(App.Log.Get());
+		}
+
+		public void AddLine(string text)
+		{
+			Dispatcher.Invoke((Action)(() =>
+			{
+				text = text + "\n";
+				Add(text);
+			}
+			));
 		}
 
 		public void Add(string text)
 		{
-			Dispatcher.Invoke((Action)(() =>
-			{
-				TextLog.AppendText(text + "\n");
-				TextLog.ScrollToEnd();
-			}
-			));
+			TextLog.AppendText(text);
+			TextLog.ScrollToEnd();
 		}
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
