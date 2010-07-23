@@ -13,7 +13,10 @@ namespace Video_converter
 
 		private void TextLog_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			TextLog.ScrollToEnd();
+			if (TextLog.VerticalOffset + TextLog.ViewportHeight == TextLog.ExtentHeight)
+				TextLog.ScrollToEnd();
+			else
+				TextLog.ScrollToVerticalOffset(TextLog.VerticalOffset);
 		}
 	}
 }
