@@ -2,34 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace Video_converter
 {
-	public class Log
+	public class Log : DependencyObject
 	{
-		private StringBuilder log = new StringBuilder(10);
+		static DependencyPropertyKey LogTextProperty = DependencyProperty.RegisterReadOnly("LogText", typeof(string), typeof(Log), new PropertyMetadata());
+
+		private string log = "";
 		private LogWindow window;
 
 		public void Add(string line)
 		{
-			line = DateTime.Now.ToString("HH:mm:ss.ff") + ": " + line;
-			log.AppendLine(line);
+			line = (log == "" ? "" : Environment.NewLine) + DateTime.Now.ToString("HH:mm:ss.ff") + ": " + line;
+			log += line;
 
-			if (window != null)
+			App.Current.Dispatcher.BeginInvoke((Action)(() =>
 			{
-				window.AddLine(line);
-			}
+				SetValue(LogTextProperty, log);
+			}), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 		}
 
-		public string Get()
+		public string LogText
 		{
-			return log.ToString();
+			get
+			{
+				return (string)GetValue(LogTextProperty.DependencyProperty);
+			}
 		}
 
 		public void ShowWindow()
 		{
 			window = new LogWindow();
-			window.Add(Get());
+			window.DataContext = this;
 			window.Show();
 		}
 	}

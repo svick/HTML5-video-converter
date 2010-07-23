@@ -1,5 +1,6 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Video_converter
 {
@@ -10,25 +11,14 @@ namespace Video_converter
 			InitializeComponent();
 		}
 
-		public void AddLine(string text)
-		{
-			Dispatcher.Invoke((Action)(() =>
-			{
-				text = text + "\n";
-				Add(text);
-			}
-			));
-		}
-
-		public void Add(string text)
-		{
-			TextLog.AppendText(text);
-			TextLog.ScrollToEnd();
-		}
-
-		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		private void Window_Closing(object sender, CancelEventArgs e)
 		{
 			App.LogWindow = null;
+		}
+
+		private void TextLog_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			TextLog.ScrollToEnd();
 		}
 	}
 }
