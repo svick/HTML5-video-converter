@@ -11,11 +11,6 @@ namespace Video_converter
 			InitializeComponent();
 		}
 
-		private void Window_Closing(object sender, CancelEventArgs e)
-		{
-			App.LogWindow = null;
-		}
-
 		private void TextLog_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			TextLog.ScrollToEnd();

@@ -12,7 +12,6 @@ namespace Video_converter
 		public static string StartupFile { get; private set; }
 
 		public static Log Log = new Log();
-		public static LogWindow LogWindow;
 
 		public App()
 		{
