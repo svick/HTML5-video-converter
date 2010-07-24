@@ -3,5 +3,5 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:loc="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
 	Title="{loc:LocText Key=Log, Assembly=Video_converter}" Height="400" Width="800" Icon="images/Converter.ico">
-	<TextBox Name="TextLog" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Text="{Binding LogText, Mode=OneWay}" TextChanged="TextLog_TextChanged" />
+	<TextBox Name="TextLog" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Text="{Binding LogText, Mode=OneWay}" Loaded="TextLog_Loaded" TextChanged="TextLog_TextChanged" />
 </Window>

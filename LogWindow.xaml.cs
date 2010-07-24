@@ -18,5 +18,10 @@ namespace Video_converter
 			else
 				TextLog.ScrollToVerticalOffset(TextLog.VerticalOffset);
 		}
+
+		private void TextLog_Loaded(object sender, RoutedEventArgs e)
+		{
+			TextLog.ScrollToEnd();
+		}
 	}
 }
