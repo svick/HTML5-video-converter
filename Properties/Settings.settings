@@ -27,7 +27,7 @@
       <Value Profile="(Default)">1.1.1</Value>
     </Setting>
     <Setting Name="ffmpegVersion" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">24417</Value>
+      <Value Profile="(Default)">24478</Value>
     </Setting>
     <Setting Name="bitRateLinear" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.002</Value>
