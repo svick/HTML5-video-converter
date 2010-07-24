@@ -407,6 +407,7 @@ namespace Video_converter
 
 			proc = Process.Start(startInfo);
 			proc.EnableRaisingEvents = true;
+			proc.PriorityClass = ProcessPriorityClass.BelowNormal;
 
 			Status = ProcessStatus.Running;
 			
