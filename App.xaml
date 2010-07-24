@@ -13,4 +13,9 @@
 			<Setter Property="Padding" Value="5 3" />
 		</Style>
 	</Application.Resources>
+
+	<JumpList.JumpList>
+		<JumpList ShowRecentCategory="True" ShowFrequentCategory="True">
+		</JumpList>
+	</JumpList.JumpList>
 </Application>

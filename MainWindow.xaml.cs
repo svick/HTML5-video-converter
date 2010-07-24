@@ -17,7 +17,8 @@ namespace Video_converter
       protected set;
 		} 
 
-		string fileName;
+		private string fileName;
+		private string lastSelectedFileName;
 		
 		ProgressBar progressBar;
 		ConvertDone convertDone;
@@ -45,9 +46,18 @@ namespace Video_converter
 
 		private void selectedFile(string fileName)
 		{
-			this.fileName = fileName;
-			fileNameTextBox.Text = Path.GetFileName(fileName);
-			getVideoInfo();
+			try
+			{
+				this.fileName = fileName;
+				getVideoInfo();
+				fileNameTextBox.Text = Path.GetFileName(fileName);
+			}
+			catch (ConverterException e)
+			{
+				fileNameTextBox.Text = null;
+				this.fileName = null;
+				App.ErrorMessageBox(e.Message);
+			}
 		}
 
 		private void getVideoInfo()
@@ -76,7 +86,9 @@ namespace Video_converter
 			}
 			catch (ConverterException e)
 			{
-				App.ErrorMessageBox(e.Message);
+				height1080.IsEnabled = height720.IsEnabled = height480.IsEnabled = true;
+				height1080.ToolTip = height720.ToolTip = height480.ToolTip = null;
+				throw e;
 			}
 		}
 
@@ -90,18 +102,21 @@ namespace Video_converter
 			ofd.CheckFileExists = true;
 			ofd.Multiselect = false;
 
-			if (Directory.Exists(Path.GetDirectoryName(fileName)))
-			{
-				ofd.InitialDirectory = Path.GetDirectoryName(fileName);
+			string file = fileName != null ? fileName : lastSelectedFileName;
 
-				if (File.Exists(fileName))
-					ofd.FileName = fileName;
+			if (file != null && Directory.Exists(Path.GetDirectoryName(file)))
+			{
+				ofd.InitialDirectory = Path.GetDirectoryName(file);
+
+				if (File.Exists(file))
+					ofd.FileName = file;
 			}
 			else
 				ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 
 			if (ofd.ShowDialog() == true)
 			{
+				lastSelectedFileName = ofd.FileName;
 				selectedFile(ofd.FileName);
 			}
 		}
