@@ -198,6 +198,7 @@ namespace Video_converter
 
 		private void allFinished(bool showMain = false, ConvertProcess.ProcessStatus status = ConvertProcess.ProcessStatus.Waiting)
 		{
+			App.Log.Add(string.Format("Doba trvání převodu: {0}", TimeSpan.FromMilliseconds((DateTime.Now - startTime).TotalMilliseconds).ToString()));
 			timer.Stop();
 			TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
