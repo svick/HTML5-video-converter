@@ -77,7 +77,7 @@ namespace Video_converter
 		{
 			BitRate bitRate = new BitRate();
 
-			bitRate.Video = (int)(size.Width * size.Height * Settings.Default.bitRateLinear + Settings.Default.bitRateOffset);
+			bitRate.Video = (int)Math.Ceiling((size.Width * size.Height * Settings.Default.bitRateLinear + Settings.Default.bitRateOffset) / 100) * 100;
 
 			if (size.Height >= 1080 || size.Width >= 1920)
 			{
