@@ -71,15 +71,14 @@ namespace Video_converter
 			{
 				Converter.VideoInfo();
 
-				height1080.IsEnabled = (video.Size.Height >= 1080 || video.Size.Width >= 1920);
-				height720.IsEnabled = (video.Size.Height >= 720 || video.Size.Width >= 1280);
-				height480.IsEnabled = (video.Size.Height >= 480 || video.Size.Width >= 854);
-
 				foreach (CheckBox resolutionCheckBox in resolutions)
 				{
+					int height = int.Parse((string)resolutionCheckBox.Tag);
+
+					resolutionCheckBox.IsEnabled = (video.Size.Height >= height || video.Size.Width >= (int)Math.Ceiling((double)height * 16 / 9));
 					if (resolutionCheckBox.IsEnabled)
 					{
-						Size newSize = video.NewSize(int.Parse((string)resolutionCheckBox.Tag));
+						Size newSize = video.NewSize(height);
 						BitRate newBitRate = video.ComputeNewBitRate(newSize);
 
 						resolutionCheckBox.ToolTip = string.Format("{0} ({1} kb/s)", newSize.ToString("×"), newBitRate.Video.ToString());
@@ -240,7 +239,7 @@ namespace Video_converter
 		{
 			allFinished(true);
 
-			if(Converter != null)
+			if (Converter != null)
 				Converter.StopAll();
 		}
 
@@ -253,7 +252,9 @@ namespace Video_converter
 		private void Window_Drop(object sender, DragEventArgs e)
 		{
 			string[] a = (string[]) e.Data.GetData(System.Windows.DataFormats.FileDrop, false);
-			selectedFile(a[0]);
+
+			if (a.Length > 0)
+				selectedFile(a[0]);
 		}
 
 		private void ShowLog(object sender, RoutedEventArgs e)
