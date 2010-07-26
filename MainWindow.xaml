@@ -37,9 +37,9 @@
 		</StackPanel>
 		<StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0">
 			<TextBlock TextAlignment="Center" Text="{loc:LocText Key=VideoFormat, Assembly=Video_converter}" />
-			<CheckBox Margin="3" Name="webm" IsChecked="True">WebM</CheckBox>
-			<CheckBox Margin="3" Name="h264" IsChecked="True">H.264</CheckBox>
-			<CheckBox Margin="3" Name="theora">Theora</CheckBox>
+			<CheckBox Margin="3" Name="webm" IsChecked="True" ToolTip="{loc:LocText Key=WebMTooltip, Assembly=Video_converter}">WebM</CheckBox>
+			<CheckBox Margin="3" Name="h264" IsChecked="True" ToolTip="{loc:LocText Key=H264Tooltip, Assembly=Video_converter}">H.264</CheckBox>
+			<CheckBox Margin="3" Name="theora" ToolTip="{loc:LocText Key=TheoraTooltip, Assembly=Video_converter}">Theora</CheckBox>
 		</StackPanel>
 		<StackPanel Grid.Row="1" Grid.Column="1">
 			<TextBlock TextAlignment="Center" Text="{loc:LocText Key=VideoSize, Assembly=Video_converter}" />

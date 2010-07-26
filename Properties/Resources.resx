@@ -228,4 +228,13 @@
   <data name="Version" xml:space="preserve">
     <value>Version {0}</value>
   </data>
+  <data name="H264Tooltip" xml:space="preserve">
+    <value>H.264 (libx264) and AAC</value>
+  </data>
+  <data name="TheoraTooltip" xml:space="preserve">
+    <value>Theora (libtheora) and Vorbis</value>
+  </data>
+  <data name="WebMTooltip" xml:space="preserve">
+    <value>VP8 (libvpx) and Vorbis</value>
+  </data>
 </root>
