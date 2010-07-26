@@ -75,14 +75,16 @@ namespace Video_converter
 				height720.IsEnabled = (video.Size.Height >= 720 || video.Size.Width >= 1280);
 				height480.IsEnabled = (video.Size.Height >= 480 || video.Size.Width >= 854);
 
-				if (height1080.IsEnabled)
-					height1080.ToolTip = video.NewSize(1080).ToString("×");
+				foreach (CheckBox resolutionCheckBox in resolutions)
+				{
+					if (resolutionCheckBox.IsEnabled)
+					{
+						Size newSize = video.NewSize(int.Parse((string)resolutionCheckBox.Tag));
+						BitRate newBitRate = video.ComputeNewBitRate(newSize);
 
-				if (height720.IsEnabled)
-					height720.ToolTip = video.NewSize(720).ToString("×");
-
-				if (height480.IsEnabled)
-					height480.ToolTip = video.NewSize(480).ToString("×");
+						resolutionCheckBox.ToolTip = string.Format("{0} ({1} kb/s)", newSize.ToString("×"), newBitRate.Video.ToString());
+					}
+				}
 			}
 			catch (ConverterException e)
 			{
