@@ -20,14 +20,9 @@ namespace Video_converter
 			parameters.Add(key, value.ToString());
 		}
 
-		public bool Contains(string key)
-		{
-			return parameters.ContainsKey(key);
-		}
-
 		public string Get(string key)
 		{
-			if (Contains(key))
+			if (parameters.ContainsKey(key))
 				return parameters[key];
 			else
 				return null;
