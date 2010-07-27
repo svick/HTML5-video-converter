@@ -75,26 +75,26 @@ namespace Video_converter
 
 		public BitRate ComputeNewBitRate(Size size)
 		{
-			BitRate bitRate = new BitRate();
+			BitRate newBitRate = new BitRate();
 
-			bitRate.Video = (int)Math.Ceiling((size.Width * size.Height * Settings.Default.bitRateLinear + Settings.Default.bitRateOffset) / 100) * 100;
+			newBitRate.Video = (int)Math.Ceiling((size.Width * size.Height * Settings.Default.bitRateLinear + Settings.Default.bitRateOffset) / 100) * 100;
 
 			if (size.Height >= 1080 || size.Width >= 1920)
 			{
-				bitRate.Audio = 320;
+				newBitRate.Audio = 320;
 			}
 			else
 			{
-				bitRate.Audio = 256;
+				newBitRate.Audio = 256;
 			}
 
-			if (BitRate.Video != 0 && bitRate.Video > BitRate.Video)
-				bitRate.Video = BitRate.Video;
+			if (BitRate.Video != 0 && newBitRate.Video > BitRate.Video)
+				newBitRate.Video = BitRate.Video;
 
-			if (BitRate.Audio != 0 && bitRate.Audio > BitRate.Audio)
-				bitRate.Audio = BitRate.Audio;
+			if (BitRate.Audio != 0 && newBitRate.Audio > BitRate.Audio)
+				newBitRate.Audio = BitRate.Audio;
 
-			return bitRate;
+			return newBitRate;
 		}
 	}
 }
