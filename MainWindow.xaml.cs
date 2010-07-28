@@ -80,8 +80,9 @@ namespace Video_converter
 					{
 						Size newSize = video.NewSize(height);
 						BitRate newBitRate = video.ComputeNewBitRate(newSize);
+						int expectedSize = (int)(((newBitRate.Video + newBitRate.Audio) * video.Duration.TotalSeconds) / 8000); // in MB
 
-						resolutionCheckBox.ToolTip = string.Format("{0} ({1} kb/s)", newSize.ToString("×"), newBitRate.Video.ToString());
+						resolutionCheckBox.ToolTip = string.Format("{0} ({1} kb/s, ≈{2} MB)", newSize.ToString("×"), newBitRate.Video, expectedSize);
 					}
 				}
 			}

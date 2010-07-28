@@ -192,7 +192,7 @@ namespace Video_converter
 			else
 			{
 				parameters.Add("acodec", "aac");
-				parameters.Add("strict", "experimental"); // acc acodec
+				parameters.Add("strict", "experimental"); // Because AAC codec is still experimental
 				parameters.Add("ab", string.Format("{0}k", bitRate.Audio));
 				parameters.Add("vpre", "slow");
 			}

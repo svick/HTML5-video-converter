@@ -15,6 +15,7 @@ namespace Video_converter
 		}
 	}
 
+	// Store video and audio bitrate in kb/s
 	public class BitRate
 	{
 		public int Audio { get; set; }
