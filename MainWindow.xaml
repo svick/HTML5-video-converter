@@ -43,9 +43,9 @@
 		</StackPanel>
 		<StackPanel Grid.Row="1" Grid.Column="1">
 			<TextBlock TextAlignment="Center" Text="{loc:LocText Key=VideoSize, Assembly=Video_converter}" />
-			<CheckBox Margin="3" Name="height480" Tag="480">480p</CheckBox>
-			<CheckBox Margin="3" Name="height720" Tag="720">720p</CheckBox>
-			<CheckBox Margin="3" Name="height1080" Tag="1080">1080p</CheckBox>
+			<CheckBox Margin="3" Name="height480" Tag="480" ToolTip="854×480">480p</CheckBox>
+			<CheckBox Margin="3" Name="height720" Tag="720" ToolTip="1280×720">720p</CheckBox>
+			<CheckBox Margin="3" Name="height1080" Tag="1080" ToolTip="1920×1080">1080p</CheckBox>
 		</StackPanel>
 		<Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="#F0F0F0" BorderBrush="#DFDFDF" BorderThickness="0,1,0,0" SnapsToDevicePixels="True" Margin="0,8,0,0" Height="50" VerticalAlignment="Bottom">
 			<Button Margin="10" HorizontalAlignment="Center" Click="Convert_Click" Name="ConvertButton">
