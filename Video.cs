@@ -82,11 +82,11 @@ namespace Video_converter
 
 			if (size.Height >= 1080 || size.Width >= 1920)
 			{
-				newBitRate.Audio = 320;
+				newBitRate.Audio = 256;
 			}
 			else
 			{
-				newBitRate.Audio = 256;
+				newBitRate.Audio = 196;
 			}
 
 			if (BitRate.Video != 0 && newBitRate.Video > BitRate.Video)
